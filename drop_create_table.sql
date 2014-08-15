@@ -20,3 +20,13 @@ CREATE TABLE RsMergeArch (
        orien2Current     smallint,
        sometext1         text
 );
+
+DROP TABLE IF EXISTS b141_SNPChrPosOnRef;
+CREATE TABLE b141_SNPChrPosOnRef (
+       snp_id                    integer        primary key,
+       chr                       varchar(32)    not null,
+       pos                       integer,
+       orien                     integer,
+       neighbor_snp_list         integer,
+       isPAR                     varchar(1)     not null
+);
