@@ -73,11 +73,11 @@ CREATE TABLE RsMergeArch (
        rsHigh            integer        primary key,
        rsLow             integer,
        build_id          smallint,
-       orien             smallint,
+       orien             bit,
        create_time       timestamp,
        last_updated_time timestamp,
        rsCurrent         integer        not null,
-       orien2Current     smallint,
+       orien2Current     bit,
        sometext1         text
 );
 
@@ -100,7 +100,7 @@ CREATE TABLE b141_SNPChrPosOnRef (
        snp_id                    integer        primary key,
        chr                       varchar(32)    not null,
        pos                       integer,
-       orien                     integer,
+       orien                     bit,
        neighbor_snp_list         integer,
        isPAR                     varchar(1)     not null
 );
@@ -176,7 +176,7 @@ DROP TABLE IF EXISTS SNPSubSNPLink;
 CREATE TABLE SNPSubSNPLink (
        subsnp_id           integer,
        snp_id              integer,
-       substrand_reversed_flag  smallint,  -- 0: same, 1: reverse
+       substrand_reversed_flag  bit,  -- 0: same, 1: reverse
        create_time              timestamp,
        last_updated_time        timestamp,
        build_id                 integer,
