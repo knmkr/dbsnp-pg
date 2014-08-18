@@ -70,3 +70,31 @@ CREATE TABLE b141_SNPChrPosOnRef (
        neighbor_snp_list         integer,
        isPAR                     varchar(1)     not null
 );
+
+-- CREATE TABLE [Population]
+-- (
+-- [pop_id] [int] NOT NULL ,
+-- [handle] [varchar](20) NOT NULL ,
+-- [loc_pop_id] [varchar](64) NOT NULL ,
+-- [loc_pop_id_upp] [varchar](64) NOT NULL ,
+-- [create_time] [smalldatetime] NULL ,
+-- [last_updated_time] [smalldatetime] NULL ,
+-- [src_id] [int] NULL
+-- )
+--
+-- CREATE NONCLUSTERED INDEX [i_handle_loc_pop_id_upp] ON [Population] ([handle] ASC,[loc_pop_id_upp] ASC)
+-- CREATE NONCLUSTERED INDEX [i_handle_loc_pop_id] ON [Population] ([handle] ASC,[loc_pop_id] ASC)
+--
+-- ALTER TABLE [Population] ADD CONSTRAINT [pk_Population_pop_id]  PRIMARY KEY  CLUSTERED ([pop_id] ASC)
+DROP TABLE IF EXISTS Population;
+CREATE TABLE Population (
+       pop_id            integer      primary key,
+       handle            varchar(20)  not null,
+       loc_pop_id        varchar(64),  -- not null,
+       loc_pop_id_upp    varchar(64),  -- not null,
+       create_time       timestamp,
+       last_updated_time timestamp,
+       src_id            integer
+);
+CREATE INDEX i_handle_loc_pop_id_upp ON Population (handle, loc_pop_id_upp);
+CREATE INDEX i_handle_loc_pop_id ON Population (handle, loc_pop_id);
