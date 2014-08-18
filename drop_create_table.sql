@@ -122,3 +122,31 @@ CREATE TABLE AlleleFreqBySsPop (
        last_updated_time       timestamp   not null,
        PRIMARY KEY (subsnp_id, pop_id, allele_id)
 );
+
+-- CREATE TABLE [SNPSubSNPLink]
+-- (
+-- [subsnp_id] [int] NULL ,
+-- [snp_id] [int] NULL ,
+-- [substrand_reversed_flag] [tinyint] NULL ,
+-- [create_time] [datetime] NULL ,
+-- [last_updated_time] [datetime] NULL ,
+-- [build_id] [int] NULL ,
+-- [comment] [varchar](255) NULL
+-- )
+--
+-- CREATE CLUSTERED INDEX [i_ss] ON [SNPSubSNPLink] ([subsnp_id] ASC)
+-- CREATE NONCLUSTERED INDEX [i_rs] ON [SNPSubSNPLink] ([snp_id] ASC,[subsnp_id] ASC,[substrand_reversed_flag] ASC)
+--
+-- ALTER TABLE [SNP] ADD CONSTRAINT [fk_exem_ss_2link] FOREIGN KEY (exemplar_subsnp_id) REFERENCES [SNPSubSNPLink](subsnp_id)
+DROP TABLE IF EXISTS SNPSubSNPLink;
+CREATE TABLE SNPSubSNPLink (
+       subsnp_id           integer,
+       snp_id              integer,
+       substrand_reversed_flag  smallint,
+       create_time              timestamp,
+       last_updated_time        timestamp,
+       build_id                 integer,
+       comment                  varchar(255)
+);
+CREATE INDEX i_ss ON SNPSubSNPLink (subsnp_id);
+CREATE INDEX i_rs ON SNPSubSNPLink (snp_id, subsnp_id, substrand_reversed_flag);
