@@ -27,31 +27,16 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 
 ## SQL example
 
-### Get allele freqs for ss#
-
-    $ psql dbsnp_b141 username -c "
-    SELECT subsnp_id, po.loc_pop_id, al.allele, source, freq
-    FROM AlleleFreqBySsPop af
-         join Population po on af.pop_id = po.pop_id
-         join Allele al on af.allele_id = al.allele_id
-    WHERE subsnp_id = 241441355
-    LIMIT 5
-    "
-     subsnp_id |             loc_pop_id             | allele | source |   freq
-    -----------+------------------------------------+--------+--------+----------
-     241441355 | pilot_1_CHB+JPT_low_coverage_panel | G      | AF     | 0.383333
-     241441355 | pilot_1_CHB+JPT_low_coverage_panel | T      | AF     | 0.616667
-    (2 rows)
-
 ### Get allele freqs for rs#
 
     $ psql dbsnp_b141 username -c "
     SELECT
-        snp_id,
+        ss2rs.snp_id,
         af.subsnp_id,
         po.loc_pop_id,
         al.allele AS ss_allele,
         CASE WHEN ss2rs.substrand_reversed_flag = 0 THEN al.allele ELSE al.rev_allele END AS rs_allele
+        CASE WHEN ss2rs.substrand_reversed_flag # rs.orien = 0 THEN al.allele ELSE al.rev_allele END AS chr_allele
         source,
         freq
     FROM
@@ -59,6 +44,7 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
         JOIN AlleleFreqBySsPop af ON af.subsnp_id = ss2rs.subsnp_id
         JOIN Population po ON af.pop_id = po.pop_id
         JOIN Allele al ON af.allele_id = al.allele_id
+        JOIN b141_SNPChrPosOnRef rs ON ss2rs.snp_id = rs.snp_id
     WHERE
         snp_id = 6983267
     LIMIT
