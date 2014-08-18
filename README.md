@@ -45,7 +45,25 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 
 ### Get allele freqs for rs#
 
-    TODO
+    $ psql dbsnp_b141 username -c "
+    SELECT
+        snp_id,
+        af.subsnp_id,
+        po.loc_pop_id,
+        al.allele AS ss_allele,
+        CASE WHEN ss2rs.substrand_reversed_flag = 0 THEN al.allele ELSE al.rev_allele END AS rs_allele
+        source,
+        freq
+    FROM
+        SNPSubSNPLink ss2rs
+        JOIN AlleleFreqBySsPop af ON af.subsnp_id = ss2rs.subsnp_id
+        JOIN Population po ON af.pop_id = po.pop_id
+        JOIN Allele al ON af.allele_id = al.allele_id
+    WHERE
+        snp_id = 6983267
+    LIMIT
+        5;
+    "
 
 
 ## Lisence
