@@ -123,14 +123,14 @@ CREATE TABLE AlleleFreqBySsPop (
        PRIMARY KEY (subsnp_id, pop_id, allele_id)
 );
 
--- CREATE TABLE [SNPSubSNPLink]
+-- CREATE TABLE [SNPSubSNPLink]                -- This is the central table that keeps the relationship between submitted snp and reference snp.
 -- (
--- [subsnp_id] [int] NULL ,
--- [snp_id] [int] NULL ,
--- [substrand_reversed_flag] [tinyint] NULL ,
+-- [subsnp_id] [int] NULL ,                    -- Submitted snp(subsnp) id. This is foreign key to SubSNP table. Each submitted snp will get a reference snp cluster id after we blast the subsnp flanking sequence against contig.
+-- [snp_id] [int] NULL ,                       -- "refSNP cluster id. The submitted snp cluster together if they map to the same contig position, or if they have similar flanking sequence."
+-- [substrand_reversed_flag] [tinyint] NULL ,  -- 0 means the submitted snp(subsnp) is in the same orientation as the refSNP. 1 means subsnp is in reverse orientation to refSNP.
 -- [create_time] [datetime] NULL ,
 -- [last_updated_time] [datetime] NULL ,
--- [build_id] [int] NULL ,
+-- [build_id] [int] NULL ,                     -- dbSNP build id the last change to the subsnp linking record occurred.
 -- [comment] [varchar](255) NULL
 -- )
 --
@@ -142,7 +142,7 @@ DROP TABLE IF EXISTS SNPSubSNPLink;
 CREATE TABLE SNPSubSNPLink (
        subsnp_id           integer,
        snp_id              integer,
-       substrand_reversed_flag  smallint,
+       substrand_reversed_flag  smallint,  -- 0: same, 1: reverse
        create_time              timestamp,
        last_updated_time        timestamp,
        build_id                 integer,
