@@ -25,6 +25,29 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 - wget (TODO)
 
 
+## SQL example
+
+### Get allele freqs for ss#
+
+    $ psql dbsnp_b141 username -c "
+    SELECT subsnp_id, po.loc_pop_id, al.allele, source, freq
+    FROM AlleleFreqBySsPop af
+         join Population po on af.pop_id = po.pop_id
+         join Allele al on af.allele_id = al.allele_id
+    WHERE subsnp_id = 241441355
+    LIMIT 5
+    "
+     subsnp_id |             loc_pop_id             | allele | source |   freq
+    -----------+------------------------------------+--------+--------+----------
+     241441355 | pilot_1_CHB+JPT_low_coverage_panel | G      | AF     | 0.383333
+     241441355 | pilot_1_CHB+JPT_low_coverage_panel | T      | AF     | 0.616667
+    (2 rows)
+
+### Get allele freqs for rs#
+
+    TODO
+
+
 ## Lisence
 
 See LISENCE
