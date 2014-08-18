@@ -30,6 +30,27 @@ CREATE TABLE Allele (
 );
 CREATE INDEX i_rev_allele_id ON Allele (rev_allele_id);
 
+-- CREATE TABLE [SnpChrCode]
+-- (
+-- [code] [varchar](8) NOT NULL ,
+-- [abbrev] [varchar](20) NOT NULL ,
+-- [descrip] [varchar](255) NOT NULL ,
+-- [create_time] [smalldatetime] NOT NULL ,
+-- [sort_order] [tinyint] NULL ,
+-- [db_name] [varchar](32) NULL ,
+-- [NC_acc] [varchar](16) NULL
+-- )
+DROP TABLE IF EXISTS SnpChrCode;
+CREATE TABLE SnpChrCode (
+       code             varchar(8)      primary key,
+       abbrev           varchar(20)     not null,
+       descrip          varchar(255)    not null,
+       create_time      timestamp       not null,
+       sort_order       smallint,
+       db_name          varchar(32),
+       NC_acc           varchar(16)
+);
+
 
 -- ftp.ncbi.nih.gov:/snp/organisms/human_9606/database/organism_schema/human_9606_table.sql.gz
 --                                                                    /human_9606_index.sql.gz

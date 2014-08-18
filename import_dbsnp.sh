@@ -3,7 +3,7 @@
 DBSNP_DB=$1
 DBSNP_USER=$2
 
-# for bcp in Allele RsMergeArch b141_SNPChrPosOnRef Population AlleleFreqBySsPop SNPSubSNPLink; do
+# for bcp in Allele RsMergeArch b141_SNPChrPosOnRef Population AlleleFreqBySsPop SNPSubSNPLink SnpChrCode; do
 for bcp in SNPSubSNPLink; do
   echo "[INFO] Importing ${bcp}..."
   gunzip -c ${bcp}.bcp.gz | tr -d '\15' | nkf -Lu |  psql $DBSNP_DB $DBSNP_USER -c "COPY ${bcp} FROM stdin DELIMITERS '	' WITH NULL AS ''"
