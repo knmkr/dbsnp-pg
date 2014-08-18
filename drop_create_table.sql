@@ -98,3 +98,27 @@ CREATE TABLE Population (
 );
 CREATE INDEX i_handle_loc_pop_id_upp ON Population (handle, loc_pop_id_upp);
 CREATE INDEX i_handle_loc_pop_id ON Population (handle, loc_pop_id);
+
+-- CREATE TABLE [AlleleFreqBySsPop]
+-- (
+-- [subsnp_id] [int] NOT NULL ,
+-- [pop_id] [int] NOT NULL ,
+-- [allele_id] [int] NOT NULL ,
+-- [source] [varchar](2) NOT NULL ,
+-- [cnt] [real] NULL ,
+-- [freq] [real] NULL ,
+-- [last_updated_time] [datetime] NOT NULL
+-- )
+--
+-- ALTER TABLE [AlleleFreqBySsPop] ADD CONSTRAINT [pk_AlleleFreqBySsPop_b129]  PRIMARY KEY  CLUSTERED ([subsnp_id] ASC,[pop_id] ASC,[allele_id] ASC)
+DROP TABLE IF EXISTS AlleleFreqBySsPop;
+CREATE TABLE AlleleFreqBySsPop (
+       subsnp_id               integer     not null,
+       pop_id                  integer     not null,
+       allele_id               integer     not null,
+       source                  varchar(2)  not null,
+       cnt                     real,
+       freq                    real,
+       last_updated_time       timestamp   not null,
+       PRIMARY KEY (subsnp_id, pop_id, allele_id)
+);
