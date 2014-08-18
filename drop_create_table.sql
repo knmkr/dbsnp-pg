@@ -60,7 +60,20 @@ CREATE TABLE RsMergeArch (
        sometext1         text
 );
 
---
+-- CREATE TABLE [b141_SNPChrPosOnRef]  -- This table stores the chromosome position(0 based) of uniquely mapped snp on NCBI reference assembly. It has one
+--                                        row for each snp in SNP table. For snp with ambiguous mappings(weight>1, please see SNPMapInfo for weight
+--                                        description), the chromosome position is NULL. To get the positions of ambiguous mapped snp, please see
+--                                        SNPContigLoc.
+--                                        Please note that the actually table name in database has dbSNP build prefix and NCBI genome build suffix. For ex.
+--                                        human dbSNP build 130 maps to NCBI 36.3. The table name for this build is: b130_SNPChrPosOnRef_36_3.
+-- (
+-- [snp_id] [int] NOT NULL ,           -- snp_id refers to SNP.snp_id. Also called 'rs#'.
+-- [chr] [varchar](32) NOT NULL ,      -- chr refers to SnpChrCode. Please see value at: ftp://ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz
+-- [pos] [int] NULL ,                  -- pos is the 0 based chromosome position of uniquely mapped snp. This value is from SNPContigLoc.phys_pos_from field. Not uniquely mapped snp(weight>1) has NULL in this field.
+-- [orien] [int] NULL ,                -- snp to chromosome orientation. 0 - same orientation(orsame strand), 1 - opposite strand
+-- [neighbor_snp_list] [int] NULL ,    -- Internal use.
+-- [isPAR] [varchar](1) NOT NULL       -- The snp is in Pseudoautosomal Region (PAR) region when isPAR value is 'y'.
+-- )
 DROP TABLE IF EXISTS b141_SNPChrPosOnRef;
 CREATE TABLE b141_SNPChrPosOnRef (
        snp_id                    integer        primary key,
