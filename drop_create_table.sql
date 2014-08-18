@@ -105,12 +105,12 @@ CREATE TABLE b141_SNPChrPosOnRef (
        isPAR                     varchar(1)     not null
 );
 
--- CREATE TABLE [Population]
+-- CREATE TABLE [Population]                   -- Population is defined and submitted by submitter over their samples.
 -- (
--- [pop_id] [int] NOT NULL ,
--- [handle] [varchar](20) NOT NULL ,
--- [loc_pop_id] [varchar](64) NOT NULL ,
--- [loc_pop_id_upp] [varchar](64) NOT NULL ,
+-- [pop_id] [int] NOT NULL ,                   -- unique dbSNP population id
+-- [handle] [varchar](20) NOT NULL ,           -- "Submitter handle, foreign key to Submitter table."
+-- [loc_pop_id] [varchar](64) NOT NULL ,       -- submitter defined population name
+-- [loc_pop_id_upp] [varchar](64) NOT NULL ,   -- Upper case obs for indexing and comparison.
 -- [create_time] [smalldatetime] NULL ,
 -- [last_updated_time] [smalldatetime] NULL ,
 -- [src_id] [int] NULL
@@ -184,3 +184,23 @@ CREATE TABLE SNPSubSNPLink (
 );
 CREATE INDEX i_ss ON SNPSubSNPLink (subsnp_id);
 CREATE INDEX i_rs ON SNPSubSNPLink (snp_id, subsnp_id, substrand_reversed_flag);
+
+-- CREATE TABLE [SNPAlleleFreq]             -- This table stores the average allele frequency for a refSNP(rs#).
+-- (
+-- [snp_id] [int] NOT NULL ,
+-- [allele_id] [int] NOT NULL ,             -- Foreign key to Allele table.
+-- [chr_cnt] [float] NULL ,                 -- Count of chromosomes for the allele specified in allele_id.
+-- [freq] [float] NULL ,                    -- Frequency of this allele.
+-- [last_updated_time] [datetime] NOT NULL
+-- )
+--
+-- ALTER TABLE [SNPAlleleFreq] ADD CONSTRAINT [pk_SNPAlleleFreq]  PRIMARY KEY  CLUSTERED ([snp_id] ASC,[allele_id] ASC)
+DROP TABLE IF EXISTS SNPAlleleFreq;
+CREATE TABLE SNPAlleleFreq (
+       snp_id              integer,
+       allele_id           integer,
+       chr_cnt             real,
+       freq                real,
+       last_updated_time   timestamp,
+       PRIMARY KEY (snp_id, allele_id)
+);
