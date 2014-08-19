@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
 
-DBSNP_DB=$1
-DBSNP_USER=$2
+PG_DB=$1
+PG_USER=$2
 
-minimal=(Allele RsMergeArch b141_SNPChrPosOnRef Population AlleleFreqBySsPop SNPSubSNPLink SnpChrCode)
+minimal=(SNPSubSNPLink)  # (Allele RsMergeArch b141_SNPChrPosOnRef Population AlleleFreqBySsPop SNPSubSNPLink)
 optional=(SnpChrCode SNPAlleleFreq)
 
-# for bcp in $minimal; do
-for bcp in SNPSubSNPLink; do
-  echo "[INFO] Importing ${bcp}..."
-  gunzip -c ${bcp}.bcp.gz | tr -d '\15' | nkf -Lu |  psql $DBSNP_DB $DBSNP_USER -c "COPY ${bcp} FROM stdin DELIMITERS '	' WITH NULL AS ''"
-  psql $DBSNP_DB $DBSNP_USER -c "SELECT * FROM ${bcp} LIMIT 5"
+target=($minimal)
+
+for table in ${target[@]}; do
+    for filename in ${table}.bcp.gz*; do
+        echo "[INFO] Importing ${filename} into ${table} ..."
+        gzip -d -c ${filename} \
+            | tr -d '\15' \
+            | nkf -Lu \
+            | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''"
+
+        psql $PG_DB $PG_USER -c "SELECT * FROM ${table} LIMIT 5"
+    done;
 done;
 
 echo "[INFO] Done"
