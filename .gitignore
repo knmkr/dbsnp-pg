@@ -2,3 +2,5 @@
 *.bcp
 ftp.ncbi.nih.gov
 misc
+done
+tmp*
