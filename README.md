@@ -27,7 +27,9 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 
 ## SQL example
 
-### Allele freqs for given rs\# :
+### Allele freqs for given rs\# and population group :
+
+rs# = 10, population = Asian
 
     $ psql dbsnp_b141 username -c "
     SELECT
@@ -48,23 +50,20 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
         JOIN AlleleFreqBySsPop af ON af.subsnp_id = ss2rs.subsnp_id
         JOIN Population po ON af.pop_id = po.pop_id
         JOIN Allele al ON af.allele_id = al.allele_id
+        JOIN dn_PopulationIndGrp pop2grp ON af.pop_id = pop2grp.pop_id
     WHERE
-        snp_id = 10;
+        snp_id = 10
+        AND pop2grp.ind_grp_name = 'Asian';
     "
      snp_id | subsnp_id | loc_pop_id | source | ss_allele | rs_allele_id |   freq
     --------+-----------+------------+--------+-----------+--------------+-----------
-         10 |   4917294 | PDR90      | IG     | G         | C            |  0.959302
-         10 |   4917294 | PDR90      | IG     | T         | A            | 0.0406977
-         10 |   4917294 | CEPH       | AF     | G         | C            |      0.96
-         10 |   4917294 | CEPH       | AF     | T         | A            |      0.04
-         10 |   4917294 | HapMap-CEU | IG     | G         | C            |  0.966667
-         10 |   4917294 | HapMap-CEU | IG     | T         | A            | 0.0333333
          10 |   4917294 | HapMap-HCB | IG     | G         | C            |         1
          10 |   4917294 | HapMap-JPT | IG     | G         | C            |         1
-         10 |   4917294 | HapMap-YRI | IG     | G         | C            |         1
-    (9 rows)
+    (2 rows)
 
 ### Current rs\# for given rs\# :
+
+rs# = 332
 
     $ psql dbsnp_b141 username -c "
     SELECT
