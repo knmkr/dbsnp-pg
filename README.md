@@ -78,6 +78,17 @@ rs# = 332
     (1 row)
 
 
+## Notice
+
+Versions of dbSNP and human reference genome.
+
+| database name             | dbSNP | reference genome |
+|---------------------------|-------|------------------|
+| human_9606                | b141  | GRCh38           |
+| human_9606_b141_GRCh38    | b141  | GRCh38           |
+| human_9606_b141_GRCh37p13 | b141  | GRCh37p13        |
+
+
 ## Lisence
 
 See LISENCE
