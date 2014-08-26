@@ -27,7 +27,7 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 
 ## SQL example
 
-### Get allele freqs for rs#
+### Allele freqs for given rs\# :
 
     $ psql dbsnp_b141 username -c "
     SELECT
@@ -63,6 +63,20 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
          10 |   4917294 | HapMap-JPT | IG     | G         | C            |         1
          10 |   4917294 | HapMap-YRI | IG     | G         | C            |         1
     (9 rows)
+
+### Current rs\# for given rs\# :
+
+    $ psql dbsnp_b141 username -c "
+    SELECT
+        rshigh,rscurrent,orien2current
+    FROM
+        rsmergearch
+    WHERE rshigh = ANY(ARRAY[330, 331, 332]);
+    "
+     rshigh | rscurrent | orien2current
+    --------+-----------+---------------
+        332 | 121909001 |             0
+    (1 row)
 
 
 ## Lisence
