@@ -205,6 +205,27 @@ CREATE TABLE SNPAlleleFreq (
        PRIMARY KEY (snp_id, allele_id)
 );
 
+-- CREATE TABLE [b141_SNPChrPosOnRef]
+-- (
+-- [snp_id] [int] NOT NULL ,
+-- [chr] [varchar](32) NOT NULL ,
+-- [pos] [int] NULL ,
+-- [orien] [int] NULL ,
+-- [neighbor_snp_list] [int] NULL ,
+-- [isPAR] [varchar](1) NOT NULL
+-- )
+--
+
+DROP TABLE IF EXISTS b141_SNPChrPosOnRef;
+CREATE TABLE b141_SNPChrPosOnRef (
+       snp_id                    integer          primary key,
+       chr                       varchar(32)      not null,
+       pos                       integer,
+       orien                     bit,
+       neighbor_snp_list         integer,
+       isPAR                     varchar(1)       not null
+);
+
 -- CREATE TABLE [dn_PopulationIndGrp]
 -- (
 -- [pop_id] [int] NOT NULL ,
@@ -217,5 +238,5 @@ DROP TABLE IF EXISTS dn_PopulationIndGrp;
 CREATE TABLE dn_PopulationIndGrp (
        pop_id                    integer          primary key,
        ind_grp_name              varchar(32)      not null,
-       ind_grp_code              bit              not null
+       ind_grp_code              smallint         not null
 );
