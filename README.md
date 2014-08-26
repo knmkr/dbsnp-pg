@@ -31,25 +31,38 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 
     $ psql dbsnp_b141 username -c "
     SELECT
-        ss2rs.snp_id,
+        snp_id,
         af.subsnp_id,
         po.loc_pop_id,
-        al.allele AS ss_allele,
-        CASE WHEN ss2rs.substrand_reversed_flag = 0 THEN al.allele ELSE al.rev_allele END AS rs_allele
-        CASE WHEN ss2rs.substrand_reversed_flag # rs.orien = 0 THEN al.allele ELSE al.rev_allele END AS chr_allele
         source,
+        al.allele AS ss_allele,
+        CASE
+          WHEN ss2rs.substrand_reversed_flag = '0' THEN
+                  al.allele
+          ELSE
+                  (SELECT allele FROM Allele WHERE allele_id = al.rev_allele_id)
+          END AS rs_allele_id,
         freq
     FROM
         SNPSubSNPLink ss2rs
         JOIN AlleleFreqBySsPop af ON af.subsnp_id = ss2rs.subsnp_id
         JOIN Population po ON af.pop_id = po.pop_id
         JOIN Allele al ON af.allele_id = al.allele_id
-        JOIN b141_SNPChrPosOnRef rs ON ss2rs.snp_id = rs.snp_id
     WHERE
-        snp_id = 6983267
-    LIMIT
-        5;
+        snp_id = 10;
     "
+     snp_id | subsnp_id | loc_pop_id | source | ss_allele | rs_allele_id |   freq
+    --------+-----------+------------+--------+-----------+--------------+-----------
+         10 |   4917294 | PDR90      | IG     | G         | C            |  0.959302
+         10 |   4917294 | PDR90      | IG     | T         | A            | 0.0406977
+         10 |   4917294 | CEPH       | AF     | G         | C            |      0.96
+         10 |   4917294 | CEPH       | AF     | T         | A            |      0.04
+         10 |   4917294 | HapMap-CEU | IG     | G         | C            |  0.966667
+         10 |   4917294 | HapMap-CEU | IG     | T         | A            | 0.0333333
+         10 |   4917294 | HapMap-HCB | IG     | G         | C            |         1
+         10 |   4917294 | HapMap-JPT | IG     | G         | C            |         1
+         10 |   4917294 | HapMap-YRI | IG     | G         | C            |         1
+    (9 rows)
 
 
 ## Lisence
