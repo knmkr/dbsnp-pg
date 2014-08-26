@@ -11,6 +11,7 @@ wget ftp.ncbi.nih.gov/snp/organisms/human_9606/database/organism_data/b141_SNPCh
 # allele freq by ss
 wget ftp.ncbi.nih.gov/snp/organisms/human_9606/database/organism_data/Population.bcp.gz
 wget ftp.ncbi.nih.gov/snp/organisms/human_9606/database/organism_data/AlleleFreqBySsPop.bcp.gz
+wget ftp.ncbi.nih.gov/snp/organisms/human_9606/database/organism_data/dn_PopulationIndGrp.bcp.gz
 
 # ss <-> rs
 wget ftp.ncbi.nih.gov/snp/organisms/human_9606/database/organism_data/SNPSubSNPLink.bcp.gz

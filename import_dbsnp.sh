@@ -3,7 +3,7 @@
 PG_DB=$1
 PG_USER=$2
 
-minimal=(SNPSubSNPLink)  # (Allele RsMergeArch b141_SNPChrPosOnRef Population AlleleFreqBySsPop SNPSubSNPLink)
+minimal=(SNPSubSNPLink)  # (Allele RsMergeArch b141_SNPChrPosOnRef Population AlleleFreqBySsPop dn_PopulationIndGrp SNPSubSNPLink)
 optional=(SnpChrCode SNPAlleleFreq)
 
 target=($minimal)

@@ -204,3 +204,18 @@ CREATE TABLE SNPAlleleFreq (
        last_updated_time   timestamp,
        PRIMARY KEY (snp_id, allele_id)
 );
+
+-- CREATE TABLE [dn_PopulationIndGrp]
+-- (
+-- [pop_id] [int] NOT NULL ,
+-- [ind_grp_name] [varchar](32) NOT NULL ,
+-- [ind_grp_code] [tinyint] NOT NULL
+-- )
+--
+-- ALTER TABLE [dn_PopulationIndGrp] ADD CONSTRAINT [pk_dn_PopulationIndGrp]  PRIMARY KEY  CLUSTERED ([pop_id] ASC)
+DROP TABLE IF EXISTS dn_PopulationIndGrp;
+CREATE TABLE dn_PopulationIndGrp (
+       pop_id                    integer          primary key,
+       ind_grp_name              varchar(32)      not null,
+       ind_grp_code              bit              not null
+);
