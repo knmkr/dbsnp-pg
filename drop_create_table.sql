@@ -67,7 +67,22 @@ CREATE TABLE SnpChrCode (
 --        sometext2                 text
 -- );
 
+-- CREATE TABLE [RsMergeArch]                 -- refSNP(rs) cluster is based on unique genome position. On new genome assembly, previously different contig may
+--                                               align. So different rs clusters map to the same location. In this case, we merge the rs. This table tracks this merging.
+-- (
+-- [rsHigh] [int] NOT NULL ,                  -- Since rs# is assigned sequentially. Low number means the rs occurs early. So we always merge high rs number into low rs number.
+-- [rsLow] [int] NOT NULL ,
+-- [build_id] [int] NULL ,                    -- dbSNP build id when this rsHigh was merged into rsLow.
+-- [orien] [tinyint] NULL ,                   -- The orientation between rsHigh and rsLow.
+-- [create_time] [datetime] NOT NULL ,
+-- [last_updated_time] [datetime] NOT NULL ,
+-- [rsCurrent] [int] NULL ,
+-- [orien2Current] [tinyint] NULL ,
+-- [comment] [varchar](255) NULL
+-- )
 --
+-- CREATE CLUSTERED INDEX [i_rsH] ON [RsMergeArch] ([rsHigh] ASC)
+-- CREATE NONCLUSTERED INDEX [i_rsL] ON [RsMergeArch] ([rsLow] ASC)
 DROP TABLE IF EXISTS RsMergeArch;
 CREATE TABLE RsMergeArch (
        rsHigh            integer        primary key,
@@ -80,6 +95,7 @@ CREATE TABLE RsMergeArch (
        orien2Current     bit,
        sometext1         text
 );
+CREATE INDEX i_rsL ON RsMergeArch (rsLow);
 
 -- CREATE TABLE [b141_SNPChrPosOnRef]  -- This table stores the chromosome position(0 based) of uniquely mapped snp on NCBI reference assembly. It has one
 --                                        row for each snp in SNP table. For snp with ambiguous mappings(weight>1, please see SNPMapInfo for weight
