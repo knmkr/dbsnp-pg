@@ -27,7 +27,7 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 
 ## SQL example
 
-### Allele freqs for given rs\# and population group :
+### Allele freqs for given rs\# and population groups :
 
 rs# = 10, population = Asian
 
@@ -39,10 +39,10 @@ rs# = 10, population = Asian
         source,
         al.allele AS ss_allele,
         CASE
-          WHEN ss2rs.substrand_reversed_flag = '0' THEN
-                  al.allele
-          ELSE
+          WHEN ss2rs.substrand_reversed_flag = '1' THEN
                   (SELECT allele FROM Allele WHERE allele_id = al.rev_allele_id)
+          ELSE
+                  al.allele
           END AS rs_allele_id,
         freq
     FROM
