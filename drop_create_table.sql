@@ -113,13 +113,14 @@ CREATE INDEX i_rsL ON RsMergeArch (rsLow);
 -- )
 DROP TABLE IF EXISTS b141_SNPChrPosOnRef;
 CREATE TABLE b141_SNPChrPosOnRef (
-       snp_id                    integer        primary key,
+       snp_id                    integer,
        chr                       varchar(32)    not null,
        pos                       integer,
        orien                     bit,
        neighbor_snp_list         integer,
        isPAR                     varchar(1)     not null
 );
+ALTER TABLE b141_SNPChrPosOnRef ADD CONSTRAINT b141_SNPChrPosOnRef_pkey PRIMARY KEY (snp_id);  -- uniq
 
 -- CREATE TABLE [Population]                   -- Population is defined and submitted by submitter over their samples.
 -- (
