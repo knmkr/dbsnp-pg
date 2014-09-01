@@ -3,10 +3,10 @@
 PG_DB=$1
 PG_USER=$2
 
-minimal=(SNPSubSNPLink)  # (Allele RsMergeArch b141_SNPChrPosOnRef Population AlleleFreqBySsPop dn_PopulationIndGrp SNPSubSNPLink)
-optional=(SnpChrCode SNPAlleleFreq)
+minimal=(Allele Population AlleleFreqBySsPop dn_PopulationIndGrp SNPSubSNPLink)
+optional=(SnpChrCode SNPAlleleFreq RsMergeArch b141_SNPChrPosOnRef)
 
-target=($minimal)
+target=${minimal[@]}
 
 for table in ${target[@]}; do
     for filename in ${table}.bcp.gz*; do
