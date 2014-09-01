@@ -33,6 +33,15 @@ WHERE
     rs2current.rshigh = tmpMapping.rshigh;
 SELECT * FROM rs2current;
 
+--   rshigh  | rscurrent | orien2current
+-- ----------+-----------+---------------
+--  57659014 |  12042114 |             0
+--  57659074 |    340338 |             1
+--  57659148 |   1540515 |             1
+--  57659150 |  57659150 |             0
+-- (4 rows)
+
+
 -- Getting allele freqs for current rs#
 SELECT
     rshigh, rscurrent, subsnp_id, ss_allele, substrand_reversed_flag, rs2current.orien2current, allele, loc_pop_id, source, freq
@@ -66,3 +75,14 @@ FROM
             AND pop2grp.ind_grp_name = 'Asian'
     ) freqs ON rs2current.rscurrent = freqs.snp_id
 ;
+
+--   rshigh  | rscurrent | subsnp_id | ss_allele | substrand_reversed_flag | orien2current | allele |  loc_pop_id   | source |   freq
+-- ----------+-----------+-----------+-----------+-------------------------+---------------+--------+---------------+--------+----------
+--  57659014 |  12042114 |  23200215 | C         | 0                       |             0 | C      | AFD_CHN_PANEL | IG     |  0.26087
+--  57659014 |  12042114 |  23200215 | T         | 0                       |             0 | T      | AFD_CHN_PANEL | IG     |  0.73913
+--  57659074 |    340338 |   2908537 | C         | 0                       |             1 | G      | HapMap-JPT    | IG     |        1
+--  57659074 |    340338 |   2908537 | C         | 0                       |             1 | G      | HapMap-HCB    | IG     |        1
+--  57659148 |   1540515 |  23712154 | C         | 1                       |             1 | C      | AFD_CHN_PANEL | IG     | 0.645833
+--  57659148 |   1540515 |  23712154 | T         | 1                       |             1 | T      | AFD_CHN_PANEL | IG     | 0.354167
+--  57659150 |  57659150 |           |           |                         |             0 |        |               |        |
+-- (7 rows)
