@@ -120,7 +120,8 @@ CREATE TABLE b141_SNPChrPosOnRef (
        neighbor_snp_list         integer,
        isPAR                     varchar(1)     not null
 );
-ALTER TABLE b141_SNPChrPosOnRef ADD CONSTRAINT b141_SNPChrPosOnRef_pkey PRIMARY KEY (snp_id);  -- uniq
+CREATE UNIQUE INDEX b141_SNPChrPosOnRef_ukey_rs ON b141_SNPChrPosOnRef (snp_id);
+CREATE INDEX b141_SNPChrPosOnRef_chr_pos ON b141_SNPChrPosOnRef (chr, pos);
 
 -- CREATE TABLE [Population]                   -- Population is defined and submitted by submitter over their samples.
 -- (
