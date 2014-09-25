@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
             # No chrom & pos
             if record[1] in ('NotOn', 'Multi', 'Un'):
-                print '\t'.join([record[0], record[1]])
+                print '\t'.join([record[0], record[1], '', '', ''])
 
             # chrom == Pseudoautosomal Region (PAR)
             elif record[1] == 'PAR':
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
             # No pos
             elif record[2] == '':
-                print '\t'.join([record[0], record[1]])
+                print '\t'.join([record[0], record[1], '', '', ''])
 
             else:
                 allele = get_allele(str(record[1]), int(record[2])+1)                  # 0-based to 1-based
