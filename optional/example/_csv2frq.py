@@ -9,7 +9,7 @@ def _main():
     rs2freq = {}
     ref_allele = None
 
-    print '\t'.join(['CHR', 'A1', 'A2', 'MAF', 'NCHROBS'])
+    print '\t'.join(['CHR', 'SNP', 'A1', 'A2', 'MAF', 'NCHROBS'])
 
     for rec in csv.DictReader(fileinput.input(), delimiter='\t'):
         if not rs:
@@ -48,9 +48,10 @@ def _main():
 
             # TODO:
             CHR = '?'
+            SNP = rs if rs.startswith('rs') else 'rs{}'.format(rs)
             NCHROBS = '?'
 
-            print '\t'.join([CHR, A1, A2, MAF, NCHROBS])
+            print '\t'.join([CHR, SNP, A1, A2, MAF, NCHROBS])
 
             rs = None
             rs2freq = {}
