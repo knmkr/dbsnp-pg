@@ -5,17 +5,20 @@ Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
 
 ## Getting Started
 
-    $ # Fetch original dbSNP data from dbSNP FTP site
-    $ ./01_fetch_dbsnp.sh
-
-    $ # Create PostgreSQL database for dbSNP
+    $ # 0. Create PostgreSQL database for dbSNP
     $ createdb --owner=username dbsnp_b141
 
-    $ # Create PostgreSQL table for dbSNP
+    $ # 1. Fetch dbSNP data from dbSNP FTP site
+    $ ./01_fetch_dbsnp.sh
+
+    $ # 2. Create PostgreSQL table for dbSNP
     $ psql dbsnp_b141 username -f 02_drop_create_table.sql
 
-    $ # Import dbSNP data
+    $ # 3. Import dbSNP data into PostgreSQL table
     $ ./03_import_dbsnp.sh dbsnp_b141 username
+
+    $ # 4. Add constraints (index, etc.)
+    $ psql dbsnp_b141 username -f 04_add_constraints.sql dbsnp_b141 username
 
 
 ## Dependency
