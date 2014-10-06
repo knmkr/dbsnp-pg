@@ -1,5 +1,14 @@
 SELECT
-    rshigh, tmp_rs2current.rscurrent, ss_allele, substrand_reversed_flag, orien_rs2ref, allele, loc_pop_id, source, freq
+    rshigh,
+    -- tmp_rs2current.rscurrent,
+    -- ss_allele,
+    -- substrand_reversed_flag,
+    -- orien_rs2ref,
+    allele,
+    -- loc_pop_id,
+    -- source,
+    freq,
+    ref_allele
 FROM
     tmp_rs2current
     LEFT OUTER JOIN (
@@ -9,14 +18,18 @@ FROM
             substrand_reversed_flag,
             pos.orien AS orien_rs2ref,
             CASE
-              WHEN ss2rs.substrand_reversed_flag # pos.orien = B'1' THEN  -- TODO: bit
+              -- Check 2 reverse-flags:
+              -- 1. ss to rs
+              -- 2. rs to reference genome
+              WHEN ss2rs.substrand_reversed_flag # pos.orien = B'1' THEN
                   (SELECT allele FROM Allele WHERE allele_id = al.rev_allele_id)
               ELSE
                   al.allele
               END AS allele,
             po.loc_pop_id,
             source,
-            freq
+            freq,
+            pos.allele AS ref_allele
         FROM
             SNPSubSNPLink ss2rs
             JOIN tmp_rs2current ON tmp_rs2current.rscurrent = snp_id
@@ -24,10 +37,12 @@ FROM
             JOIN Population po ON af.pop_id = po.pop_id
             JOIN Allele al ON af.allele_id = al.allele_id
             JOIN dn_PopulationIndGrp pop2grp ON af.pop_id = pop2grp.pop_id
-            JOIN b141_snpchrposonref pos ON pos.snp_id = rscurrent
+            JOIN _b141_snpchrposonref_GRCh37p13 pos ON pos.snp_id = rscurrent
         WHERE
             ss2rs.snp_id = ANY(ARRAY(SELECT rscurrent FROM tmp_rs2current))
             AND pop2grp.ind_grp_name = 'Asian'
+
+            -- TODO: limit to 1 source for each SNP
 
             -- HapMap
             AND loc_pop_id = 'HapMap-JPT'  -- HapMap JPT (100? individuals)
