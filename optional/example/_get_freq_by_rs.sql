@@ -53,6 +53,7 @@ FROM
             -- AND loc_pop_id = 'pilot_1_CHB+JPT_low_coverage_panel'  -- 1000GENOMES JPT+CHB (60? individuals)
 
     ) freqs ON tmp_rs2current.rscurrent = freqs.rscurrent
+ORDER BY tmp_rs2current.id
 ;
 
 --   rshigh  | rscurrent | ss_allele | substrand_reversed_flag | orien_rs2ref | allele | loc_pop_id | source | freq

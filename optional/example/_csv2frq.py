@@ -23,7 +23,7 @@ def _main():
             rs2freq[rs].update({rec['allele']: rec['freq']})
             assert ref_allele == rec['ref_allele']
 
-        elif rs != rec['rshigh']:
+        if rs != rec['rshigh']:
             # output freq record in .frq format
             allele_count = len(rs2freq[rs])
 
@@ -53,8 +53,11 @@ def _main():
 
             print '\t'.join([CHR, SNP, A1, A2, MAF, NCHROBS])
 
-            rs = None
-            rs2freq = {}
+            # init freq record
+            rs = rec['rshigh']
+            rs2freq.clear()
+            rs2freq[rs] = {rec['allele']: rec['freq']}
+            ref_allele = rec['ref_allele']
 
 
 if __name__ == '__main__':
