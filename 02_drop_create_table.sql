@@ -123,6 +123,18 @@ CREATE TABLE b141_SNPChrPosOnRef (
 CREATE UNIQUE INDEX b141_SNPChrPosOnRef_ukey_rs ON b141_SNPChrPosOnRef (snp_id);
 CREATE INDEX b141_SNPChrPosOnRef_chr_pos ON b141_SNPChrPosOnRef (chr, pos);
 
+DROP TABLE IF EXISTS b141_SNPChrPosOnRef_GRCh37p13;
+CREATE TABLE b141_SNPChrPosOnRef_GRCh37p13 (
+       snp_id                    integer,
+       chr                       varchar(32)    not null,
+       pos                       integer,
+       orien                     bit,
+       neighbor_snp_list         integer,
+       isPAR                     varchar(1)     not null
+);
+CREATE UNIQUE INDEX b141_SNPChrPosOnRef_GRCh37p13_ukey_rs ON b141_SNPChrPosOnRef_GRCh37p13 (snp_id);
+CREATE INDEX b141_SNPChrPosOnRef_GRCh37p13_chr_pos ON b141_SNPChrPosOnRef_GRCh37p13 (chr, pos);
+
 -- CREATE TABLE [Population]                   -- Population is defined and submitted by submitter over their samples.
 -- (
 -- [pop_id] [int] NOT NULL ,                   -- unique dbSNP population id
