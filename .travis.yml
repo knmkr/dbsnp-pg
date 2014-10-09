@@ -1,0 +1,16 @@
+language: bash
+
+install:
+  - sudo apt-get install pgtap
+
+before_script:
+  - sudo -u postgres createuser -S -R -D -E -l dbsnp
+  - sudo -u postgres createdb -E UTF8 -O dbsnp -hlocalhost dbsnp
+  - psql -U dbsnp -hlocalhost -d dbsnp -f `pg_config --sharedir`/extension/pgtap--*.sql
+
+script:
+  - echo "test"
+
+notifications:
+  email:
+    - knmkr3gma@gmail.com
