@@ -4,10 +4,10 @@ test_db=dbsnp_b141_test_$RANDOM
 
 echo "[INFO] test_db: ${test_db}"
 echo "[INFO] prepare for test..."
-dropdb $test_db
+dropdb --if-exists $test_db
 createdb $test_db
-psql $test_db -f ../drop_create_table.sql
-../import_dbsnp.sh $test_db
+psql $test_db -f ../02_drop_create_table.sql
+../03_import_dbsnp.sh $test_db
 
 echo "[INFO] test get_freq_by_rs.sql ..."
 psql $test_db -f ../example/get_freq_by_rs.sql
