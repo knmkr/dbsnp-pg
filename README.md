@@ -82,8 +82,10 @@ or simply
 ## Unit Tests
 
 - Requirements
-  - PostgreSQL version: >8.4
   - PostgreSQL extension: [pgTAP (a unit testing framework for PostgreSQL)](http://pgtap.org/)
+  - [pg_prove (a command-line tool for running and harnessing pgTAP tests)](http://search.cpan.org/dist/TAP-Parser-SourceHandler-pgTAP/)
+
+To run tests:
 
 ```
 $ cd test
