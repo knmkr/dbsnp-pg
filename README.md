@@ -1,6 +1,6 @@
 # dbsnp-pg-min
 
-Minimal PostgreSQL schemes/functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+Minimal PostgreSQL schemes/functions for Human [9606] data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
 - NCBI dbSNP (a public archive for genetic variation) is distributed in MS SQL Server scheme.
 - We simply port original database scheme to PostgreSQL,
@@ -18,9 +18,9 @@ Minimal PostgreSQL schemes/functions for Human data in [NCBI dbSNP](http://www.n
 
 ## Dependency
 
-- PostgreSQL
-- nkf (TODO)
-- wget (TODO)
+- PostgreSQL >8.4
+- nkf   # TODO
+- wget  # TODO
 
 
 ## SQL example
@@ -79,7 +79,19 @@ or simply
     121909001
 
 
-## Notice
+## Unit Tests
+
+- Requirements
+  - PostgreSQL version: >8.4
+  - PostgreSQL extension: [pgTAP (a unit testing framework for PostgreSQL)](http://pgtap.org/)
+
+```
+$ cd test
+$ ./test.sh
+```
+
+
+## Notes
 
 - Only human [9606] data is supported.
 - Build versions of dbSNP and human reference genome assembly are:
