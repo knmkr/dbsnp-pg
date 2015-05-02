@@ -9,20 +9,11 @@ Minimal PostgreSQL schemes/functions for Human data in [NCBI dbSNP](http://www.n
 
 ## Getting Started
 
-    $ # 0. Create PostgreSQL database for dbSNP
-    $ createdb --owner=username dbsnp_b141
-
-    $ # 1. Fetch dbSNP data from dbSNP FTP site
-    $ ./01_fetch_dbsnp.sh
-
-    $ # 2. Create PostgreSQL table for dbSNP
-    $ psql dbsnp_b141 username -f 02_drop_create_table.sql
-
-    $ # 3. Import dbSNP data into PostgreSQL table
-    $ ./03_import_dbsnp.sh dbsnp_b141 username
-
-    $ # 4. Add constraints (index, etc.)
-    $ psql dbsnp_b141 username -f 04_add_constraints.sql dbsnp_b141 username
+    $ createdb --owner=username dbsnp_b141           # 0. Create new PostgreSQL database for dbSNP
+    $ ./01_fetch_dbsnp.sh                            # 1. Fetch dbSNP data from dbSNP FTP site
+    $ ./02_drop_create_table.sh dbsnp_b141 username  # 2. Create PostgreSQL tables for dbSNP
+    $ ./03_import_dbsnp.sh      dbsnp_b141 username  # 3. Import dbSNP data into PostgreSQL tables
+    $ ./04_add_constraints.sh   dbsnp_b141 username  # 4. Add constraints (index, etc.) to tables
 
 
 ## Dependency
