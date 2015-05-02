@@ -1,6 +1,10 @@
 # dbsnp-pg-min
 
-Minimal PostgreSQL schemes for dbSNP. (dbSNP is written in MS SQL Server)
+Minimal PostgreSQL schemes/functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+
+- NCBI dbSNP (a public archive for genetic variation) is distributed in MS SQL Server scheme.
+- We simply port original database scheme to PostgreSQL,
+- and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671) in command line interface.
 
 
 ## Getting Started
@@ -83,7 +87,8 @@ rs# = 332
 
 ## Notice
 
-Versions of dbSNP and human reference genome.
+- Only human [9606] data is supported.
+- Build versions of dbSNP and human reference genome assembly are:
 
 | database name             | dbSNP | reference genome |
 |---------------------------|-------|------------------|
