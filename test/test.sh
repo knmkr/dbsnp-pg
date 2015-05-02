@@ -15,6 +15,9 @@ cd test
 echo "[INFO] test get_freq_by_rs.sql ..."
 psql $test_db -f ../example/get_freq_by_rs.sql
 
+#
+psql $test_db -c "SELECT get_current_rs(332);"
+
 echo "[INFO] clean up ${test_db} ..."
 dropdb $test_db
 
