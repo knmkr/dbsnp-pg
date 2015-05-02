@@ -8,15 +8,18 @@ optional=(SnpChrCode SNPAlleleFreq RsMergeArch b141_SNPChrPosOnRef b141_SNPChrPo
 
 target=${minimal[@]}
 
+mkdir -p data
+cd data
+
 for table in ${target[@]}; do
     for filename in ${table}.bcp.gz*; do
         echo "[INFO] Importing ${filename} into ${table} ..."
         gzip -d -c ${filename} \
             | tr -d '\15' \
             | nkf -Lu \
-            | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''"
+            | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
 
-        psql $PG_DB $PG_USER -c "SELECT * FROM ${table} LIMIT 5"
+        psql $PG_DB $PG_USER -c "SELECT * FROM ${table} LIMIT 1" -q
     done;
 done;
 

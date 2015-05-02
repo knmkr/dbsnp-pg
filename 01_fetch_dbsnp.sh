@@ -10,6 +10,9 @@ dbsnp="141"
 # ref="_GRCh37p13"
 # dbsnp="141"
 
+mkdir -p data
+cd data
+
 echo "[INFO] Fetching data..."
 # shared
 wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz
