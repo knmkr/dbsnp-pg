@@ -70,19 +70,22 @@ rs# = 10, population = Asian
 
 ### Current rs\# for given rs\# :
 
-rs# = 332
-
     $ psql dbsnp_b141 username -c "
     SELECT
-        rshigh,rscurrent,orien2current
+        rshigh,rscurrent
     FROM
         rsmergearch
     WHERE rshigh = ANY(ARRAY[330, 331, 332]);
     "
-     rshigh | rscurrent | orien2current
-    --------+-----------+---------------
-        332 | 121909001 |             0
+     rshigh | rscurrent
+    --------+-----------
+        332 | 121909001
     (1 row)
+
+or simply
+
+    $ psql dbsnp_b141 username -c "SELECT get_current_rs(332);"
+    121909001
 
 
 ## Notice
