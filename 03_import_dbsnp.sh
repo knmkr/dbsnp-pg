@@ -3,17 +3,16 @@
 PG_DB=$1
 PG_USER=$2
 
-minimal=(Allele Population AlleleFreqBySsPop dn_PopulationIndGrp SNPSubSNPLink)
-optional=(SnpChrCode SNPAlleleFreq RsMergeArch b141_SNPChrPosOnRef b141_SNPChrPosOnRef_GRCh37p13)
+minimal=(Allele SnpChrCode RsMergeArch b141_SNPChrPosOnRef b141_SNPChrPosOnRef_GRCh37p13 Population AlleleFreqBySsPop SNPSubSNPLink dn_PopulationIndGrp SNPAlleleFreq)
+optional=()
 
 target=${minimal[@]}
 
-mkdir -p data
 cd data
 
 for table in ${target[@]}; do
-    for filename in ${table}.bcp.gz*; do
-        echo "[INFO] Importing ${filename} into ${table} ..."
+    for filename in ${table}.bcp.gz; do
+        echo `date +"%Y-%m-%d %H:%M:%S"` "[INFO] Importing ${filename} into ${table} ..."
         gzip -d -c ${filename} \
             | tr -d '\15' \
             | nkf -Lu \
@@ -23,4 +22,4 @@ for table in ${target[@]}; do
     done;
 done;
 
-echo "[INFO] Done"
+echo `date +"%Y-%m-%d %H:%M:%S"` "[INFO] Done"
