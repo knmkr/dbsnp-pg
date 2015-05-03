@@ -25,6 +25,8 @@ cd test; pg_prove -d $test_db .
 # #
 # psql $test_db -c "SELECT get_current_rs(332);"
 
+psql $test_db -c "\di"
+
 echo "[INFO] clean up ${test_db} ..."
 dropdb $test_db
 
