@@ -78,7 +78,7 @@ CREATE TABLE RsMergeArch (
        last_updated_time timestamp,
        rsCurrent         integer        not null,
        orien2Current     bit,
-       sometext1         text
+       comment           varchar(255)
 );
 
 -- CREATE TABLE [b141_SNPChrPosOnRef]  -- This table stores the chromosome position(0 based) of uniquely mapped snp on NCBI reference assembly. It has one
