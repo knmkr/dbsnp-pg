@@ -98,11 +98,13 @@ $ ./test.sh
 - Only human [9606] data is supported.
 - Build versions of dbSNP and human reference genome assembly are:
 
-| database name             | dbSNP | reference genome |
-|---------------------------|-------|------------------|
-| human_9606                | b141  | GRCh38           |
-| human_9606_b141_GRCh38    | b141  | GRCh38           |
-| human_9606_b141_GRCh37p13 | b141  | GRCh37p13        |
+| database name             | dbSNP    | reference genome |
+|---------------------------+----------+------------------|
+| human_9606                | (latest) | (latest)         |
+| human_9606_b142_GRCh38    | b142     | GRCh38           |
+| human_9606_b142_GRCh37p13 | b142     | GRCh37p13        |
+| human_9606_b141_GRCh38    | b141     | GRCh38           |
+| human_9606_b141_GRCh37p13 | b141     | GRCh37p13        |
 
 
 ## Lisence
