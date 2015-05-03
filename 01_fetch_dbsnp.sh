@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO: choose dbsnp and reference versions
+#
 # # GRCh38
 # database="human_9606"
 # ref=""
@@ -14,26 +16,18 @@ mkdir -p data
 cd data
 
 echo "[INFO] Fetching data..."
-# shared
-wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}  # 63.1 MB
 
-# rs
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/RsMergeArch.bcp.gz{,.md5}  # 131 MB
-
-# allele freq by ss
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/Population.bcp.gz{,.md5}  # 148 kB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/AlleleFreqBySsPop.bcp.gz{,.md5}  # 1.1 GB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/dn_PopulationIndGrp.bcp.gz{,.md5}  # 550 B
-
-# ss <-> rs
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPSubSNPLink.bcp.gz{,.md5}  # 1.8 GB
-
-# position on reference genome
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                  # 63.1 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                     # 131 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/Population.bcp.gz{,.md5}                      # 148 kB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/AlleleFreqBySsPop.bcp.gz{,.md5}               # 1.1 GB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/dn_PopulationIndGrp.bcp.gz{,.md5}             # 550 B
+wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPSubSNPLink.bcp.gz{,.md5}                   # 1.8 GB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/b${dbsnp}_SNPChrPosOnRef${ref}.bcp.gz{,.md5}  # 481 MB
 
 # optional
-# wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}  # 767 B
-# wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPAlleleFreq.bcp.gz{,.md5}  # 483 MB
+# wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                              # 767 B
+# wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPAlleleFreq.bcp.gz{,.md5}                   # 483 MB
 
 echo "[INFO] Checking md5..."
 
