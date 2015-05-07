@@ -7,10 +7,10 @@ before_install:
   - sudo /etc/init.d/postgresql stop
   - sudo /etc/init.d/postgresql start 9.1
   - which pg_prove
-  - pg_prove -version
+  - pg_prove --version
   - sudo cpan TAP::Parser::SourceHandler::pgTAP
   - which pg_prove
-  - pg_prove -version
+  - pg_prove --version
 
 before_script:
   - sudo -u postgres createuser -S -R -D -E -l dbsnp
