@@ -1,20 +1,16 @@
 language: bash
-addons:
-    postgresql: "9.3"
 
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install nkf -qq
   - sudo apt-get install pgtap
   - sudo /etc/init.d/postgresql stop
-  - sudo /etc/init.d/postgresql start 9.3
+  - sudo /etc/init.d/postgresql start 9.1
 
 before_script:
   - sudo -u postgres createuser -S -R -D -E -l dbsnp
   - sudo -u postgres createdb -E UTF8 -O dbsnp -hlocalhost test_dbsnp_pg_min
-  - sudo ls -R /usr/share/postgresql
-  - sudo ls -R /usr/share/postgresql/9.3/extension
-  - psql -U dbsnp -hlocalhost -d test_dbsnp_pg_min -f /usr/share/postgresql/9.3/extension/pgtap--*.sql
+  - psql -U dbsnp -hlocalhost -d test_dbsnp_pg_min -f /usr/share/postgresql/9.1/extension/pgtap--*.sql
   - cd test; ./ci/before_script.sh test_dbsnp_pg_min dbsnp
 
 script:
