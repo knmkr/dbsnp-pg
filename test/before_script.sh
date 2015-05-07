@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-test_db=test_dbsnp_$RANDOM
+test_db=$1
 
 echo "[INFO] test_db: ${test_db}"
 echo "[INFO] prepare for test..."
@@ -13,6 +13,7 @@ cd test
   ../03_import_dbsnp.sh     $test_db
 cd ..
   ./04_add_constraints.sh   $test_db
+cd test
 
 echo -n "[INFO] "; type pg_prove
 if [ $? != 0 ]; then
@@ -20,11 +21,4 @@ if [ $? != 0 ]; then
   exit 1
 fi
 
-cd test
-  psql $test_db -c "CREATE EXTENSION IF NOT EXISTS pgtap;"
-  pg_prove -d $test_db .
-
-  echo "[INFO] clean up ${test_db} ..."
-  dropdb $test_db
-
-  echo "[INFO] done"
+psql $test_db -c "CREATE EXTENSION IF NOT EXISTS pgtap;"
