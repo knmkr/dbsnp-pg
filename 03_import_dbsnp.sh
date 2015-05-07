@@ -19,7 +19,7 @@ for table in ${target[@]}; do
             | nkf -Lu \
             | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
 
-        psql $PG_DB $PG_USER -c "SELECT * FROM ${table} LIMIT 1" -q
+        # psql $PG_DB $PG_USER -c "SELECT * FROM ${table} LIMIT 1" -q
     done;
 done;
 
