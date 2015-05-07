@@ -4,7 +4,7 @@ test_db=$1
 
 echo "[INFO] test_db: ${test_db}"
 echo "[INFO] prepare for test..."
-dropdb --if-exists $test_db
+# dropdb --if-exists $test_db
 createdb $test_db
 
 cd ..
