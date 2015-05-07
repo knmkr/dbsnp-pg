@@ -12,10 +12,10 @@ before_install:
 before_script:
   - sudo -u postgres createuser -S -R -D -E -l dbsnp
   - sudo -u postgres createdb -E UTF8 -O dbsnp -hlocalhost dbsnp
-  - cd test; ./before_script.sh test_dbsnp_pg_min
+  - cd test; ./ci/before_script.sh test_dbsnp_pg_min
 
 script:
-  - cd test; ./script.sh test_dbsnp_pg_min
+  - cd test; ./ci/script.sh test_dbsnp_pg_min
 
 after_script:
-  - cd test; ./after_script.sh test_dbsnp_pg_min
+  - cd test; ./ci/after_script.sh test_dbsnp_pg_min
