@@ -5,8 +5,8 @@ test_user=$2
 
 echo "[INFO] test_db: ${test_db}"
 echo "[INFO] prepare for test..."
-# dropdb --if-exists $test_db
-# createdb $test_db
+dropdb --if-exists $test_db
+createdb -E UTF8 -O $test_user $test_db
 
 cd ..
   ./02_drop_create_table.sh $test_db $test_user
