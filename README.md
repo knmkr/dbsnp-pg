@@ -1,6 +1,6 @@
 # dbsnp-pg-min
 
-Minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+[dbsnp-pg-min](https://github.com/knmkr/dbsnp-pg-min) is a minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
 - NCBI dbSNP (a public archive for genetic variation) is distributed in MS SQL Server schema.
 - We simply port minimal original MS SQL Server schema to PostgreSQL,
@@ -41,7 +41,7 @@ Results:
 (1 row)
 ```
 
-Stored Finction:
+Stored Function:
 
 ```
 SELECT get_pos_by_rs(333333);
