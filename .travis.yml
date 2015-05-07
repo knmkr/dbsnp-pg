@@ -10,7 +10,7 @@ before_install:
 before_script:
   - sudo -u postgres createuser -S -R -D -E -l dbsnp
   - sudo -u postgres createdb -E UTF8 -O dbsnp -hlocalhost test_dbsnp_pg_min
-  - psql -U dbsnp -hlocalhost -d test_dbsnp_pg_min -f `pg_config --sharedir`/extension/pgtap--*.sql
+  - psql -U dbsnp -hlocalhost -d test_dbsnp_pg_min -f /usr/share/postgresql/9.1/extension/pgtap--*.sql
   - cd test; ./ci/before_script.sh test_dbsnp_pg_min dbsnp
 
 script:
