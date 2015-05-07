@@ -1,12 +1,11 @@
 # dbsnp-pg-min
 
-[dbsnp-pg-min](https://github.com/knmkr/dbsnp-pg-min) is a minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+Minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
 - NCBI dbSNP (a public archive for genetic variation) is distributed in MS SQL Server schema.
 - We simply port minimal original MS SQL Server schema to PostgreSQL,
 - and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671) in command line interface.
 
-[![Build Status](https://travis-ci.org/knmkr/dbsnp-pg-min.svg?branch=master)](https://travis-ci.org/knmkr/dbsnp-pg-min)
 
 ## Getting Started
 
@@ -19,9 +18,9 @@
 
 ## Usage example
 
-### Get chrom. and position for given rs\#
+### Get chrom and position for given rs\#.
 
-SQL
+SQL:
 
 ```
 SELECT
@@ -32,6 +31,8 @@ WHERE
     snp_id = 333333;
 ```
 
+Results:
+
 ```
  snp_id | chr |    pos
 --------+-----+-----------
@@ -39,19 +40,21 @@ WHERE
 (1 row)
 ```
 
-Stored function
+Stored Finction:
 
 ```
 SELECT get_pos_by_rs(333333);
 ```
 
+Results:
+
 ```
 (3,124609540)
 ```
 
-### Get current rs\# for given rs\#
+### Get current rs\# for given rs\#.
 
-SQL
+SQL:
 
 ```
 SELECT
@@ -61,18 +64,22 @@ FROM
 WHERE rshigh = ANY(ARRAY[330, 331, 332]);
 ```
 
+Results:
+
 ```
  rshigh | rscurrent
 --------+-----------
- 332 | 121909001
+    332 | 121909001
 (1 row)
 ```
 
-Stored function
+Stored Function:
 
 ```
 SELECT get_current_rs(332);
 ```
+
+Results:
 
 ```
 121909001
@@ -85,7 +92,7 @@ To run tests:
 
 ```
 $ cd test
-$ ./test.sh
+$ ./run-test.sh $test_db $test_user
 ```
 
 Requirements:
