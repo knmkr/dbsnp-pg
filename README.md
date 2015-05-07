@@ -18,9 +18,9 @@ Minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www
 
 ## Usage example
 
-### Get chrom. and position for given rs\#
+### Get chrom and position for given rs\#.
 
-SQL
+SQL:
 
 ```
 SELECT
@@ -31,6 +31,8 @@ WHERE
     snp_id = 333333;
 ```
 
+Results:
+
 ```
  snp_id | chr |    pos
 --------+-----+-----------
@@ -38,19 +40,21 @@ WHERE
 (1 row)
 ```
 
-Stored function
+Stored Finction:
 
 ```
 SELECT get_pos_by_rs(333333);
 ```
 
+Results:
+
 ```
 (3,124609540)
 ```
 
-### Get current rs\# for given rs\#
+### Get current rs\# for given rs\#.
 
-SQL
+SQL:
 
 ```
 SELECT
@@ -60,18 +64,22 @@ FROM
 WHERE rshigh = ANY(ARRAY[330, 331, 332]);
 ```
 
+Results:
+
 ```
  rshigh | rscurrent
 --------+-----------
- 332 | 121909001
+    332 | 121909001
 (1 row)
 ```
 
-Stored function
+Stored Function:
 
 ```
 SELECT get_current_rs(332);
 ```
+
+Results:
 
 ```
 121909001
@@ -84,7 +92,7 @@ To run tests:
 
 ```
 $ cd test
-$ ./test.sh
+$ ./run-test.sh $test_db $test_user
 ```
 
 Requirements:

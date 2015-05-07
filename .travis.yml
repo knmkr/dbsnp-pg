@@ -1,16 +1,23 @@
 language: bash
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install nkf
+  - sudo apt-get update -qq
+  - sudo apt-get install nkf -qq
   - sudo apt-get install pgtap
   - sudo /etc/init.d/postgresql stop
-  - sudo /etc/init.d/postgresql start 9.4
+  - sudo /etc/init.d/postgresql start 9.1
+  - yes '' | sudo cpan -fi TAP::Parser::SourceHandler::pgTAP
+  - export PATH=/home/travis/perl5/bin:$PATH
+  - pg_prove --version
 
 before_script:
-  - sudo -u postgres createuser -S -R -D -E -l dbsnp
-  - sudo -u postgres createdb -E UTF8 -O dbsnp -hlocalhost dbsnp
-  - cd test; ./test.sh
+  - createdb --owner=travis test_db
+  - for x in /usr/share/postgresql/9.1/extension/pgtap--*.sql; do psql test_db -f $x; done
+  - cd test
+  - ./ci/before_script.sh test_db travis
 
 script:
-  - echo "ok"
+  - ./ci/script.sh        test_db travis
+
+after_script:
+  - ./ci/after_script.sh  test_db travis
