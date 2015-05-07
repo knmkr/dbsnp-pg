@@ -106,9 +106,9 @@ Requirements:
 | human_9606_b141_GRCh37p13 | b141     | GRCh37p13        |
 
 
-## Lisence
+## License
 
-See LISENCE
+See LICENSE
 
 
 ## Author
