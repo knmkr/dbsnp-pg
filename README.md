@@ -18,7 +18,9 @@ Minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www
 
 ## Usage example
 
-### Get chromosome and position for given rs\#
+### Get chrom. and position for given rs\#
+
+SQL
 
 ```
 SELECT
@@ -27,20 +29,28 @@ FROM
     b141_snpchrposonref
 WHERE
     snp_id = 333333;
---  snp_id | chr |    pos
--- --------+-----+-----------
---  333333 | 3   | 124609540
--- (1 row)
 ```
 
-or simply
+```
+ snp_id | chr |    pos
+--------+-----+-----------
+ 333333 | 3   | 124609540
+(1 row)
+```
+
+Stored function
 
 ```
 SELECT get_pos_by_rs(333333);
--- (3,124609540)
+```
+
+```
+(3,124609540)
 ```
 
 ### Get current rs\# for given rs\#
+
+SQL
 
 ```
 SELECT
@@ -48,14 +58,23 @@ SELECT
 FROM
    rsmergearch
 WHERE rshigh = ANY(ARRAY[330, 331, 332]);
---  rshigh | rscurrent
--- --------+-----------
---     332 | 121909001
--- (1 row)
+```
+
+```
+ rshigh | rscurrent
+--------+-----------
+ 332 | 121909001
+(1 row)
+```
+
+Stored function
 
 ```
 SELECT get_current_rs(332);
--- 121909001
+```
+
+```
+121909001
 ```
 
 
