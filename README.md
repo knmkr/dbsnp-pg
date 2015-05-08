@@ -1,5 +1,7 @@
 # dbsnp-pg-min
 
+[![Join the chat at https://gitter.im/knmkr/dbsnp-pg-min](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/knmkr/dbsnp-pg-min?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [dbsnp-pg-min](https://github.com/knmkr/dbsnp-pg-min) is a minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
 - NCBI dbSNP (a public archive for genetic variation) is distributed in MS SQL Server schema.
