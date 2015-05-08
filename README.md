@@ -21,69 +21,29 @@
 
 ### Get chrom and position for given rs\#.
 
-SQL:
-
-```
-SELECT
-    snp_id, chr, pos
-FROM
-    b141_snpchrposonref
-WHERE
-    snp_id = 333333;
-```
-
-Results:
-
-```
- snp_id | chr |    pos
---------+-----+-----------
- 333333 | 3   | 124609540
-(1 row)
-```
-
-Stored Function:
-
 ```
 SELECT get_pos_by_rs(333333);
-```
-
-Results:
-
-```
 (3,124609540)
 ```
 
 ### Get current rs\# for given rs\#.
 
-SQL:
-
-```
-SELECT
-   rshigh, rscurrent
-FROM
-   rsmergearch
-WHERE rshigh = ANY(ARRAY[330, 331, 332]);
-```
-
-Results:
-
-```
- rshigh | rscurrent
---------+-----------
-    332 | 121909001
-(1 row)
-```
-
-Stored Function:
-
 ```
 SELECT get_current_rs(332);
-```
-
-Results:
-
-```
 121909001
+```
+
+### Get allele frequency for given rs\#.
+
+```
+SELECT * FROM get_tbl_freq_by_rs(671);
+ snp_id | subsnp_id |             loc_pop_id             |    ind_grp_name     | source | rs_allele |   freq
+--------+-----------+------------------------------------+---------------------+--------+-----------+-----------
+    671 |   3177110 | MITOGPOP6                          | multiple            | IG     | A         | 0.0645161
+    671 |   3177110 | MITOGPOP6                          | multiple            | IG     | G         |  0.935484
+    671 |   5586234 | AFR1                               |                     | AF     | G         |         1
+    671 |   5586234 | AFR1                               |                     | AF     | A         |         0
+...
 ```
 
 
