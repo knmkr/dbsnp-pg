@@ -7,7 +7,6 @@
 - and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671) in command line interface.
 
 [![Build Status](https://travis-ci.org/knmkr/dbsnp-pg-min.svg?branch=master)](https://travis-ci.org/knmkr/dbsnp-pg-min)
-[![Join the chat at https://gitter.im/knmkr/dbsnp-pg-min](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/knmkr/dbsnp-pg-min?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Getting Started
 
