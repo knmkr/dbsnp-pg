@@ -3,8 +3,7 @@
 PG_DB=$1
 PG_USER=$2
 
-# TODO: choose dbsnp and reference versions
-minimal=(Allele SnpChrCode RsMergeArch b141_SNPChrPosOnRef b141_SNPChrPosOnRef_GRCh37p13 Population AlleleFreqBySsPop SNPSubSNPLink dn_PopulationIndGrp SNPAlleleFreq)
+minimal=(Allele SnpChrCode RsMergeArch SNPChrPosOnRef Population AlleleFreqBySsPop SNPSubSNPLink dn_PopulationIndGrp SNPAlleleFreq)
 optional=()
 
 target=${minimal[@]}

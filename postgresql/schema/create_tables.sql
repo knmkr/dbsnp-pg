@@ -76,7 +76,7 @@ CREATE TABLE RsMergeArch (
        orien             bit,
        create_time       timestamp,
        last_updated_time timestamp,
-       rsCurrent         integer        not null,
+       rsCurrent         integer,
        orien2Current     bit,
        comment           varchar(255)
 );
@@ -95,18 +95,8 @@ CREATE TABLE RsMergeArch (
 -- [neighbor_snp_list] [int] NULL ,    -- Internal use.
 -- [isPAR] [varchar](1) NOT NULL       -- The snp is in Pseudoautosomal Region (PAR) region when isPAR value is 'y'.
 -- )
-DROP TABLE IF EXISTS b141_SNPChrPosOnRef;
-CREATE TABLE b141_SNPChrPosOnRef (
-       snp_id                    integer,
-       chr                       varchar(32)    not null,
-       pos                       integer,
-       orien                     bit,
-       neighbor_snp_list         integer,
-       isPAR                     varchar(1)     not null
-);
-
-DROP TABLE IF EXISTS b141_SNPChrPosOnRef_GRCh37p13;
-CREATE TABLE b141_SNPChrPosOnRef_GRCh37p13 (
+DROP TABLE IF EXISTS SNPChrPosOnRef;
+CREATE TABLE SNPChrPosOnRef (
        snp_id                    integer,
        chr                       varchar(32)    not null,
        pos                       integer,

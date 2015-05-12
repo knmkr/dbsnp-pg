@@ -24,12 +24,8 @@ CLUSTER RsMergeArch USING i_rsH;
 CREATE INDEX i_rsL ON RsMergeArch (rsLow);
 
 --
-CREATE UNIQUE INDEX b141_SNPChrPosOnRef_ukey_rs ON b141_SNPChrPosOnRef (snp_id);
-CREATE INDEX b141_SNPChrPosOnRef_chr_pos ON b141_SNPChrPosOnRef (chr, pos);
-
---
-CREATE UNIQUE INDEX b141_SNPChrPosOnRef_GRCh37p13_ukey_rs ON b141_SNPChrPosOnRef_GRCh37p13 (snp_id);
-CREATE INDEX b141_SNPChrPosOnRef_GRCh37p13_chr_pos ON b141_SNPChrPosOnRef_GRCh37p13 (chr, pos);
+CREATE UNIQUE INDEX SNPChrPosOnRef_ukey_rs ON SNPChrPosOnRef (snp_id);
+CREATE INDEX SNPChrPosOnRef_chr_pos ON SNPChrPosOnRef (chr, pos);
 
 -- CREATE NONCLUSTERED INDEX [i_handle_loc_pop_id_upp] ON [Population] ([handle] ASC,[loc_pop_id_upp] ASC)
 -- CREATE NONCLUSTERED INDEX [i_handle_loc_pop_id] ON [Population] ([handle] ASC,[loc_pop_id] ASC)
