@@ -74,6 +74,11 @@ Requirements:
 | human_9606_b141_GRCh38    | b141     | GRCh38           |
 | human_9606_b141_GRCh37p13 | b141     | GRCh37p13        |
 
+If you want to specify the versions, set `-d` and `-r` options in `01_fetch_dbsnp.sh`:
+
+```
+$ ./01_fetch_dbsnp.sh -d b141 -r GRCh37p13
+```
 
 ## License
 
