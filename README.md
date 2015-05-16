@@ -77,9 +77,9 @@ Requirements:
 
 ## License
 
-See LICENSE
+See `LICENSE.txt`
 
 
 ## Author
 
-@knmkr
+[@knmkr](https://github.com/knmkr)
