@@ -80,6 +80,13 @@ If you want to specify the versions, set `-d` and `-r` options in `01_fetch_dbsn
 $ ./01_fetch_dbsnp.sh -d b141 -r GRCh37p13
 ```
 
+
+## Requirements
+
+- PostgreSQL (>9.3 is preferred)
+- Bash >4.x
+
+
 ## License
 
 See `LICENSE.txt`
