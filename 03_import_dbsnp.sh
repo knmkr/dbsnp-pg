@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e -o pipefail
-
 PG_DB=$1
 PG_USER=$2
 
