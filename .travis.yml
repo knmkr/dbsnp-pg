@@ -13,11 +13,10 @@ before_install:
 before_script:
   - createdb --owner=travis test_db
   - for x in /usr/share/postgresql/9.1/extension/pgtap--*.sql; do psql test_db -f $x; done
-  - cd test
-  - ./ci/before_script.sh test_db travis
+  - ./test/ci/before_script.sh test_db travis $PWD
 
 script:
-  - ./ci/script.sh        test_db travis
+  - ./test/ci/script.sh        test_db travis $PWD
 
 after_script:
-  - ./ci/after_script.sh  test_db travis
+  - ./test/ci/after_script.sh  test_db travis $PWD

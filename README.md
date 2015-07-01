@@ -10,11 +10,18 @@
 
 ## Getting Started
 
-    $ createdb --owner=username dbsnp_b141           # 0. Create new PostgreSQL database for dbSNP
-    $ ./01_fetch_dbsnp.sh                            # 1. Fetch dbSNP data from dbSNP FTP site
-    $ ./02_drop_create_table.sh dbsnp_b141 username  # 2. Create PostgreSQL tables for dbSNP
-    $ ./03_import_dbsnp.sh      dbsnp_b141 username  # 3. Import dbSNP data into PostgreSQL tables
-    $ ./04_add_constraints.sh   dbsnp_b141 username  # 4. Add constraints (index, etc.) to tables
+    # 0. Create new PostgreSQL database for dbSNP
+    $ createdb --owner=username dbsnp_b141
+
+    # 1. Fetch dbSNP data from dbSNP FTP site
+    $ ./01_fetch_data.sh $PWD/data
+
+    # 2. Create PostgreSQL tables for dbSNP
+    $ ./02_drop_create_table.sh dbsnp_b141 username $PWD
+
+    # 3. Import dbSNP data into PostgreSQL tables,
+    #    and add constraints (index, etc.) to tables
+    $ ./03_import_data.sh dbsnp_b141 username $PWD $PWD/data
 
 
 ## Usage example

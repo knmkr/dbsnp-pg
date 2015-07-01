@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+DATA_DIR=$1
+
 dbsnp_builds=("b142" "b141")
 reference_genome_builds=("GRCh38" "GRCh37p13")
 
@@ -36,8 +38,8 @@ elif ! [[ ${reference_genome_builds[*]} =~ "${ref}" ]]; then
   usage_exit
 fi
 
-mkdir -p data
-cd data
+mkdir -p ${DATA_DIR}
+cd ${DATA_DIR}
 
 database="human_9606_${dbsnp}_${ref}"
 echo "[INFO] Fetching data for ${database}..."
