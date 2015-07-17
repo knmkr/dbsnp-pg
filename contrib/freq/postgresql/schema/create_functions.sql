@@ -2,7 +2,7 @@ DROP FUNCTION IF EXISTS get_tbl_allele_freq_by_rs_history(
   _rs int[],
   OUT snp_id int,
   OUT snp_current int,
-  OUT ref varchar,
+  OUT ref varchar[],
   OUT alt varchar[],
   OUT freq real[]
 );
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION get_tbl_allele_freq_by_rs_history(
   _rs int[],
   OUT snp_id int,
   OUT snp_current int,
-  OUT ref varchar,
+  OUT ref varchar[],
   OUT alt varchar[],
   OUT freq real[]
 ) RETURNS SETOF RECORD AS $$
