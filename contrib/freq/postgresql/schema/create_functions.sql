@@ -29,23 +29,25 @@ BEGIN
   freq AS (
       SELECT
           f.snp_id,
-          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE f.snp_id END AS snp_current,
-          f.ref,
-          f.alt,
-          freq_eas -- FIXME
+          max(CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE f.snp_id END) AS snp_current,
+          array_agg(f.ref) as ref,
+          array_agg(f.alt) as alt,
+          array_agg(freq_eas) as freq_eas
       FROM
           allelefreqin1000genomesphase3_b37 f
           LEFT JOIN rsmergearch m ON f.snp_id = m.rshigh
+      GROUP BY
+          f.snp_id
   )
   SELECT
       query.snp_id,
-      f.snp_current,
-      f.ref,
-      f.alt,
-      freq_eas
+      freq.snp_current,
+      freq.ref,
+      freq.alt,
+      freq.freq_eas
   FROM
       query
-      LEFT JOIN freq f ON query.snp_current = f.snp_current
+      LEFT JOIN freq ON query.snp_current = freq.snp_current
   );
   --
   RETURN;
