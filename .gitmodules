@@ -1,0 +1,3 @@
+[submodule "contrib/freq/script/py-vcf-parser"]
+	path = contrib/freq/script/py-vcf-parser
+	url = https://github.com/knmkr/py-vcf-parser.git
