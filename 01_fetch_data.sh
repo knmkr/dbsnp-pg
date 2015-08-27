@@ -1,25 +1,35 @@
 #!/usr/bin/env bash
 
-DATA_DIR=$1
-
 dbsnp_builds=("b142" "b141")
-reference_genome_builds=("GRCh38" "GRCh37p13")
+reference_genome_builds=("GRCh38" "GRCh37")
 
 usage_exit() {
   echo
-  echo "Usage: $0 [-d dbsnp_build] [-r reference_genome_build]"
+  echo "Usage: $0 [-d dbsnp_build] [-r reference_genome_build] data_dir"
   echo
   echo "-d dbSNP build version. Set one from (${dbsnp_builds[@]}). Default: ${dbsnp_builds[0]}"
   echo "-r reference genome build version. Set one from (${reference_genome_builds[@]}). Default: ${reference_genome_builds[0]}"
   exit 1
 }
 
-while getopts d:r: OPT
-do
-  case $OPT in
-    d)  dbsnp=$OPTARG
+in_array() {
+  local array="$1[@]"
+  local seeking=$2
+  local in=1
+  for element in "${!array}"; do
+    if [[ $element == $seeking ]]; then
+      in=0
+      break
+    fi
+  done
+  return $in
+}
+
+while getopts ":d:r:" OPT; do
+  case "${OPT}" in
+    d)  dbsnp=${OPTARG}
         ;;
-    r)  ref=$OPTARG
+    r)  ref=${OPTARG}
         ;;
     \?) usage_exit
         ;;
@@ -27,19 +37,19 @@ do
 done
 shift $((OPTIND - 1))
 
+# Defaults
 : ${dbsnp:=${dbsnp_builds[0]}}
 : ${ref:=${reference_genome_builds[0]}}
 
-if ! [[ ${dbsnp_builds[*]} =~ "${dbsnp}" ]]; then
-  echo "[ERROR] Invalid value for option -d. Not supported dbSNP build."
-  usage_exit
-elif ! [[ ${reference_genome_builds[*]} =~ "${ref}" ]]; then
-  echo "[ERROR] Invalid value for option -r. Not supported reference genome build."
-  usage_exit
-fi
+in_array $dbsnp_build $dbsnp && echo ok || usage_exit
+in_array $reference_genome_build $ref && echo ok|| usage_exit
 
-mkdir -p ${DATA_DIR}
-cd ${DATA_DIR}
+data_dir=$1
+if [ -z "${data_dir}" ]; then
+    usage_exit
+fi
+mkdir -p ${data_dir}
+cd ${data_dir}
 
 database="human_9606_${dbsnp}_${ref}"
 echo "[INFO] Fetching data for ${database}..."
@@ -51,9 +61,9 @@ wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/dn_Pop
 wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPSubSNPLink.bcp.gz{,.md5}                   # 1.8 GB
 
 declare -A _SNPChrPosOnRef=( \
-  ["human_9606_b141_GRCh37p13"]="b141_SNPChrPosOnRef_GRCh37p13" \
+  ["human_9606_b141_GRCh37"]="b141_SNPChrPosOnRef_GRCh37p13" \
   ["human_9606_b141_GRCh38"]="b141_SNPChrPosOnRef" \
-  ["human_9606_b142_GRCh37p13"]="b142_SNPChrPosOnRef_105" \
+  ["human_9606_b142_GRCh37"]="b142_SNPChrPosOnRef_105" \
   ["human_9606_b142_GRCh38"]="b142_SNPChrPosOnRef_106"
 )
 wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/${_SNPChrPosOnRef[${database}]}.bcp.gz{,.md5}  # 481 MB
