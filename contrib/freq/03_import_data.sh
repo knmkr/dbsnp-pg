@@ -8,7 +8,7 @@ DATA_DIR=$4
 target=(AlleleFreqIn1000GenomesPhase3_b37)
 
 declare -A table2filename=( \
-  ["AlleleFreqIn1000GenomesPhase3_b37"]="ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.vcf.gz"
+  ["AlleleFreqIn1000GenomesPhase3_b37"]="ALL.chr*.*.vcf.gz"
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
@@ -30,14 +30,11 @@ for table in ${target[@]}; do
         fi
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table} ..."
-        gzip -d -c ${filename} \
-            | ${py} ${BASE_DIR}/script/vcf2tsv.py \
+        ${py} ${BASE_DIR}/script/get-allele-freq.py \
+              --sample-ids ${BASE_DIR}/script/sample_ids.1000genomes.CHB+JPT.txt \
+              ${filename} \
             | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
 done;
-
-echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating constrains..."
-
-psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -q
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Done"
