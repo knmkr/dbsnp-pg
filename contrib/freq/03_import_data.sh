@@ -30,8 +30,8 @@ for table in ${target[@]}; do
         fi
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table} ..."
-        ${py} ${BASE_DIR}/script/py-vcf-parser/example/get-allele-freq.py \
-              --sample-ids ${BASE_DIR}/script/py-vcf-parser/example/sample_ids.1000genomes.CHB+JPT.txt \
+        ${py} ${BASE_DIR}/script/get-allele-freq.py \
+              --sample-ids ${BASE_DIR}/script/sample_ids.1000genomes.CHB+JPT.txt \
               ${filename} \
             | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
