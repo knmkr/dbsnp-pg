@@ -18,34 +18,44 @@ BEGIN
   --
   WITH query AS (
       SELECT
-          q.snp_id,
-          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE q.snp_id END AS snp_current
+          arg.snp_id,
+          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE arg.snp_id END AS snp_current,
+          rshigh,
+          rslow
       FROM
-          (SELECT unnest(_rs) AS snp_id) AS q
-          LEFT JOIN rsmergearch m ON q.snp_id = m.rshigh
+          (SELECT unnest(_rs) AS snp_id) AS arg
+          LEFT JOIN rsmergearch m ON arg.snp_id = m.rshigh
   ),
+  -- NOTE: To avoid Seq Scan on `rsmergearch`, split CTE as `info` and `info_with_snp_current`
   info AS (
       SELECT
           f.snp_id,
-          max(CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE f.snp_id END) AS snp_current,
           array_agg(f.allele) as allele,
           array_agg(f.freq) as freq
       FROM
           allelefreqin1000genomesphase3_b37 f
-          LEFT JOIN rsmergearch m ON f.snp_id = m.rshigh
+      WHERE
+          f.snp_id IN (
+              SELECT q.snp_id FROM query q
+              UNION SELECT q.snp_current FROM query q
+              UNION SELECT q.rshigh FROM query q
+              UNION SELECT q.rslow FROM query q
+          )
       GROUP BY
           f.snp_id
+  ),
+  info_with_snp_current AS (
+      SELECT
+          i.snp_id,
+          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE i.snp_id END AS snp_current,
+          i.allele,
+          i.freq
+      FROM
+          info i
+          LEFT JOIN rsmergearch m ON i.snp_id = m.rshigh
   )
-  SELECT
-      query.snp_id,
-      info.snp_current,
-      info.allele,
-      info.freq
-  FROM
-      query
-      LEFT JOIN info ON query.snp_current = info.snp_current
-  );
+  SELECT q.snp_id, q.snp_current, i.allele, i.freq FROM query q LEFT JOIN info_with_snp_current i USING (snp_current)
   --
-  RETURN;
+  );
 END
 $$ LANGUAGE plpgsql;
