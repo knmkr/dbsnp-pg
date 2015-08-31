@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import argparse
 import gzip
@@ -13,7 +14,8 @@ from vcf.filters import sample_names_in
 def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument('vcf')
-    parser.add_argument('--sample-ids')
+    parser.add_argument('--sample-ids', required=True)
+    parser.add_argument('--exclude-rsids', nargs='+', type=int)
     args = parser.parse_args()
 
     filters = {}
@@ -21,11 +23,18 @@ def _main():
         sample_ids = [line.strip() for line in open(args.sample_ids)]
         filters.update({'genotype': sample_names_in(sample_ids)})
 
-    reader = VCFReader(gzip.open(args.vcf, 'rb'), filters=filters)
+    fin = gzip.open(args.vcf, 'rb') if os.path.splitext(args.vcf)[1] == '.gz' else open(args.vcf)
+    reader = VCFReader(fin, filters=filters)
     writer = csv.DictWriter(sys.stdout, delimiter='\t', fieldnames=['snp_id', 'chrom', 'pos', 'allele', 'freq'])
 
     for record in reader:
         for allele,freq in record['allele_freq'].items():
+            if not record['rs']:
+                continue
+
+            if args.exclude_rsids and (record['rs'] in args.exclude_rsids):
+                continue
+
             writer.writerow({'snp_id': record['rs'], 'chrom': record['CHROM'], 'pos': record['pos'], 'allele': allele, 'freq': freq})
 
 
