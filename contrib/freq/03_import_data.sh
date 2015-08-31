@@ -42,7 +42,7 @@ for table in ${target[@]}; do
         fi
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table} ..."
-        ${py} ${BASE_DIR}/script/get-allele-freq.py \
+        ${py} ${BASE_DIR}/script/vcf2tsv.py \
               ${filename} \
               --sample-ids ${BASE_DIR}/script/${table2sample_ids[${table}]} \
               --exclude-rsids ${table2exclude_rsids[${table}]} \
