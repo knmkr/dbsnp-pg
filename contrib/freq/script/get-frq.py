@@ -27,7 +27,7 @@ def _main():
 
         if not (allele and freq):
             raw_chr     = '{0: >4}'.format('.')
-            raw_snp     = '{0: >12}'.format(snp_id)
+            raw_snp     = '{0: >12}'.format('rs' + str(snp_id))
             raw_a1      = '{0: >5}'.format('.')
             raw_a2      = '{0: >5}'.format('.')
             raw_maf     = '{0: >13}'.format('.')
@@ -39,10 +39,10 @@ def _main():
             major = freq.index(sorted(freq)[-1])
 
             raw_chr     = '{0: >4}'.format('.')
-            raw_snp     = '{0: >12}'.format(snp_id)
+            raw_snp     = '{0: >12}'.format('rs' + str(snp_id))
             raw_a1      = '{0: >5}'.format(allele[minor])
             raw_a2      = '{0: >5}'.format(allele[major])
-            raw_maf     = '{0: >13}'.format(allele_freq[allele[minor]])
+            raw_maf     = '{0: >13.3f}'.format(allele_freq[allele[minor]])
             raw_nchrobs = '{0: >9}'.format('.')
 
         print raw_chr + raw_snp + raw_a1 + raw_a2 + raw_maf + raw_nchrobs
