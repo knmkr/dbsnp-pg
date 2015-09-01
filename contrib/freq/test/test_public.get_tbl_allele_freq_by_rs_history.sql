@@ -1,5 +1,5 @@
 BEGIN;
-SELECT * FROM plan(1);
+SELECT * FROM plan(2);
 
 SELECT set_eq(
   'SELECT snp_id,snp_current,allele,freq::text FROM get_tbl_allele_freq_by_rs_history(ARRAY[671, 2230021, 4134524, 4986830, 60823674])',
@@ -9,6 +9,13 @@ SELECT set_eq(
   (4134524,  671, '{G,A}'::varchar[], '{0.8,0.2}'),
   (4986830,  671, '{G,A}'::varchar[], '{0.8,0.2}'),
   (60823674, 671, '{G,A}'::varchar[], '{0.8,0.2}')
+  $$
+);
+
+SELECT set_eq(
+  'SELECT snp_id,snp_current,allele,freq::text FROM get_tbl_allele_freq_by_rs_history_1000genomes_phase1(ARRAY[671])',
+  $$ VALUES
+  (671,      671, '{G,A}'::varchar[], '{0.783,0.217}')
   $$
 );
 
