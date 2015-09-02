@@ -3,6 +3,7 @@
 
 import argparse
 import csv
+import decimal
 
 try:
     import psycopg2cffi as psycopg2
@@ -20,7 +21,7 @@ def _main():
 
     conn = psycopg2.connect("dbname={} user={}".format(args.dbname, args.dbuser))
     cur = conn.cursor()
-    cur.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s);", (args.rsids,))
+    cur.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history_1000genomes_phase1(%s);", (args.rsids,))
     rows = cur.fetchall()
     for row in rows:
         snp_id, snp_current, allele, freq = row
@@ -42,7 +43,7 @@ def _main():
             raw_snp     = '{0: >12}'.format('rs' + str(snp_id))
             raw_a1      = '{0: >5}'.format(allele[minor])
             raw_a2      = '{0: >5}'.format(allele[major])
-            raw_maf     = '{0: >13.3f}'.format(allele_freq[allele[minor]])
+            raw_maf     = '{0: >13.4f}'.format((decimal.Decimal(allele_freq[allele[minor]])).quantize(decimal.Decimal('1.0000'), rounding=decimal.ROUND_HALF_UP))
             raw_nchrobs = '{0: >9}'.format('.')
 
         print raw_chr + raw_snp + raw_a1 + raw_a2 + raw_maf + raw_nchrobs
