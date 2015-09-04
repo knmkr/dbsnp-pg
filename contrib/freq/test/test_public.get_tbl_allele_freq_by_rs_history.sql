@@ -13,11 +13,13 @@ SELECT set_eq(
 );
 
 SELECT set_eq(
-  'SELECT snp_id,snp_current,allele,freq::text FROM get_tbl_allele_freq_by_rs_history_1000genomes_phase1(ARRAY[671])',
+  'SELECT snp_id,snp_current,allele,freq::text FROM get_tbl_allele_freq_by_rs_history_1000genomes_phase1(ARRAY[671,26])',
   $$ VALUES
-  (671,      671, '{G,A}'::varchar[], '{0.7832,0.2168}')
+  (671,      671, '{G,A}'::varchar[], '{0.7832,0.2168}'),
+  (26,        26, '{C,T}'::varchar[], '{0.6836,0.3164}')
   $$
 );
+
 
 SELECT * FROM finish();
 ROLLBACK;
