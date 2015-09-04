@@ -24,7 +24,7 @@ def _main():
         filters.update({'genotype': sample_names_in(sample_ids)})
 
     fin = gzip.open(args.vcf, 'rb') if os.path.splitext(args.vcf)[1] == '.gz' else open(args.vcf)
-    reader = VCFReader(fin, filters=filters, num_after_decimal_point=4)
+    reader = VCFReader(fin, filters=filters, decimal_prec=4)
     writer = csv.DictWriter(sys.stdout, delimiter='\t', fieldnames=['snp_id', 'chrom', 'pos', 'allele', 'freq'])
 
     for record in reader:
