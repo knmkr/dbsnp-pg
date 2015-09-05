@@ -1,6 +1,8 @@
---
-DROP INDEX IF EXISTS AlleleFreqIn1000GenomesPhase3_ukey_snp_id_allele;
-CREATE UNIQUE INDEX AlleleFreqIn1000GenomesPhase3_ukey_snp_id_allele ON AlleleFreqIn1000GenomesPhase3_b37 (snp_id, allele) WHERE snp_id IS NOT NULL;
+DROP INDEX IF EXISTS allelefreq_1_ukey_snp_id_allele;
+CREATE UNIQUE INDEX allelefreq_1_ukey_snp_id_allele ON AlleleFreq_1 (snp_id, allele);
 
-DROP INDEX IF EXISTS AlleleFreqIn1000GenomesPhase1_ukey_snp_id_allele;
-CREATE UNIQUE INDEX AlleleFreqIn1000GenomesPhase1_ukey_snp_id_allele ON AlleleFreqIn1000GenomesPhase1_b37 (snp_id, allele);
+DROP INDEX IF EXISTS allelefreq_2_ukey_snp_id_allele;
+CREATE UNIQUE INDEX allelefreq_2_ukey_snp_id_allele ON AlleleFreq_2 (snp_id, allele);
+
+CREATE INDEX idx_allelefreq_1 ON AlleleFreq_1 (snp_id);
+CREATE INDEX idx_allelefreq_2 ON AlleleFreq_2 (snp_id);

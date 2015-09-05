@@ -5,22 +5,22 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-target=(AlleleFreqIn1000GenomesPhase1_b37 AlleleFreqIn1000GenomesPhase3_b37)
+source_ids=(1 2)
 
-declare -A table2filename=( \
-  ["AlleleFreqIn1000GenomesPhase1_b37"]="1000genomes.phase1/ALL.chr*.*.vcf*"
-  ["AlleleFreqIn1000GenomesPhase3_b37"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+declare -A target2filename=( \
+  ["1"]="1000genomes.phase1/ALL.chr*.*.vcf*"
+  ["2"]="1000genomes.phase3/ALL.chr*.*.vcf*"
 )
 
-declare -A table2sample_ids=( \
-  ["AlleleFreqIn1000GenomesPhase1_b37"]="sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt"
-  ["AlleleFreqIn1000GenomesPhase3_b37"]="sample_ids.1000genomes.phase3.CHB+JPT.txt"
+declare -A target2sample_ids=( \
+  ["1"]="sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt"
+  ["2"]="sample_ids.1000genomes.phase3.CHB+JPT.txt"
 )
 
 # Skip non-unique rsids in original vcf.  # FIXME: Need to be revised.
-declare -A table2exclude_rsids=( \
-  ["AlleleFreqIn1000GenomesPhase1_b37"]="--exclude-rsids 113940759 11457237 71904485"
-  ["AlleleFreqIn1000GenomesPhase3_b37"]=""
+declare -A target2exclude_rsids=( \
+  ["1"]="--exclude-rsids 113940759 11457237 71904485"
+  ["2"]=""
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
@@ -34,8 +34,9 @@ else
   py=$(which python)
 fi
 
-for table in ${target[@]}; do
-    for filename in ${table2filename[${table}]}; do
+table=AlleleFreq
+for target in ${source_ids[@]}; do
+    for filename in ${target2filename[${target}]}; do
         if [ ! -e ${filename} ]; then
             echo "[contrib/freq] [WARN] `date +"%Y-%m-%d %H:%M:%S"` ${filename} does not exists, so skip importing."
             continue
@@ -44,7 +45,8 @@ for table in ${target[@]}; do
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table} ..."
         ${py} ${BASE_DIR}/script/vcf2tsv.py \
               ${filename} \
-              --sample-ids ${BASE_DIR}/script/${table2sample_ids[${table}]} ${table2exclude_rsids[${table}]} \
+              --source-id ${target} \
+              --sample-ids ${BASE_DIR}/script/${target2sample_ids[${target}]} ${target2exclude_rsids[${target}]} \
             | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
 done;

@@ -14,6 +14,7 @@ from vcf.filters import sample_names_in
 def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument('vcf')
+    parser.add_argument('--source-id', required=True)
     parser.add_argument('--sample-ids', required=True)
     parser.add_argument('--exclude-rsids', nargs='+', type=int)
     args = parser.parse_args()
@@ -25,7 +26,7 @@ def _main():
 
     fin = gzip.open(args.vcf, 'rb') if os.path.splitext(args.vcf)[1] == '.gz' else open(args.vcf)
     reader = VCFReader(fin, filters=filters, decimal_prec=4)
-    writer = csv.DictWriter(sys.stdout, delimiter='\t', fieldnames=['snp_id', 'chrom', 'pos', 'allele', 'freq'])
+    writer = csv.DictWriter(sys.stdout, delimiter='\t', fieldnames=['snp_id', 'chrom', 'pos', 'allele', 'freq', 'source_id'])
 
     for record in reader:
         for allele,freq in record['allele_freq'].items():
@@ -35,7 +36,7 @@ def _main():
             if args.exclude_rsids and (record['rs'] in args.exclude_rsids):
                 continue
 
-            writer.writerow({'snp_id': record['rs'], 'chrom': record['CHROM'], 'pos': record['pos'], 'allele': allele, 'freq': freq})
+            writer.writerow({'snp_id': record['rs'], 'chrom': record['CHROM'], 'pos': record['pos'], 'allele': allele, 'freq': freq, 'source_id': args.source_id})
 
 
 if __name__ == '__main__':
