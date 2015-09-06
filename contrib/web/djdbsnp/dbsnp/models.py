@@ -6,16 +6,16 @@ class SNP(models.Model):
     @classmethod
     def get_pos_by_rs(self, rs):
         with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT * FROM get_tbl_pos_by_rs(%s)", [rs])
-            row = dictfetchall(c)
-            return row
+            c.execute("SELECT * FROM get_tbl_pos_by_rs(%s)", (rs,))
+            row = c.fetchone()
+            return row[0], row[1]
 
     @classmethod
-    def get_freq_by_rs(self, rs):
+    def get_current_rs(self, rs):
         with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT snp_id,ref,alt,freq_eas FROM allelefreqin1000genomesphase3 WHERE snp_id = %s", [rs])
-            row = dictfetchall(c)
-            return row
+            c.execute("SELECT get_current_rs(%s)", (rs,))
+            row = c.fetchone()
+            return row[0]
 
 
 def dictfetchall(cursor):

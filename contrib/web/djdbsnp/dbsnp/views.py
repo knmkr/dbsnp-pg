@@ -4,7 +4,7 @@ from .models import SNP
 
 def index(request):
     rs = str(671)
-    chrpos = SNP.get_pos_by_rs(rs)
+    chrom, pos = SNP.get_pos_by_rs(rs)
     # TODO: chrom, pos on b37, b38
 
     # TODO: gene
@@ -13,8 +13,7 @@ def index(request):
 
     # TODO: snp fasta sequence
 
-    # TODO: rs id history
-    # - rshigh, rslow, rscurrent
+    rs_current = SNP.get_current_rs(rs)
 
     # TODO: freq
     # - alleles, freq, source
@@ -30,4 +29,6 @@ def index(request):
                   {'dbsnp_build': settings.DBSNP_BUILD,
                    'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
                    'rs': rs,
-                   'chrpos': chrpos})
+                   'chrom': chrom,
+                   'pos': pos,
+                   'rs_current': rs_current})
