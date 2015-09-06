@@ -72,6 +72,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djdbsnp.wsgi.application'
 
+# dbsnp
+DBSNP_BUILD = 'b141'
+DBSNP_REF_GENOME_BUILD = 'b37'
+DBSNP_DB_NAME = '_'.join(['dbsnp', DBSNP_BUILD, DBSNP_REF_GENOME_BUILD])
+DBSNP_DB_USER= 'dbsnp'
+DBSNP_DB_HOST = '127.0.0.1'
+DBSNP_DB_PORT = '5432'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -86,10 +93,10 @@ DATABASES = {
     },
     'dbsnp': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbsnp',
-        'USER': 'dbsnp',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': DBSNP_DB_NAME,
+        'USER': DBSNP_DB_USER,
+        'HOST': DBSNP_DB_HOST,
+        'PORT': DBSNP_DB_PORT,
     }
 }
 

@@ -11,21 +11,52 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <h2 class="sub-header">rs{{ rs }}</h2>
+          <h1>rs{{ rs }}</h2>
+
+          <h2 class="sub-header">location</h2>
+          <table class="table">
+            <tr>
+              <th>chrom</th>
+              <td>{{ chrpos.0.chr }}</td>
+            </tr>
+            <tr>
+              <th>position</th>
+              <td>{{ chrpos.0.pos }}</td>
+            </tr>
+            <tr>
+              <th>reference genome build</th>
+              <td>{{ dbsnp_ref_genome_build }}</td>
+            </tr>
+          </table>
+
+          <h2 class="sub-header">merge history</h2>
           <table class="table">
             <tr>
               <th>rs id</th>
               <td>{{ rs }}</td>
             </tr>
             <tr>
-              <th>chrom (b37)</th>
-              <td>{{ chrpos.0.chr }}</td>
+              <th>current</th>
+              <td>TODO</td>
             </tr>
             <tr>
-              <th>position (b37)</th>
-              <td>{{ chrpos.0.pos }}</td>
+              <th>old</th>
+              <td>TODO</td>
+            </tr>
+            <tr>
+              <th></th>
+              <td>TODO</td>
+            </tr>
+            <tr>
+              <th></th>
+              <td>TODO</td>
+            </tr>
+            <tr>
+              <th>dbsnp build</th>
+              <td>{{ dbsnp_build }}</td>
             </tr>
           </table>
+
         </div>
       </div>
     </div>

@@ -1,9 +1,8 @@
 from django.shortcuts import render
+from django.conf import settings
 from .models import SNP
 
 def index(request):
-    # TODO: dbSNP build
-
     rs = str(671)
     chrpos = SNP.get_pos_by_rs(rs)
     # TODO: chrom, pos on b37, b38
@@ -27,4 +26,8 @@ def index(request):
 
     # TODO: GWAS
 
-    return render(request, 'index.html', dict(rs=rs, chrpos=chrpos))
+    return render(request, 'index.html',
+                  {'dbsnp_build': settings.DBSNP_BUILD,
+                   'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
+                   'rs': rs,
+                   'chrpos': chrpos})
