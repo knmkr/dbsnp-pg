@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- bootstrap3 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   </head>
+
   <body>
-    Hello dbsnp
-
-    <table>
-      <tr>
-        <th>rs</th>
-        <th>chrpos</th>
-      </tr>
-      <tr>
-        <td>{{ rs }}</td>
-        <td>{{ chrpos }}</td>
-      </tr>
-    </table>
-
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="sub-header">rs{{ rs }}</h2>
+          <table class="table">
+            <tr>
+              <th>rs id</th>
+              <td>{{ rs }}</td>
+            </tr>
+            <tr>
+              <th>chrom (b37)</th>
+              <td>{{ chrpos.0.chr }}</td>
+            </tr>
+            <tr>
+              <th>position (b37)</th>
+              <td>{{ chrpos.0.pos }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
