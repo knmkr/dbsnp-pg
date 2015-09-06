@@ -1,0 +1,6 @@
+Django>=1.8,<1.8.99
+psycopg2
+
+# For development
+ipython
+django-extensions
