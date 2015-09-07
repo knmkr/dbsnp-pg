@@ -1,5 +1,5 @@
 BEGIN;
-SELECT * FROM plan(3);
+SELECT * FROM plan(2);
 
 -- 1000 genomes phase1 CHB+JPT
 SELECT set_eq(

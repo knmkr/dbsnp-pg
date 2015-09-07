@@ -43,15 +43,14 @@ SELECT get_current_rs(332);
 ### Get allele frequency for given rs\#.
 
 ```
-SELECT * FROM get_tbl_freq_by_rs(671);
- snp_id | subsnp_id |             loc_pop_id             |    ind_grp_name     | source | rs_allele |   freq
---------+-----------+------------------------------------+---------------------+--------+-----------+-----------
-    671 |   3177110 | MITOGPOP6                          | multiple            | IG     | A         | 0.0645161
-    671 |   3177110 | MITOGPOP6                          | multiple            | IG     | G         |  0.935484
-    671 |   5586234 | AFR1                               |                     | AF     | G         |         1
-    671 |   5586234 | AFR1                               |                     | AF     | A         |         0
-...
+SELECT * FROM get_tbl_allele_freq_by_rs_history(2, ARRAY[671, 2230021]);
+  snp_id  | snp_current | snp_in_source | allele |      freq
+----------+-------------+---------------+--------+-----------------
+      671 |         671 |           671 | {G,A}  | {0.7995,0.2005}
+  2230021 |         671 |           671 | {G,A}  | {0.7995,0.2005}
 ```
+
+See details in `contrib/freq`
 
 
 ## Unit Tests
@@ -71,17 +70,16 @@ Requirements:
 ## Notes
 
 - Only human [9606] data is supported.
-- Build versions of dbSNP and human reference genome assembly are:
+- Build versions of dbSNP and human references genome assemblies are:
 
 | database name             | dbSNP    | reference genome |
 |---------------------------|----------|------------------|
-| human_9606                | (latest) | (latest)         |
 | human_9606_b142_GRCh38    | b142     | GRCh38           |
 | human_9606_b142_GRCh37p13 | b142     | GRCh37p13        |
 | human_9606_b141_GRCh38    | b141     | GRCh38           |
 | human_9606_b141_GRCh37p13 | b141     | GRCh37p13        |
 
-If you want to specify the versions, set `-d` and `-r` options in `01_fetch_dbsnp.sh`:
+To specify the versions, use `-d` and `-r` options in `01_fetch_dbsnp.sh`:
 
 ```
 $ ./01_fetch_dbsnp.sh -d b141 -r GRCh37p13

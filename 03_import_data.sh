@@ -5,10 +5,7 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-minimal=(Allele SnpChrCode RsMergeArch SNPChrPosOnRef Population AlleleFreqBySsPop SNPSubSNPLink dn_PopulationIndGrp SNPAlleleFreq)
-optional=()
-
-target=${minimal[@]}
+target=(Allele SnpChrCode RsMergeArch SNPChrPosOnRef)
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
 

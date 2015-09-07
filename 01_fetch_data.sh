@@ -54,11 +54,7 @@ cd ${data_dir}
 database="human_9606_${dbsnp}_${ref}"
 echo "[INFO] Fetching data for ${database}..."
 
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                     # 131 MB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/Population.bcp.gz{,.md5}                      # 148 kB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/AlleleFreqBySsPop.bcp.gz{,.md5}               # 1.1 GB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/dn_PopulationIndGrp.bcp.gz{,.md5}             # 550 B
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPSubSNPLink.bcp.gz{,.md5}                   # 1.8 GB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                      # 131 MB
 
 declare -A _SNPChrPosOnRef=( \
   ["human_9606_b141_GRCh37"]="b141_SNPChrPosOnRef_GRCh37p13" \
@@ -68,10 +64,7 @@ declare -A _SNPChrPosOnRef=( \
 )
 wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/${_SNPChrPosOnRef[${database}]}.bcp.gz{,.md5}  # 481 MB
 wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                   # 63.1 MB
-
-# optional
-# wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                              # 767 B
-# wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPAlleleFreq.bcp.gz{,.md5}                   # 483 MB
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                               # 767 B
 
 echo "[INFO] Checking md5..."
 
