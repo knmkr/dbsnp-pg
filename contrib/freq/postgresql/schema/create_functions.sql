@@ -1,33 +1,4 @@
--- Partitioning
-CREATE OR REPLACE FUNCTION allelefreq_insert_trigger()
-RETURNS TRIGGER AS $$
-    BEGIN
-        IF ( NEW.source_id = 1 ) THEN
-            INSERT INTO allelefreq_1 VALUES (NEW.*);
-        ELSIF ( NEW.source_id = 2 ) THEN
-            INSERT INTO allelefreq_2 VALUES (NEW.*);
-        ELSE
-            RAISE EXCEPTION 'Invalid source_id in allelefreq_insert_trigger()';
-        END IF;
-        RETURN NULL;
-    END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER insert_alllefreq_trigger
-    BEFORE INSERT ON allelefreq
-    FOR EACH ROW EXECUTE PROCEDURE allelefreq_insert_trigger();
-
 --
-DROP FUNCTION IF EXISTS get_tbl_allele_freq_by_rs_history(
-  _source_id int,
-  _rs int[],
-  OUT snp_id int,
-  OUT snp_current int,
-  OUT snp_in_source int,
-  OUT allele varchar[],
-  OUT freq real[]
-);
-
 CREATE OR REPLACE FUNCTION get_tbl_allele_freq_by_rs_history(
   _source_id int,
   _rs int[],
