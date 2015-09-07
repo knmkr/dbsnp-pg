@@ -17,6 +17,13 @@ class SNP(models.Model):
             row = c.fetchone()
             return row[0]
 
+    @classmethod
+    def get_allele_freq(self, source_id, rs):
+        with connections['dbsnp'].cursor() as c:
+            c.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s)", (source_id, [rs],))
+            row = dictfetchall(c)
+            return row[0]
+
 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"

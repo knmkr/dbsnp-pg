@@ -49,6 +49,22 @@
             </tr>
           </table>
 
+          <h2 class="sub-header">allele freq</h2>
+          <table class="table">
+            {% for source, allele_freq in allele_freqs.items %}
+              {% for allele, freq in allele_freq.items %}
+              <tr>
+                <th>{{ allele }}</th>
+                <td>{{ freq }}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <th>allele freq source</th>
+                <td>{{ source }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+
         </div>
       </div>
     </div>
