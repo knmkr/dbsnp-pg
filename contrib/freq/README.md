@@ -1,6 +1,6 @@
 # contrib/freq
 
-- Allele frequencies based on the 1000 Genomes genotype data.
+- Allele frequencies based on public genotype data.
 
 
 ## Usage example
@@ -26,19 +26,18 @@
 
 ## Notes
 
-### Source files
+### Sources
 
-`ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/`
+| project             | populations |
+|---------------------|-------------|
+| 1000 Genomes Phase1 | CHB+JPT     |
+| 1000 Genomes Phase3 | CHB+JPT     |
+| 1000 Genomes Phase3 | CEU         |
 
-See datails in `01_fetch_data.sh`
-
-
-### Population groups
-
-Currently only `CHB+JPT+CHS` is available.
+See datails in `01_fetch_data.sh` and `03_import_data.sh`
 
 
 ### TODOs
 
-- [ ] Add European and African population.
+- [ ] Add African population.
 - [ ] Add HapMap
