@@ -1,14 +1,4 @@
 --
-DROP FUNCTION IF EXISTS get_tbl_allele_freq_by_rs_history(
-  _source_id int,
-  _rs int[],
-  OUT snp_id int,
-  OUT snp_current int,
-  OUT snp_in_source int,
-  OUT allele varchar[],
-  OUT freq real[]
-);
-
 CREATE OR REPLACE FUNCTION get_tbl_allele_freq_by_rs_history(
   _source_id int,
   _rs int[],
