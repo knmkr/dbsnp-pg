@@ -8,7 +8,7 @@ import gzip
 import csv
 import re
 
-from pyfasta import Fasta
+# from pyfasta import Fasta
 from vcf.writer import VCFWriter
 
 def get_ref_allele(fasta, chrom, pos):
@@ -24,32 +24,44 @@ def chromosomes(key, regexp):
 def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument('hapmap')
-    parser.add_argument('--fa', requreid=True)
+    # parser.add_argument('--fa', requreid=True)
     args = parser.parse_args()
 
     fin = gzip.open(args.hapmap, 'rb') if os.path.splitext(args.hapmap)[1] == '.gz' else open(args.hapmap)
-    chrom = re.findall(r'\.chr(.*)_', args.hapmap)
+    chrom = re.findall(r'\.chr(.*)_', args.hapmap)[0]
 
-    fa = Fasta(args.fa, key_fn=lambda key: chromosomes(key, re.compile('chr([0-9XY]+)')))
+    # fa = Fasta(args.fa, key_fn=lambda key: chromosomes(key, re.compile('chr([0-9XY]+)')))
 
     reader = csv.DictReader(fin, delimiter=' ')
-    sample_ids = set([x.strip('_A').strip('_B') for x in reader.fieldnames if x.endswith('_A') or x.endswith('_B')])
+    sample_ids = sorted(list(set([x.strip('_A').strip('_B') for x in reader.fieldnames if x.endswith('_A') or x.endswith('_B')])))
 
-    # '#CHROM        POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  NA00001 NA00002 NA00003'
+    header_records = [('fileformat', 'VCFv4.1'),
+                      ('reference', '.fa')] + \
+                     [('contig', '<ID={},assembly=B36">'.format(c)) for c in range(1,23)] + \
+                     [('FORMAT', '<ID=GT,Number=1,Type=String,Description="Genotype">')]
+    writer = VCFWriter(sys.stdout, sample_ids, header_records)
+    writer.writeheaderlines()
 
     for record in reader:
+        row = {}
         row['#CHROM'] = chrom
         row['POS'] = record['position_b36']
         row['ID'] = record['rsID']
 
-        ref = get_ref_allele(fa, chrom, record['position_b36'])
+        # ref = get_ref_allele(fa, chrom, record['position_b36'])
+        ref = 'N'
         alts = []
 
         for sample_id in sample_ids:
             alts.append(record[sample_id + '_A'])
             alts.append(record[sample_id + '_B'])
-        alts = list(set(alts)).remove(ref)
+
+        # assert ref in alts
+        alts = list(set(alts) - set([ref]))
         alleles = [ref] + alts
+
+        if not alts:
+            alts = ['.']
 
         row['REF'] = ref
         row['ALT'] = alts
@@ -59,24 +71,9 @@ def _main():
         row['FORMAT'] = ['GT']
 
         for sample_id in sample_ids:
-            row[sample_id]['GT'] = '{}|{}'.format(alleles.index(record[sample_id + '_A']), alleles.index(record[sample_id + '_B']))
+            row[sample_id] = [('GT', '{}|{}'.format(alleles.index(record[sample_id + '_A']), alleles.index(record[sample_id + '_B'])))]
 
-        print row
-        break
-
-
-    # reader = VCFReader(fin, filters=filters, decimal_prec=4)
-    # writer = csv.DictWriter(sys.stdout, delimiter='\t', fieldnames=['snp_id', 'chrom', 'pos', 'allele', 'freq', 'source_id'])
-
-    # for record in reader:
-    #     for allele,freq in record['allele_freq'].items():
-    #         if not record['rs']:
-    #             continue
-
-    #         if args.exclude_rsids and (record['rs'] in args.exclude_rsids):
-    #             continue
-
-    #         writer.writerow({'snp_id': record['rs'], 'chrom': record['CHROM'], 'pos': record['pos'], 'allele': allele, 'freq': freq, 'source_id': args.source_id})
+        writer.writerow(row)
 
 
 if __name__ == '__main__':
