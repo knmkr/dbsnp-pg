@@ -12,47 +12,32 @@ usage_exit() {
   exit 1
 }
 
-in_array() {
-  local array="$1[@]"
-  local seeking=$2
-  local in=1
-  for element in "${!array}"; do
-    if [[ $element == $seeking ]]; then
-      in=0
-      break
-    fi
-  done
-  return $in
-}
-
+# Parse args
 while getopts ":d:r:" OPT; do
   case "${OPT}" in
-    d)  dbsnp=${OPTARG}
-        ;;
-    r)  ref=${OPTARG}
-        ;;
-    \?) usage_exit
-        ;;
+    d)  dbsnp=${OPTARG};;
+    r)  ref=${OPTARG};;
+     \?) usage_exit;;
   esac
 done
 shift $((OPTIND - 1))
 
-# Defaults
+# Set defaults
 : ${dbsnp:=${dbsnp_builds[0]}}
 : ${ref:=${reference_genome_builds[0]}}
 
-in_array $dbsnp_build $dbsnp && echo ok || usage_exit
-in_array $reference_genome_build $ref && echo ok|| usage_exit
-
+# TODO: check dbsnp_builds and reference_genome_builds in choices
+# Check args
 data_dir=$1
 if [ -z "${data_dir}" ]; then
     usage_exit
 fi
+
 mkdir -p ${data_dir}
 cd ${data_dir}
 
 database="human_9606_${dbsnp}_${ref}"
-echo "[INFO] Fetching data for ${database}..."
+echo "[INFO] Fetching data for ${database} to ${data_dir}..."
 
 wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                     # 131 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/Population.bcp.gz{,.md5}                      # 148 kB
