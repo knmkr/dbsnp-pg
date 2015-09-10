@@ -1,3 +1,4 @@
+import re
 import csv
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
@@ -6,38 +7,42 @@ from .models import SNP
 
 
 def index(request):
-    rs = 671
-    chrom, pos = SNP.get_pos_by_rs(rs)
-    # TODO: chrom, pos on b37, b38
+    rs_match = re.findall('\A(rs)?(\d+)\Z', request.GET.get('rs', ''))
+    rs = int(rs_match[0][1]) if rs_match else ''
+    records = {'rs': rs}
 
-    # TODO: gene
+    if rs:
+        chrom, pos = SNP.get_pos_by_rs(rs)
+        # TODO: chrom, pos on b37, b38
 
-    # TODO: reference sequence
+        # TODO: gene
 
-    # TODO: snp fasta sequence
+        # TODO: reference sequence
 
-    rs_current = SNP.get_current_rs(rs)
+        # TODO: snp fasta sequence
 
-    allele_freq_source = '1000 Genomes Phase1, CHB+JPT+CHS'  # TODO
-    allele_freq_source_id = 1  # TODO
-    af = SNP.get_allele_freq(allele_freq_source_id, rs)
-    allele_freqs = {allele_freq_source: dict(zip(af['allele'], af['freq']))}
+        rs_current = SNP.get_current_rs(rs)
 
-    # TODO: JPT, EUR, AFR
+        allele_freq_source = '1000 Genomes Phase1, CHB+JPT+CHS'  # TODO
+        allele_freq_source_id = 1  # TODO
+        af = SNP.get_allele_freq(allele_freq_source_id, rs)
+        allele_freqs = {allele_freq_source: dict(zip(af['allele'], af['freq']))}
 
-    # TODO: OMIM
+        # TODO: JPT, EUR, AFR
 
-    # TODO: LD
+        # TODO: OMIM
 
-    # TODO: GWAS
+        # TODO: LD
 
-    records = {'dbsnp_build': settings.DBSNP_BUILD,
-               'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
-               'rs': rs,
-               'chrom': chrom,
-               'pos': pos,
-               'rs_current': rs_current,
-               'allele_freqs': allele_freqs}
+        # TODO: GWAS
+
+        records.update({'dbsnp_build': settings.DBSNP_BUILD,
+                        'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
+                        'rs': rs,
+                        'chrom': chrom,
+                        'pos': pos,
+                        'rs_current': rs_current,
+                        'allele_freqs': allele_freqs})
 
     fmt = request.GET.get('fmt', '')
 
