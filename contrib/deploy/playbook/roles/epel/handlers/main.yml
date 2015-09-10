@@ -1,0 +1,3 @@
+---
+- name: import epel gpg key
+  command: /bin/rpm --import {{ epel_gpg_key }}

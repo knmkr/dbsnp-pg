@@ -1,0 +1,11 @@
+---
+- name: install yum-cron
+  yum: name=yum-cron state=present
+
+- name: start yum-cron
+  service: name=yum-cron state=started enabled=yes
+
+- name: install devlopment tools
+  yum: name=gcc,gcc-c++,make state=present
+  with_items:
+    - yum-cron

@@ -1,0 +1,6 @@
+---
+- name: install epel repo
+  yum: name='{{ epel_repo_url }}'
+  notify:
+    - import epel gpg key
+  tags: epel
