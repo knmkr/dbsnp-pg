@@ -6,6 +6,6 @@
   service: name=yum-cron state=started enabled=yes
 
 - name: install devlopment tools
-  yum: name=gcc,gcc-c++,make state=present
+  yum: name=gcc,gcc-c++,make,git state=present
   with_items:
     - yum-cron
