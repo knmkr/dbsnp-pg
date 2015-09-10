@@ -1,30 +1,35 @@
-DROP FUNCTION IF EXISTS get_tbl_allele_freq_by_rs_history(
-  _rs int[],
-  OUT snp_id int,
-  OUT snp_current int,
-  OUT allele varchar[],
-  OUT freq real[]
-);
-
+--
 CREATE OR REPLACE FUNCTION get_tbl_allele_freq_by_rs_history(
+  _source_id int,
   _rs int[],
   OUT snp_id int,
   OUT snp_current int,
+  OUT snp_in_source int,
   OUT allele varchar[],
   OUT freq real[]
 ) RETURNS SETOF RECORD AS $$
 BEGIN
   RETURN QUERY (
   --
-  WITH query AS (
+  WITH arg AS (
       SELECT
-          arg.snp_id,
-          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE arg.snp_id END AS snp_current,
-          rshigh,
-          rslow
+          a.snp_id,
+          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE a.snp_id END AS snp_current
       FROM
-          (SELECT unnest(_rs) AS snp_id) AS arg
-          LEFT JOIN rsmergearch m ON arg.snp_id = m.rshigh
+          (SELECT unnest(_rs) AS snp_id) AS a
+          LEFT JOIN rsmergearch m ON a.snp_id = m.rshigh
+  ),
+  query AS (
+      SELECT
+          m.rscurrent, m.rshigh, m.rslow
+      FROM
+          rsmergearch m
+      WHERE
+          rshigh = ANY(_rs)
+          OR rslow = ANY(_rs)
+          OR rscurrent = ANY(_rs)
+      UNION
+          SELECT unnest(_rs), NULL, NULL
   ),
   -- NOTE: To avoid Seq Scan on `rsmergearch`, split CTE as `info` and `info_with_snp_current`
   info AS (
@@ -38,11 +43,11 @@ BEGIN
               f.allele,
               f.freq
           FROM
-              allelefreqin1000genomesphase3_b37 f
+              allelefreq f
           WHERE
-              f.snp_id IN (
-                  SELECT q.snp_id FROM query q
-                  UNION SELECT q.snp_current FROM query q
+              f.source_id = _source_id
+              AND f.snp_id IN (
+                  SELECT q.rscurrent FROM query q
                   UNION SELECT q.rshigh FROM query q
                   UNION SELECT q.rslow FROM query q
               )
@@ -62,8 +67,10 @@ BEGIN
           info i
           LEFT JOIN rsmergearch m ON i.snp_id = m.rshigh
   )
-  SELECT q.snp_id, q.snp_current, i.allele, i.freq FROM query q LEFT JOIN info_with_snp_current i USING (snp_current)
-  --
+  SELECT
+      arg.snp_id, arg.snp_current, i.snp_id, i.allele, i.freq
+  FROM
+      arg LEFT JOIN info_with_snp_current i USING (snp_current)
   );
 END
 $$ LANGUAGE plpgsql;
