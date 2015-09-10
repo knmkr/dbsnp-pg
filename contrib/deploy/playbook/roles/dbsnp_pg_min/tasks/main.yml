@@ -1,0 +1,25 @@
+---
+- name: create postgresql user for dbsnp
+  sudo_user: postgres
+  postgresql_user: name={{ database_user }}
+                   role_attr_flags=NOSUPERUSER
+
+- name: create postgresql database for dbsnp
+  sudo_user: postgres
+  postgresql_db: name={{ database_name }}
+                 encoding='UTF-8'
+                 owner={{ database_user }}
+
+- name: clone dbsnp-pg-min repo
+  git: repo=https://github.com/knmkr/dbsnp-pg-min.git
+       dest=dbsnp-pg-min
+
+- name: fetch dbsnp data from ftp
+  command: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data chdir=dbsnp-pg-min
+
+# --- Create PostgreSQL tables for dbSNP
+# ./02_drop_create_table.sh dbsnp_b141 username $PWD
+
+# --- Import dbSNP data into PostgreSQL tables,
+# --- and add constraints (index, etc.) to tables
+# ./03_import_data.sh dbsnp_b141 username $PWD $PWD/data

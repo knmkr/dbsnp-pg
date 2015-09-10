@@ -1,0 +1,6 @@
+---
+dbsnp_builds: b141
+reference_genome_builds: GRCh37
+
+database_name: dbsnp_{{ dbsnp_builds }}_{{ reference_genome_builds }}
+database_user: dbsnp
