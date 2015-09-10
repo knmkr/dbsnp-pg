@@ -14,4 +14,4 @@
   gather_facts: no
   roles:
     - { role: postgresql }
-    # - { role: dbsnp_pg_min }
+    - { role: dbsnp_pg_min }
