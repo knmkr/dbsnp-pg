@@ -9,8 +9,8 @@
 => SELECT * FROM AlleleFreqSource;
  source_id |      project       |  populations  | genome_build
 -----------+--------------------+---------------+--------------
-         1 | 1000genomes_phase1 | {CHB,JPT,CHS} | b37
-         2 | 1000genomes_phase3 | {CHB,JPT,CHS} | b37
+         1 | 1000genomes_phase1 | {CHB,JPT}     | b37
+         2 | 1000genomes_phase3 | {CHB,JPT}     | b37
 ...
 
 => SELECT * FROM get_tbl_allele_freq_by_rs_history(2, ARRAY[671, 2230021, 4134524, 4986830, 60823674]);
@@ -32,12 +32,11 @@
 |---------------------|-------------|
 | 1000 Genomes Phase1 | CHB+JPT     |
 | 1000 Genomes Phase3 | CHB+JPT     |
-| 1000 Genomes Phase3 | CEU         |
 
 See datails in `01_fetch_data.sh` and `03_import_data.sh`
 
 
 ### TODOs
 
-- [ ] Add African population.
+- [ ] Add European & African population.
 - [ ] Add HapMap

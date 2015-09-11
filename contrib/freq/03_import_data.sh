@@ -7,6 +7,7 @@ DATA_DIR=$4
 
 source_ids=(2)
 
+# TODO: Avoid hardcoding source_ids
 declare -A target2filename=( \
   ["1"]="1000genomes.phase1/ALL.chr*.*.vcf*"
   ["2"]="1000genomes.phase3/ALL.chr*.*.vcf*"
