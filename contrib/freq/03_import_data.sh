@@ -5,25 +5,31 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-source_ids=(1 11)
+source_ids=(1 2 4)
 
 declare -A target2filename=( \
   ["1"]="1000genomes.phase1/ALL.chr*.*.vcf*"
-  ["11"]="1000genomes.phase3/ALL.chr*.*.vcf*"
-  ["12"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["2"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["3"]="hapmap"
+  ["4"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["5"]="1000genomes.phase3/ALL.chr*.*.vcf*"
 )
 
 declare -A target2sample_ids=( \
   ["1"]="sample_ids.1000genomes.phase1.CHB+JPT.txt"
-  ["11"]="sample_ids.1000genomes.phase3.CHB+JPT.txt"
-  ["12"]="sample_ids.1000genomes.phase3.CEU.txt"
+  ["2"]="sample_ids.1000genomes.phase3.CHB+JPT.txt"
+  ["3"]="CHB+JPT"
+  ["4"]="sample_ids.1000genomes.phase3.CEU.txt"
+  ["5"]="AFR"
 )
 
 # Skip non-unique rsids in original vcf.  # FIXME: Need to be revised.
 declare -A target2exclude_rsids=( \
   ["1"]="--exclude-rsids 113940759 11457237 71904485"
-  ["11"]=""  # TODO: unique check
-  ["12"]=""  # TODO: unique check
+  ["2"]=""
+  ["3"]=""
+  ["4"]=""
+  ["5"]=""
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
