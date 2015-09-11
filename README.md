@@ -74,10 +74,10 @@ Requirements:
 
 | database name             | dbSNP    | reference genome |
 |---------------------------|----------|------------------|
+| human_9606_b144_GRCh38p2  | b144     | GRCh38p2         |
+| human_9606_b144_GRCh37p13 | b144     | GRCh37p13        |
 | human_9606_b142_GRCh38    | b142     | GRCh38           |
 | human_9606_b142_GRCh37p13 | b142     | GRCh37p13        |
-| human_9606_b141_GRCh38    | b141     | GRCh38           |
-| human_9606_b141_GRCh37p13 | b141     | GRCh37p13        |
 
 To specify the versions, use `-d` and `-r` options in `01_fetch_dbsnp.sh`:
 

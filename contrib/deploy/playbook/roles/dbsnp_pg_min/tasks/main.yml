@@ -14,12 +14,8 @@
   git: repo=https://github.com/knmkr/dbsnp-pg-min.git
        dest=dbsnp-pg-min
 
-- name: fetch dbsnp data from ftp
-  command: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data chdir=dbsnp-pg-min
+- shell: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data > 01_fetch_data.log 2>&1        chdir=dbsnp-pg-min
 
-# --- Create PostgreSQL tables for dbSNP
-# ./02_drop_create_table.sh dbsnp_b141 username $PWD
+- shell: ./02_drop_create_table.sh {{ dbsnp_builds }} {{ database_user }} .               > 02_drop_create_table.log 2>&1 chdir=dbsnp-pg-min
 
-# --- Import dbSNP data into PostgreSQL tables,
-# --- and add constraints (index, etc.) to tables
-# ./03_import_data.sh dbsnp_b141 username $PWD $PWD/data
+- shell: ./03_import_data.sh {{ dbsnp_builds }} {{ database_user }} . ./data              > 03_import_data.log 2>&1       chdir=dbsnp-pg-min

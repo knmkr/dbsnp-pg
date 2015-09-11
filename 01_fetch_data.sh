@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dbsnp_builds=("b142" "b141")
+dbsnp_builds=("b144" "b142")
 reference_genome_builds=("GRCh38" "GRCh37")
 
 usage_exit() {
@@ -39,17 +39,23 @@ cd ${data_dir}
 database="human_9606_${dbsnp}_${ref}"
 echo "[INFO] Fetching data for ${database} to ${data_dir}..."
 
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                      # 131 MB
-
-declare -A _SNPChrPosOnRef=( \
-  ["human_9606_b141_GRCh37"]="b141_SNPChrPosOnRef_GRCh37p13" \
-  ["human_9606_b141_GRCh38"]="b141_SNPChrPosOnRef" \
-  ["human_9606_b142_GRCh37"]="b142_SNPChrPosOnRef_105" \
-  ["human_9606_b142_GRCh38"]="b142_SNPChrPosOnRef_106"
+declare -A fpt_name=( \
+  ["human_9606_b142_GRCh37"]="human_9606_b142_GRCh37p13" \
+  ["human_9606_b142_GRCh38"]="human_9606_b142_GRCh38"    \
+  ["human_9606_b144_GRCh37"]="human_9606_b144_GRCh37p13" \
+  ["human_9606_b144_GRCh38"]="human_9606_b144_GRCh38p2"
 )
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/${_SNPChrPosOnRef[${database}]}.bcp.gz{,.md5}  # 481 MB
-wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                   # 63.1 MB
-wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                               # 767 B
+declare -A SNPChrPosOnRef=( \
+  ["human_9606_b142_GRCh37"]="b142_SNPChrPosOnRef_105" \
+  ["human_9606_b142_GRCh38"]="b142_SNPChrPosOnRef_106" \
+  ["human_9606_b144_GRCh37"]="b144_SNPChrPosOnRef_105" \
+  ["human_9606_b144_GRCh38"]="b144_SNPChrPosOnRef_107"
+)
+
+wget -c ftp.ncbi.nih.gov/snp/organisms/${fpt_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                     # ~150 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${fpt_name[${database}]}/database/organism_data/${SNPChrPosOnRef[${database}]}.bcp.gz{,.md5}  # ~500 MB
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                               #  ~70 MB
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                                           #   ~1 KB
 
 echo "[INFO] Checking md5..."
 
