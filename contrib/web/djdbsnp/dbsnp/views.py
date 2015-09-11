@@ -7,10 +7,12 @@ from .models import SNP
 
 
 def index(request):
-    rs_match = re.findall('\A(rs)?(\d+)\Z', request.GET.get('rs', ''))
+    rs_regexp = re.compile('\A(rs)?(\d{1,9})\Z')  # max rs# is 483352819 (b141)
+    rs_match = rs_regexp.findall(request.GET.get('rs', ''))
     rs = int(rs_match[0][1]) if rs_match else ''
     records = {'rs': rs}
 
+    # TODO: handle not found records
     if rs:
         chrom, pos = SNP.get_pos_by_rs(rs)
         # TODO: chrom, pos on b37, b38
