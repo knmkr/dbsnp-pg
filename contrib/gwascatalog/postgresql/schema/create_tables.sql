@@ -1,35 +1,39 @@
--- [raw columns]
--- Date Added to Catalog
--- PUBMEDID
--- First Author
--- Date
--- Journal
--- Link
--- Study
--- Disease/Trait
--- Initial Sample Description
--- Replication Sample Description
--- Region
--- Chr_id
--- Chr_pos
--- Reported Gene(s)
--- Mapped_gene
--- Upstream_gene_id
--- Downstream_gene_id
--- Snp_gene_ids
--- Upstream_gene_distance
--- Downstream_gene_distance
--- Strongest SNP-Risk Allele
--- SNPs
--- Merged
--- Snp_id_current
--- Context
--- Intergenic
--- Risk Allele Frequency
--- p-Value
--- Pvalue_mlog
--- p-Value (text)
--- OR or beta
--- 95% CI (text)
--- Platform [SNPs passing QC]
--- CNV
+DROP TABLE IF EXISTS GwasCatalog;
+CREATE TABLE GwasCatalog (
+    date_added_to_catalog          date     not null,
+    pubmed_id                      integer  not null,
+    first_author                   varchar  not null,
+    date_published                 date     not null,
+    journal                        varchar  not null,
+    pubmed_url                     varchar  not null,
+    study_title                    varchar  not null,
+    disease_or_trait               varchar  not null,
+    initial_sample                 varchar  not null,
+    replication_sample             varchar  not null,
+    region                         varchar  not null,
+    chr                            varchar(32) not null,
+    pos                            integer  not null,
+    gene_reported                  varchar  not null,
+    gene_mapped                    varchar  not null,
+    upstream_entrez_gene_id        varchar,
+    downstream_entrez_gene_id      varchar,
+    entrez_gene_id                 varchar,
+    upstream_gene_distance_kb      real,
+    downstream_gene_distance_kb    real,
+    strongest_snp_risk_allele      varchar  not null,
+    strongest_snps                 varchar  not null,
+    is_snp_id_merged               boolean  not null,
+    snp_id_current                 varchar  not null,
+    snp_context                    varchar  not null,
+    is_snpintergenic               boolean  not null,
+    risk_allele_freq_reported      real     not null,
+    p_value                        real     not null,
+    minus_log_p_value_             real     not null,
+    p_value_text                   varchar  not null,
+    odds_ratio_or_beta_coeff       real     not null,
+    confidenceinterval_95_percent  varchar  not null,
+    snp_platform                   varchar  not null,
+    cnv                            varchar  not null,
+    snp_id                         integer  not null,
+    risk_allele                    varchar(1024)  not null
+);
