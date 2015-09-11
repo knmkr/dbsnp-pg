@@ -1,6 +1,6 @@
 # contrib/deploy
 
-- Deployment scripts for `dbsnp-pg-min` on PostgreSQL server.
+- Deployment scripts for hosting `dbsnp-pg-min` on PostgreSQL server.
 
 
 ## Requirements
