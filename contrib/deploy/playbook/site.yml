@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  sudo: yes
+  become: yes
   gather_facts: no
   roles:
     - { role: selinux }
@@ -10,7 +10,7 @@
     - { role: ntpd }
 
 - hosts: dbsnp_host
-  sudo: yes
+  become: yes
   gather_facts: no
   roles:
     - { role: postgresql }

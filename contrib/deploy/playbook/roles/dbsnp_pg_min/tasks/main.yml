@@ -1,21 +1,31 @@
 ---
+- name: create dbsnp user
+  user: name={{ database_user }}
+  become: yes
+
 - name: create postgresql user for dbsnp
-  sudo_user: postgres
+  become_user: postgres
   postgresql_user: name={{ database_user }}
                    role_attr_flags=NOSUPERUSER
 
 - name: create postgresql database for dbsnp
-  sudo_user: postgres
+  become_user: postgres
   postgresql_db: name={{ database_name }}
                  encoding='UTF-8'
                  owner={{ database_user }}
 
 - name: clone dbsnp-pg-min repo
+  become_user: dbsnp
   git: repo=https://github.com/knmkr/dbsnp-pg-min.git
-       dest=dbsnp-pg-min
+       dest={{ dbsnp_pg_min_root }}
 
-- shell: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data > 01_fetch_data.log 2>&1        chdir=dbsnp-pg-min
+- shell: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data > 01_fetch_data.log 2>&1 \
+         chdir={{ dbsnp_pg_min_root }}
 
-- shell: ./02_drop_create_table.sh {{ dbsnp_builds }} {{ database_user }} .               > 02_drop_create_table.log 2>&1 chdir=dbsnp-pg-min
+- become_user: dbsnp
+  shell: ./02_drop_create_table.sh {{ dbsnp_builds }} {{ database_user }} . > 02_drop_create_table.log 2>&1 \
+         chdir={{ dbsnp_pg_min_root }}
 
-- shell: ./03_import_data.sh {{ dbsnp_builds }} {{ database_user }} . ./data              > 03_import_data.log 2>&1       chdir=dbsnp-pg-min
+- become_user: dbsnp
+  shell: ./03_import_data.sh {{ dbsnp_builds }} {{ database_user }} . ./data > 03_import_data.log 2>&1 \
+         chdir={{ dbsnp_pg_min_root }}
