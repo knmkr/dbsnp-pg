@@ -8,7 +8,8 @@ CREATE TABLE AlleleFreqSource (
 );
 INSERT INTO AlleleFreqSource VALUES (1, '1000genomes_phase1', '{CHB,JPT}', 'b37'),
                                     (2, '1000genomes_phase3', '{CHB,JPT}', 'b37'),
-                                    (4, '1000genomes_phase3', '{CEU}',     'b37');
+                                    (3, '1000genomes_phase1', '{CHB,JPT,CHS}', 'b37'),
+                                    (4, '1000genomes_phase3', '{CHB,JPT,CHS}', 'b37');
 
 -- Partitioning "master" table
 DROP TABLE IF EXISTS AlleleFreq CASCADE;
