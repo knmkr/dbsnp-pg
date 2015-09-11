@@ -6,22 +6,21 @@
 - We simply port minimal original MS SQL Server schema to PostgreSQL,
 - and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671) in command line interface.
 
-[![Build Status](https://travis-ci.org/knmkr/dbsnp-pg-min.svg?branch=master)](https://travis-ci.org/knmkr/dbsnp-pg-min)
 
 ## Getting Started
 
     # 0. Create new PostgreSQL database for dbSNP
-    $ createdb --owner=username dbsnp_b141
+    $ createdb --owner=username dbsnp_b142_GRCh37
 
-    # 1. Fetch dbSNP data from dbSNP FTP site
-    $ ./01_fetch_data.sh $PWD/data
+    # 1. Fetch dbSNP data from NCBI FTP.
+    $ ./01_fetch_dbsnp.sh -d b142 -r GRCh37 $PWD/data
 
     # 2. Create PostgreSQL tables for dbSNP
-    $ ./02_drop_create_table.sh dbsnp_b141 username $PWD
+    $ ./02_drop_create_table.sh dbsnp_b142 username $PWD
 
     # 3. Import dbSNP data into PostgreSQL tables,
     #    and add constraints (index, etc.) to tables
-    $ ./03_import_data.sh dbsnp_b141 username $PWD $PWD/data
+    $ ./03_import_data.sh dbsnp_b142 username $PWD $PWD/data
 
 
 ## Usage example
@@ -70,20 +69,14 @@ Requirements:
 ## Notes
 
 - Only human [9606] data is supported.
-- Build versions of dbSNP and human references genome assemblies are:
+- Build versions of dbSNP and references genome assemblies depend on the versions in NCBI FTP release:
 
-| database name             | dbSNP    | reference genome |
+| PostgreSQL database name  | dbSNP    | reference genome |
 |---------------------------|----------|------------------|
-| human_9606_b144_GRCh38p2  | b144     | GRCh38p2         |
-| human_9606_b144_GRCh37p13 | b144     | GRCh37p13        |
-| human_9606_b142_GRCh38    | b142     | GRCh38           |
-| human_9606_b142_GRCh37p13 | b142     | GRCh37p13        |
-
-To specify the versions, use `-d` and `-r` options in `01_fetch_dbsnp.sh`:
-
-```
-$ ./01_fetch_dbsnp.sh -d b141 -r GRCh37p13
-```
+| dbsnp_b144_GRCh38         | b144     | GRCh38p2         |
+| dbsnp_b144_GRCh37         | b144     | GRCh37p13        |
+| dbsnp_b142_GRCh38         | b142     | GRCh38           |
+| dbsnp_b142_GRCh37         | b142     | GRCh37p13        |
 
 
 ## Requirements
