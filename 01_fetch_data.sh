@@ -74,6 +74,6 @@ for src in *.gz; do
 done
 
 # Unifying bcp name
-cp ${_SNPChrPosOnRef[${database}]}.bcp.gz SNPChrPosOnRef.bcp.gz
+cp ${SNPChrPosOnRef[${database}]}.bcp.gz SNPChrPosOnRef.bcp.gz
 
 echo "[INFO] Done"
