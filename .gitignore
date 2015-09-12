@@ -1,5 +1,5 @@
+.vagrant
+
 *.py[cod]
 __pycache__/
-
-# contrib/web
 settings.py

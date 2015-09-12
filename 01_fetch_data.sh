@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dbsnp_builds=("b142" "b141")
+dbsnp_builds=("b144" "b142")
 reference_genome_builds=("GRCh38" "GRCh37")
 
 usage_exit() {
@@ -12,66 +12,50 @@ usage_exit() {
   exit 1
 }
 
-in_array() {
-  local array="$1[@]"
-  local seeking=$2
-  local in=1
-  for element in "${!array}"; do
-    if [[ $element == $seeking ]]; then
-      in=0
-      break
-    fi
-  done
-  return $in
-}
-
+# Parse args
 while getopts ":d:r:" OPT; do
   case "${OPT}" in
-    d)  dbsnp=${OPTARG}
-        ;;
-    r)  ref=${OPTARG}
-        ;;
-    \?) usage_exit
-        ;;
+    d)  dbsnp=${OPTARG};;
+    r)  ref=${OPTARG};;
+     \?) usage_exit;;
   esac
 done
 shift $((OPTIND - 1))
 
-# Defaults
+# Set defaults
 : ${dbsnp:=${dbsnp_builds[0]}}
 : ${ref:=${reference_genome_builds[0]}}
 
-in_array $dbsnp_build $dbsnp && echo ok || usage_exit
-in_array $reference_genome_build $ref && echo ok|| usage_exit
-
+# TODO: check dbsnp_builds and reference_genome_builds in choices
+# Check args
 data_dir=$1
 if [ -z "${data_dir}" ]; then
     usage_exit
 fi
+
 mkdir -p ${data_dir}
 cd ${data_dir}
 
 database="human_9606_${dbsnp}_${ref}"
-echo "[INFO] Fetching data for ${database}..."
+echo "[INFO] Fetching data for ${database} to ${data_dir}..."
 
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                     # 131 MB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/Population.bcp.gz{,.md5}                      # 148 kB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/AlleleFreqBySsPop.bcp.gz{,.md5}               # 1.1 GB
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/dn_PopulationIndGrp.bcp.gz{,.md5}             # 550 B
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPSubSNPLink.bcp.gz{,.md5}                   # 1.8 GB
-
-declare -A _SNPChrPosOnRef=( \
-  ["human_9606_b141_GRCh37"]="b141_SNPChrPosOnRef_GRCh37p13" \
-  ["human_9606_b141_GRCh38"]="b141_SNPChrPosOnRef" \
-  ["human_9606_b142_GRCh37"]="b142_SNPChrPosOnRef_105" \
-  ["human_9606_b142_GRCh38"]="b142_SNPChrPosOnRef_106"
+declare -A fpt_name=( \
+  ["human_9606_b142_GRCh37"]="human_9606_b142_GRCh37p13" \
+  ["human_9606_b142_GRCh38"]="human_9606_b142_GRCh38"    \
+  ["human_9606_b144_GRCh37"]="human_9606_b144_GRCh37p13" \
+  ["human_9606_b144_GRCh38"]="human_9606_b144_GRCh38p2"
 )
-wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/${_SNPChrPosOnRef[${database}]}.bcp.gz{,.md5}  # 481 MB
-wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                   # 63.1 MB
+declare -A SNPChrPosOnRef=( \
+  ["human_9606_b142_GRCh37"]="b142_SNPChrPosOnRef_105" \
+  ["human_9606_b142_GRCh38"]="b142_SNPChrPosOnRef_106" \
+  ["human_9606_b144_GRCh37"]="b144_SNPChrPosOnRef_105" \
+  ["human_9606_b144_GRCh38"]="b144_SNPChrPosOnRef_107"
+)
 
-# optional
-# wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                              # 767 B
-# wget -c ftp.ncbi.nih.gov/snp/organisms/${database}/database/organism_data/SNPAlleleFreq.bcp.gz{,.md5}                   # 483 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${fpt_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                     # ~150 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${fpt_name[${database}]}/database/organism_data/${SNPChrPosOnRef[${database}]}.bcp.gz{,.md5}  # ~500 MB
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                               #  ~70 MB
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                                           #   ~1 KB
 
 echo "[INFO] Checking md5..."
 
@@ -90,6 +74,6 @@ for src in *.gz; do
 done
 
 # Unifying bcp name
-cp ${_SNPChrPosOnRef[${database}]}.bcp.gz SNPChrPosOnRef.bcp.gz
+cp ${SNPChrPosOnRef[${database}]}.bcp.gz SNPChrPosOnRef.bcp.gz
 
 echo "[INFO] Done"

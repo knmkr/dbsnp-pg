@@ -7,20 +7,27 @@ DATA_DIR=$4
 
 source_ids=(1 2)
 
+# TODO: Avoid hardcoding source_ids
 declare -A target2filename=( \
   ["1"]="1000genomes.phase1/ALL.chr*.*.vcf*"
   ["2"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["3"]="1000genomes.phase1/ALL.chr*.*.vcf*"
+  ["4"]="1000genomes.phase3/ALL.chr*.*.vcf*"
 )
 
 declare -A target2sample_ids=( \
-  ["1"]="sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt"
+  ["1"]="sample_ids.1000genomes.phase1.CHB+JPT.txt"
   ["2"]="sample_ids.1000genomes.phase3.CHB+JPT.txt"
+  ["3"]="sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt"
+  ["4"]="sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt"
 )
 
 # Skip non-unique rsids in original vcf.  # FIXME: Need to be revised.
 declare -A target2exclude_rsids=( \
   ["1"]="--exclude-rsids 113940759 11457237 71904485"
-  ["2"]=""
+  ["2"]="--exclude-rsids 113350436 193220252"
+  ["3"]="--exclude-rsids 113940759 11457237 71904485"
+  ["4"]="--exclude-rsids 113350436 193220252"
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."

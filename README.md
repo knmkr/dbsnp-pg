@@ -6,22 +6,21 @@
 - We simply port minimal original MS SQL Server schema to PostgreSQL,
 - and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671) in command line interface.
 
-[![Build Status](https://travis-ci.org/knmkr/dbsnp-pg-min.svg?branch=master)](https://travis-ci.org/knmkr/dbsnp-pg-min)
 
 ## Getting Started
 
     # 0. Create new PostgreSQL database for dbSNP
-    $ createdb --owner=username dbsnp_b141
+    $ createdb --owner=username dbsnp_b142_GRCh37
 
-    # 1. Fetch dbSNP data from dbSNP FTP site
-    $ ./01_fetch_data.sh $PWD/data
+    # 1. Fetch dbSNP data from NCBI FTP.
+    $ ./01_fetch_dbsnp.sh -d b142 -r GRCh37 $PWD/data
 
     # 2. Create PostgreSQL tables for dbSNP
-    $ ./02_drop_create_table.sh dbsnp_b141 username $PWD
+    $ ./02_drop_create_table.sh dbsnp_b142 username $PWD
 
     # 3. Import dbSNP data into PostgreSQL tables,
     #    and add constraints (index, etc.) to tables
-    $ ./03_import_data.sh dbsnp_b141 username $PWD $PWD/data
+    $ ./03_import_data.sh dbsnp_b142 username $PWD $PWD/data
 
 
 ## Usage example
@@ -43,15 +42,35 @@ SELECT get_current_rs(332);
 ### Get allele frequency for given rs\#.
 
 ```
-SELECT * FROM get_tbl_freq_by_rs(671);
- snp_id | subsnp_id |             loc_pop_id             |    ind_grp_name     | source | rs_allele |   freq
---------+-----------+------------------------------------+---------------------+--------+-----------+-----------
-    671 |   3177110 | MITOGPOP6                          | multiple            | IG     | A         | 0.0645161
-    671 |   3177110 | MITOGPOP6                          | multiple            | IG     | G         |  0.935484
-    671 |   5586234 | AFR1                               |                     | AF     | G         |         1
-    671 |   5586234 | AFR1                               |                     | AF     | A         |         0
-...
+SELECT * FROM get_tbl_allele_freq_by_rs_history(2, ARRAY[671, 2230021]);
+  snp_id  | snp_current | snp_in_source | allele |      freq
+----------+-------------+---------------+--------+-----------------
+      671 |         671 |           671 | {G,A}  | {0.7995,0.2005}
+  2230021 |         671 |           671 | {G,A}  | {0.7995,0.2005}
 ```
+
+See details in `contrib/freq`
+
+### Get GWAS Catalog data for given rs\#.
+
+```
+SELECT pubmed_id, disease_or_trait, snp_id, risk_allele, odds_ratio_or_beta_coeff
+FROM gwascatalog
+WHERE snp_id = 671
+AND risk_allele IS NOT NULL;
+
+ pubmed_id |             disease_or_trait              | snp_id | risk_allele | odds_ratio_or_beta_coeff
+-----------+-------------------------------------------+--------+-------------+--------------------------
+  19698717 | Esophageal cancer                         |    671 | A           |                     1.67
+  20139978 | Hematological and biochemical traits      |    671 | A           |                     0.12
+  20139978 | Mean corpuscular hemoglobin concentration |    671 | A           |                     0.08
+  21971053 | Coronary heart disease                    |    671 | A           |                     1.43
+  22286173 | Intracranial aneurysm                     |    671 | C           |                     1.24
+  22797727 | Renal function-related traits (sCR)       |    671 | A           |                        0
+  24861553 | Body mass index                           |    671 | G           |                     0.04
+```
+
+See details in `contrib/gwascatalog`
 
 
 ## Unit Tests
@@ -71,21 +90,14 @@ Requirements:
 ## Notes
 
 - Only human [9606] data is supported.
-- Build versions of dbSNP and human reference genome assembly are:
+- Build versions of dbSNP and references genome assemblies depend on the versions in NCBI FTP release:
 
-| database name             | dbSNP    | reference genome |
+| PostgreSQL database name  | dbSNP    | reference genome |
 |---------------------------|----------|------------------|
-| human_9606                | (latest) | (latest)         |
-| human_9606_b142_GRCh38    | b142     | GRCh38           |
-| human_9606_b142_GRCh37p13 | b142     | GRCh37p13        |
-| human_9606_b141_GRCh38    | b141     | GRCh38           |
-| human_9606_b141_GRCh37p13 | b141     | GRCh37p13        |
-
-If you want to specify the versions, set `-d` and `-r` options in `01_fetch_dbsnp.sh`:
-
-```
-$ ./01_fetch_dbsnp.sh -d b141 -r GRCh37p13
-```
+| dbsnp_b144_GRCh38         | b144     | GRCh38p2         |
+| dbsnp_b144_GRCh37         | b144     | GRCh37p13        |
+| dbsnp_b142_GRCh38         | b142     | GRCh38           |
+| dbsnp_b142_GRCh37         | b142     | GRCh37p13        |
 
 
 ## Requirements

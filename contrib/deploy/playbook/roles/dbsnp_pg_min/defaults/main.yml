@@ -1,0 +1,8 @@
+---
+dbsnp_builds: b142
+reference_genome_builds: GRCh37
+
+database_user: dbsnp
+database_name: dbsnp_{{ dbsnp_builds }}_{{ reference_genome_builds }}
+
+dbsnp_pg_min_root: /home/dbsnp/dbsnp-pg-min
