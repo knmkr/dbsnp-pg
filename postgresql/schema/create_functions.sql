@@ -1,9 +1,16 @@
 DROP FUNCTION IF EXISTS get_current_rs(_rs int);
 CREATE OR REPLACE FUNCTION get_current_rs(_rs int)
 RETURNS int AS $$
+DECLARE
+  snp_current int;
 BEGIN
   --
-  RETURN (SELECT rscurrent FROM rsmergearch WHERE rshigh = _rs);
+  SELECT INTO snp_current rscurrent FROM rsmergearch WHERE rshigh = _rs;
+  IF snp_current IS NULL THEN
+      RETURN _rs;
+  ELSE
+      RETURN snp_current;
+  END IF;
 END
 $$ LANGUAGE plpgsql;
 
@@ -16,6 +23,19 @@ BEGIN
   --
   SELECT INTO ret chr, pos + 1 FROM snpchrposonref WHERE snp_id = _rs;  -- 0-based to 1-based
   RETURN ret;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_tbl_pos_by_rs(
+  _rs int,
+  OUT chr varchar(32),
+  OUT pos int
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT s.chr, s.pos + 1 FROM snpchrposonref s WHERE snp_id = _rs  -- 0-based to 1-based
+  );
+  RETURN;
 END
 $$ LANGUAGE plpgsql;
 

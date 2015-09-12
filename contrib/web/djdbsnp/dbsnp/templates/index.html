@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- bootstrap3 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>rs id: {{ rs }}</h2>
+
+          {% if rs %}
+          <h2 class="sub-header">location</h2>
+          <table class="table">
+            <tr>
+              <th>chrom</th>
+              <td>{{ chrom }}</td>
+            </tr>
+            <tr>
+              <th>position</th>
+              <td>{{ pos }}</td>
+            </tr>
+            <tr>
+              <th>reference genome build</th>
+              <td>{{ dbsnp_ref_genome_build }}</td>
+            </tr>
+          </table>
+
+          <h2 class="sub-header">merge history</h2>
+          <table class="table">
+            <tr>
+              <th>rs id</th>
+              <td>{{ rs }}</td>
+            </tr>
+            <tr>
+              <th>current</th>
+              <td>{{ rs_current }}</td>
+            </tr>
+            <tr>
+              <th>old</th>
+              <td>TODO</td>
+            </tr>
+            <tr>
+              <th>dbsnp build</th>
+              <td>{{ dbsnp_build }}</td>
+            </tr>
+          </table>
+
+          <h2 class="sub-header">allele freq</h2>
+          <table class="table">
+            {% for source, allele_freq in allele_freqs.items %}
+              {% for allele, freq in allele_freq.items %}
+              <tr>
+                <th>{{ allele }}</th>
+                <td>{{ freq }}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <th>allele freq source</th>
+                <td>{{ source }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
