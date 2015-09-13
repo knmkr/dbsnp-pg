@@ -5,7 +5,7 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-source_ids=(1 2)
+source_ids=(2)
 
 # TODO: Avoid hardcoding source_ids
 declare -A target2filename=( \
