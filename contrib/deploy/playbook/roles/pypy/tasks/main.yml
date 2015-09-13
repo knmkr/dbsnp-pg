@@ -1,9 +1,10 @@
 ---
 - command: wget -c https://bitbucket.org/pypy/pypy/downloads/{{ pypy }}.tar.bz2
-
 - command: tar xf {{ pypy }}.tar.bz2
+
+- stat: path=/opt/pypy
+  register: p
 
 - command: mv {{ pypy }} /opt/pypy
   become: yes
-
-- command: rm -f {{ pypy }}.tar.bz2
+  when: p.stat.isdir is not defined
