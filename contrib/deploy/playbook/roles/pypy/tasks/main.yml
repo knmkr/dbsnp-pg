@@ -1,0 +1,9 @@
+---
+- command: wget -c https://bitbucket.org/pypy/pypy/downloads/{{ pypy }}.tar.bz2
+
+- command: tar xf {{ pypy }}.tar.bz2
+
+- command: mv {{ pypy }} /opt/pypy
+  become: yes
+
+- command: rm -f {{ pypy }}.tar.bz2

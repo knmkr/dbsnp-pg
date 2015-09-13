@@ -13,7 +13,8 @@
   become: yes
   gather_facts: yes
   roles:
-    - { role: postgresql }
     - { role: python }
+    - { role: pypy }
+    - { role: postgresql }
     - { role: dbsnp_pg_min }
     - { role: dbsnp_pg_min_freq }
