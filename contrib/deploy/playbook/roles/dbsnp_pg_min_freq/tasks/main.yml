@@ -1,5 +1,5 @@
 ---
-- shell: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data > 01_fetch_data.log 2>&1 \
+- shell: ./01_fetch_data.sh ./data > 01_fetch_data.log 2>&1 \
          chdir={{ dbsnp_pg_min_root }}/contrib/freq
 
 - become_user: dbsnp
