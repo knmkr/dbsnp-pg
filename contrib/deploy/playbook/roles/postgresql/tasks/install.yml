@@ -9,6 +9,6 @@
 - name: install postgresql package
   yum: name={{ item }} state=latest
   with_items:
+   - postgresql{{ postgresql_version| replace('.', '') }}-devel
    - postgresql{{ postgresql_version| replace('.', '') }}-server
-   - python-psycopg2
-   - postgresql{{ postgresql_version |replace('.', '') }}-contrib
+   - postgresql{{ postgresql_version| replace('.', '') }}-contrib

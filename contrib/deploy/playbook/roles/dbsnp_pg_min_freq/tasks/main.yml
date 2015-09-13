@@ -1,0 +1,11 @@
+---
+- shell: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data > 01_fetch_data.log 2>&1 \
+         chdir={{ dbsnp_pg_min_root }}/contrib/freq
+
+- become_user: dbsnp
+  shell: ./02_drop_create_table.sh {{ dbsnp_builds }} {{ database_user }} . > 02_drop_create_table.log 2>&1 \
+         chdir={{ dbsnp_pg_min_root }}/contrib/freq
+
+- become_user: dbsnp
+  shell: ./03_import_data.sh {{ dbsnp_builds }} {{ database_user }} . ./data > 03_import_data.log 2>&1 \
+         chdir={{ dbsnp_pg_min_root }}/contrib/freq

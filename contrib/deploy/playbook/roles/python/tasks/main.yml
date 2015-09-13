@@ -1,0 +1,14 @@
+---
+- git: repo=https://github.com/tagomoris/xbuild.git dest=/var/tmp/xbuild
+
+- name: install python2.7
+  become: yes
+  command: /var/tmp/xbuild/python-install -f 2.7.10 /opt/python-2.7
+
+- name: upgrade pip
+  become: yes
+  pip: name=pip extra_args="--upgrade" executable=/opt/python-2.7/bin/pip
+
+- name: install virtualenv
+  become: yes
+  pip: name=virtualenv executable=/opt/python-2.7/bin/pip
