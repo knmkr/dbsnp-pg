@@ -14,6 +14,9 @@
                  encoding='UTF-8'
                  owner={{ database_user }}
 
+- name: install nkf
+  yum: name=nkf state=present
+
 - name: clone dbsnp-pg-min repo
   become_user: dbsnp
   git: repo=https://github.com/knmkr/dbsnp-pg-min.git
