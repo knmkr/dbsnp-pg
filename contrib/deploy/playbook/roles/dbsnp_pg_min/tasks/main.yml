@@ -22,13 +22,13 @@
   git: repo=https://github.com/knmkr/dbsnp-pg-min.git
        dest={{ dbsnp_pg_min_root }}
 
-- shell: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} ./data > 01_fetch_data.log 2>&1 \
+- shell: ./01_fetch_data.sh -d {{ dbsnp_builds }} -r {{ reference_genome_builds }} {{ dbsnp_pg_min_root }}/data > 01_fetch_data.log 2>&1 \
          chdir={{ dbsnp_pg_min_root }}
 
 - become_user: dbsnp
-  shell: ./02_drop_create_table.sh {{ database_name }} {{ database_user }} . > 02_drop_create_table.log 2>&1 \
+  shell: ./02_drop_create_table.sh {{ database_name }} {{ database_user }} {{ dbsnp_pg_min_root }} > 02_drop_create_table.log 2>&1 \
          chdir={{ dbsnp_pg_min_root }}
 
 - become_user: dbsnp
-  shell: ./03_import_data.sh {{ database_name }} {{ database_user }} . ./data > 03_import_data.log 2>&1 \
+  shell: ./03_import_data.sh {{ database_name }} {{ database_user }} {{ dbsnp_pg_min_root }} {{ dbsnp_pg_min_root }}/data > 03_import_data.log 2>&1 \
          chdir={{ dbsnp_pg_min_root }}
