@@ -23,9 +23,9 @@
          chdir={{ dbsnp_pg_min_root }}
 
 - become_user: dbsnp
-  shell: ./02_drop_create_table.sh {{ dbsnp_builds }} {{ database_user }} . > 02_drop_create_table.log 2>&1 \
+  shell: ./02_drop_create_table.sh {{ database_name }} {{ database_user }} . > 02_drop_create_table.log 2>&1 \
          chdir={{ dbsnp_pg_min_root }}
 
 - become_user: dbsnp
-  shell: ./03_import_data.sh {{ dbsnp_builds }} {{ database_user }} . ./data > 03_import_data.log 2>&1 \
+  shell: ./03_import_data.sh {{ database_name }} {{ database_user }} . ./data > 03_import_data.log 2>&1 \
          chdir={{ dbsnp_pg_min_root }}
