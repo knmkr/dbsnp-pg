@@ -8,6 +8,7 @@ DATA_DIR=$4
 target=(Allele SnpChrCode RsMergeArch SNPChrPosOnRef)
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
+echo "[INFO] database_name: ${PG_DB}, database_user: ${PG_USER}, base_dir: ${BASE_DIR}, data_dir: ${DATA_DIR}"
 
 cd ${DATA_DIR}
 

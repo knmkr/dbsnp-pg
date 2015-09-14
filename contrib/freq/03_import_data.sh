@@ -31,6 +31,7 @@ declare -A target2exclude_rsids=( \
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
+echo "[contrib/freq] [INFO] database_name: ${PG_DB}, database_user: ${PG_USER}, base_dir: ${BASE_DIR}, data_dir: ${DATA_DIR}"
 
 cd ${DATA_DIR}
 
