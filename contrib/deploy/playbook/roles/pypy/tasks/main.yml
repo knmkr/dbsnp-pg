@@ -1,13 +1,6 @@
 ---
-- command: wget -c https://bitbucket.org/pypy/pypy/downloads/{{ pypy }}.tar.bz2
-- command: tar xf {{ pypy }}.tar.bz2
+- command: wget -c https://bitbucket.org/squeaky/portable-pypy/downloads/{{ pypy }}.tar.bz2 creates={{ pypy }}.tar.bz2
+- command: tar xf {{ pypy }}.tar.bz2 creates={{ pypy }}
 
-- stat: path=/opt/pypy
-  register: p
-
-- command: mv {{ pypy }} /opt/pypy
-  become: yes
-  when: p.stat.isdir is not defined
-
-# FIXME: workaround
-- file: src=/lib64/libbz2.so.1 dest=/lib64/libbz2.so.1.0 state=link
+- become: yes
+  command: mv {{ pypy }} /opt/pypy creates=/opt/pypy
