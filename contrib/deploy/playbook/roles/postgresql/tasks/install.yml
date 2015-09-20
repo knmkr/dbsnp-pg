@@ -2,11 +2,13 @@
 
 # https://wiki.postgresql.org/wiki/YUM_Installation
 - name: install postgresql
+  become: yes
   yum: name={{ item }} state=present
   with_items:
    - "{{ postgresql_repo_url }}"
 
 - name: install postgresql package
+  become: yes
   yum: name={{ item }} state=latest
   with_items:
    - postgresql{{ postgresql_version| replace('.', '') }}-devel

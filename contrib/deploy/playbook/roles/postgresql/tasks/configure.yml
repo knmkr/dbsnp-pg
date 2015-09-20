@@ -1,5 +1,6 @@
 ---
 - name: initdb
+  become: yes
   command: service postgresql-{{ postgresql_version }} initdb
            creates=/var/lib/pgsql/{{ postgresql_version }}/data/postgresql.conf
 
@@ -16,4 +17,5 @@
 #     owner=postgres group=postgres mode=0640
 
 - name: start postgresql service
+  become: yes
   service: name='postgresql-{{ postgresql_version }}' state=started enabled=yes

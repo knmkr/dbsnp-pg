@@ -1,5 +1,6 @@
 ---
-- shell: ./01_fetch_data.sh {{ dbsnp_pg_min_freq_root }}/data > 01_fetch_data.log 2>&1 \
+- become_user: dbsnp
+  shell: ./01_fetch_data.sh {{ dbsnp_pg_min_freq_root }}/data > 01_fetch_data.log 2>&1 \
          chdir={{ dbsnp_pg_min_freq_root }}
 
 - become_user: dbsnp
