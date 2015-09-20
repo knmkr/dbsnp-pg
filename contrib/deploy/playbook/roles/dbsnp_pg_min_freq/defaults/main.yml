@@ -6,4 +6,4 @@ database_user: dbsnp
 database_name: dbsnp_{{ dbsnp_builds }}_{{ reference_genome_builds }}
 
 dbsnp_pg_min_root: /home/dbsnp/dbsnp-pg-min
-dbsnp_pg_min_freq_root: {{ dbsnp_pg_min_root }}/contrib/freq
+dbsnp_pg_min_freq_root: "{{ dbsnp_pg_min_root }}/contrib/freq"
