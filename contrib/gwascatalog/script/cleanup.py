@@ -16,39 +16,39 @@ def _main():
     date_downloaded = re.findall(r'gwas_catalog-downloaded_(\d{4}-\d{2}-\d{2}).tsv', os.path.basename(args.gwascatalog))[0]
 
     # ref: http://www.ebi.ac.uk/gwas/docs/fileheaders
-    cols_map = [('Date Added to Catalog',          'date_added',                     date),
+    cols_map = [('DATE ADDED TO CATALOG',          'date_added',                     date),
                 ('PUBMEDID',                       'pubmed_id',                      int),
-                ('First Author',                   'first_author',                   str),
-                ('Date',                           'date_published',                 date),
-                ('Journal',                        'journal',                        str),
-                ('Link',                           'pubmed_url',                     str),
-                ('Study',                          'study_title',                    str),
-                ('Disease/Trait',                  'disease_or_trait',               str),
-                ('Initial Sample Description',     'initial_sample',                 str),
-                ('Replication Sample Description', 'replication_sample',             str),
-                ('Region',                         'region',                         str),
-                ('Chr_id',                         'chr',                            chrom),
-                ('Chr_pos',                        'pos',                            int),
-                ('Reported Gene(s)',               'gene_reported',                  str),
-                ('Mapped_gene',                    'gene_mapped',                    str),
-                ('Upstream_gene_id',               'upstream_entrez_gene_id',        str),  # when rs is not within gene
-                ('Downstream_gene_id',             'downstream_entrez_gene_id',      str),  # when rs is not within gene
-                ('Snp_gene_ids',                   'entrez_gene_id',                 str),  # when rs is within gene
-                ('Upstream_gene_distance',         'upstream_gene_distance_kb',      float),
-                ('Downstream_gene_distance',       'downstream_gene_distance_kb',    float),
-                ('Strongest SNP-Risk Allele',      'strongest_snp_risk_allele',      str),
-                ('SNPs',                           'strongest_snps',                 str),
-                ('Merged',                         'is_snp_id_merged',               boolean),
-                ('Snp_id_current',                 'snp_id_current',                 str),
-                ('Context',                        'snp_context',                    str),
-                ('Intergenic',                     'is_snp_intergenic',              boolean),
-                ('Risk Allele Frequency',          'risk_allele_freq_reported',      float),
-                ('p-Value',                        'p_value',                        float),
-                ('Pvalue_mlog',                    'minus_log_p_value',              float),
-                ('p-Value (text)',                 'p_value_text',                   str),
-                ('OR or beta',                     'odds_ratio_or_beta_coeff',       float),
-                ('95% CI (text)',                  'confidence_interval_95_percent', str),
-                ('Platform [SNPs passing QC]',     'snp_platform',                   str),
+                ('FIRST AUTHOR',                   'first_author',                   str),
+                ('DATE',                           'date_published',                 date),
+                ('JOURNAL',                        'journal',                        str),
+                ('LINK',                           'pubmed_url',                     str),
+                ('STUDY',                          'study_title',                    str),
+                ('DISEASE/TRAIT',                  'disease_or_trait',               str),
+                ('INITIAL SAMPLE DESCRIPTION',     'initial_sample',                 str),
+                ('REPLICATION SAMPLE DESCRIPTION', 'replication_sample',             str),
+                ('REGION',                         'region',                         str),
+                ('CHR_ID',                         'chr',                            chrom),
+                ('CHR_POS',                        'pos',                            int),
+                ('REPORTED GENE(S)',               'gene_reported',                  str),
+                ('MAPPED_GENE',                    'gene_mapped',                    str),
+                ('UPSTREAM_GENE_ID',               'upstream_entrez_gene_id',        str),  # when rs is not within gene
+                ('DOWNSTREAM_GENE_ID',             'downstream_entrez_gene_id',      str),  # when rs is not within gene
+                ('SNP_GENE_IDS',                   'entrez_gene_id',                 str),  # when rs is within gene
+                ('UPSTREAM_GENE_DISTANCE',         'upstream_gene_distance_kb',      float),
+                ('DOWNSTREAM_GENE_DISTANCE',       'downstream_gene_distance_kb',    float),
+                ('STRONGEST SNP-RISK ALLELE',      'strongest_snp_risk_allele',      str),
+                ('SNPS',                           'strongest_snps',                 str),
+                ('MERGED',                         'is_snp_id_merged',               boolean),
+                ('SNP_ID_CURRENT',                 'snp_id_current',                 str),
+                ('CONTEXT',                        'snp_context',                    str),
+                ('INTERGENIC',                     'is_snp_intergenic',              boolean),
+                ('RISK ALLELE FREQUENCY',          'risk_allele_freq_reported',      float),
+                ('P-VALUE',                        'p_value',                        float),
+                ('PVALUE_MLOG',                    'minus_log_p_value',              float),
+                ('P-VALUE (TEXT)',                 'p_value_text',                   str),
+                ('OR or BETA',                     'odds_ratio_or_beta_coeff',       float),
+                ('95% CI (TEXT)',                  'confidence_interval_95_percent', str),
+                ('PLATFORM [SNPS PASSING QC]',     'snp_platform',                   str),
                 ('CNV',                            'cnv',                            str)]
 
     cols_header = [x[1] for x in cols_map] + ['snp_id', 'risk_allele', 'date_downloaded']
@@ -65,7 +65,6 @@ def _main():
 
             val = val.strip()
             val = {'NR': '', 'NS': ''}.get(val, val)   # Null symbols
-            val = ''.join([c if 0 <= ord(c) <= 128 else ' ' for c in val])  # Invalid byte sequence for encoding UTF8
 
             if val != '':
                 try:

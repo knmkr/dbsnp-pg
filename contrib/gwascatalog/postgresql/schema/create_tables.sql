@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS GwasCatalog;
 CREATE TABLE GwasCatalog (
-    date_added                     date     not null,
+    date_added                     date,
     pubmed_id                      integer  not null,
     first_author                   varchar  not null,
     date_published                 date     not null,

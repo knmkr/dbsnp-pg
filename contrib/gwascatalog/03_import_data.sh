@@ -22,8 +22,9 @@ tmp_table=GwasCatalog_`python -c "import uuid; print str(uuid.uuid4()).replace('
 for filename in gwas*.tsv; do
     echo "[contrib/gwascatalog] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table} ..."
 
-    ${py} ${BASE_DIR}/script/cleanup.py ${filename}| \
-        psql $PG_DB $PG_USER -c "
+    ${py} ${BASE_DIR}/script/cleanup.py ${filename} \
+        | nkf -Lu \
+        | psql $PG_DB $PG_USER -c "
             CREATE TEMP TABLE ${tmp_table}
             ON COMMIT DROP
             AS SELECT * FROM ${table}
