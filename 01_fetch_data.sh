@@ -4,11 +4,10 @@ dbsnp_builds=("b144" "b142")
 reference_genome_builds=("GRCh38" "GRCh37")
 
 usage_exit() {
-  echo
-  echo "Usage: $0 [-d dbsnp_build] [-r reference_genome_build] data_dir"
-  echo
-  echo "-d dbSNP build version. Set one from (${dbsnp_builds[@]}). Default: ${dbsnp_builds[0]}"
-  echo "-r reference genome build version. Set one from (${reference_genome_builds[@]}). Default: ${reference_genome_builds[0]}"
+  echo "Usage: $0 [-d dbsnp_build] [-r reference_genome_build] <data_dir>"                                                        >&2
+  echo                                                                                                                            >&2
+  echo "-d dbSNP build version. Set one from (${dbsnp_builds[@]}). Default: ${dbsnp_builds[0]}"                                   >&2
+  echo "-r reference genome build version. Set one from (${reference_genome_builds[@]}). Default: ${reference_genome_builds[0]}"  >&2
   exit 1
 }
 
@@ -17,10 +16,14 @@ while getopts ":d:r:" OPT; do
   case "${OPT}" in
     d)  dbsnp=${OPTARG};;
     r)  ref=${OPTARG};;
-     \?) usage_exit;;
+    \?) usage_exit;;
   esac
 done
 shift $((OPTIND - 1))
+
+if [ "$#" -ne 1 ]; then
+    usage_exit
+fi
 
 # Set defaults
 : ${dbsnp:=${dbsnp_builds[0]}}

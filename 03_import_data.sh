@@ -5,6 +5,11 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 <dbname> <dbuser> <base_dir> <data_dir>" >&2
+    exit 1
+fi
+
 target=(Allele SnpChrCode RsMergeArch SNPChrPosOnRef)
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
