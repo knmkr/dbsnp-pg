@@ -5,6 +5,7 @@ import re
 import os
 import sys
 import csv
+import decimal
 import argparse
 import datetime
 
@@ -27,8 +28,8 @@ def _main():
                 ('INITIAL SAMPLE DESCRIPTION',     'initial_sample',                 str),
                 ('REPLICATION SAMPLE DESCRIPTION', 'replication_sample',             str),
                 ('REGION',                         'region',                         str),
-                ('CHR_ID',                         'chr',                            chrom),
-                ('CHR_POS',                        'pos',                            int),
+                ('CHR_ID',                         'chrom_reported',                 chrom),
+                ('CHR_POS',                        'pos_reported',                   int),
                 ('REPORTED GENE(S)',               'gene_reported',                  str),
                 ('MAPPED_GENE',                    'gene_mapped',                    str),
                 ('UPSTREAM_GENE_ID',               'upstream_entrez_gene_id',        str),  # when rs is not within gene
@@ -43,13 +44,15 @@ def _main():
                 ('CONTEXT',                        'snp_context',                    str),
                 ('INTERGENIC',                     'is_snp_intergenic',              boolean),
                 ('RISK ALLELE FREQUENCY',          'risk_allele_freq_reported',      float),
-                ('P-VALUE',                        'p_value',                        float),
+                ('P-VALUE',                        'p_value',                        probability),
                 ('PVALUE_MLOG',                    'minus_log_p_value',              float),
                 ('P-VALUE (TEXT)',                 'p_value_text',                   str),
                 ('OR or BETA',                     'odds_ratio_or_beta_coeff',       float),
                 ('95% CI (TEXT)',                  'confidence_interval_95_percent', str),
                 ('PLATFORM [SNPS PASSING QC]',     'snp_platform',                   str),
                 ('CNV',                            'cnv',                            str)]
+
+    decimal.getcontext().prec = 1000
 
     cols_header = [x[1] for x in cols_map] + ['snp_id', 'risk_allele', 'date_downloaded']
     writer = csv.DictWriter(sys.stdout, fieldnames=cols_header, delimiter='\t')
@@ -78,6 +81,14 @@ def _main():
             row['snp_id'], row['risk_allele'] = split_to_snp_id_and_allele(row['strongest_snp_risk_allele'])
             row['date_downloaded'] = date_downloaded
             writer.writerow(row)
+
+def probability(x):
+    p = decimal.Decimal(x)
+    if 0 < p and p < 1:
+        print >>sys.stderr, x
+        return x
+    else:
+        raise ValueError
 
 def boolean(x):
     return {'0': 'f', '1': 't'}[x]
