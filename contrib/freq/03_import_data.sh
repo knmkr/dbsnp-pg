@@ -34,20 +34,16 @@ else
   py=$(which python)
 fi
 
-table=AlleleFreq
 for target in ${source_ids[@]}; do
     for filename in ${target2filename[${target}]}; do
         if [ ! -e ${filename} ]; then
-            echo "[contrib/freq] [WARN] `date +"%Y-%m-%d %H:%M:%S"` ${filename} does not exists, so skip importing."
             continue
         fi
 
-        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table} ..."
-        ${py} ${BASE_DIR}/script/vcf2freq.py \
-              ${filename} \
-              --source-id ${target} \
-              --sample-ids ${BASE_DIR}/script/${target2sample_ids[${target}]} \
-            | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} ..."
+        ${py} ${BASE_DIR}/script/vcf2freq.py ${filename} --sample-ids ${BASE_DIR}/script/${target2sample_ids[${target}]} \
+            | awk -v v="${target}" 'OFS="\t" {print $0,v}' \
+            | psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
 done;
 
