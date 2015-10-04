@@ -34,28 +34,18 @@ BEGIN
   -- NOTE: To avoid Seq Scan on `rsmergearch`, split CTE as `info` and `info_with_snp_current`
   info AS (
       SELECT
-          i.snp_id,
-          array_agg(i.allele) as allele,
-          array_agg(i.freq) as freq
-      FROM (
-          SELECT
-              f.snp_id,
-              f.allele,
-              f.freq
-          FROM
-              allelefreq f
-          WHERE
-              f.source_id = _source_id
-              AND f.snp_id IN (
-                  SELECT q.rscurrent FROM query q
-                  UNION SELECT q.rshigh FROM query q
-                  UNION SELECT q.rslow FROM query q
-              )
-          ORDER BY
-              f.snp_id ASC, f.freq DESC
-      ) i
-      GROUP BY
-          i.snp_id
+          f.snp_id,
+          f.allele,
+          f.freq
+      FROM
+          allelefreq f
+      WHERE
+          f.source_id = _source_id
+          AND f.snp_id IN (
+              SELECT q.rscurrent FROM query q
+              UNION SELECT q.rshigh FROM query q
+              UNION SELECT q.rslow FROM query q
+          )
   ),
   info_with_snp_current AS (
       SELECT

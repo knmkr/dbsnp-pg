@@ -22,14 +22,6 @@ declare -A target2sample_ids=( \
   ["4"]="sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt"
 )
 
-# Skip non-unique rsids in original vcf.  # FIXME: Need to be revised.
-declare -A target2exclude_rsids=( \
-  ["1"]="--exclude-rsids 113940759 11457237 71904485"
-  ["2"]="--exclude-rsids 113350436 193220252"
-  ["3"]="--exclude-rsids 113940759 11457237 71904485"
-  ["4"]="--exclude-rsids 113350436 193220252"
-)
-
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
 echo "[contrib/freq] [INFO] database_name: ${PG_DB}, database_user: ${PG_USER}, base_dir: ${BASE_DIR}, data_dir: ${DATA_DIR}"
 
@@ -51,10 +43,10 @@ for target in ${source_ids[@]}; do
         fi
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table} ..."
-        ${py} ${BASE_DIR}/script/vcf2tsv.py \
+        ${py} ${BASE_DIR}/script/vcf2freq.py \
               ${filename} \
               --source-id ${target} \
-              --sample-ids ${BASE_DIR}/script/${target2sample_ids[${target}]} ${target2exclude_rsids[${target}]} \
+              --sample-ids ${BASE_DIR}/script/${target2sample_ids[${target}]} \
             | psql $PG_DB $PG_USER -c "COPY ${table} FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
 done;

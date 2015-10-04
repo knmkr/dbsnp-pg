@@ -14,11 +14,9 @@ INSERT INTO AlleleFreqSource VALUES (1, '1000genomes_phase1', '{CHB,JPT}', 'b37'
 -- Partitioning "master" table
 DROP TABLE IF EXISTS AlleleFreq CASCADE;
 CREATE TABLE AlleleFreq (
-       snp_id    integer        not null,
-       chr       varchar(32)    not null,
-       pos       integer        not null,
-       allele    varchar(1024)  not null,
-       freq      real           not null,
+       snp_id    integer          not null,
+       allele    varchar(1024)[]  not null,
+       freq      real[]           not null,
        source_id smallint       references AlleleFreqSource(source_id)
 );
 
@@ -33,10 +31,10 @@ DROP INDEX IF EXISTS allelefreq_1_ukey_snp_id_allele;
 DROP INDEX IF EXISTS allelefreq_2_ukey_snp_id_allele;
 DROP INDEX IF EXISTS allelefreq_3_ukey_snp_id_allele;
 DROP INDEX IF EXISTS allelefreq_4_ukey_snp_id_allele;
-CREATE UNIQUE INDEX allelefreq_1_ukey_snp_id_allele ON AlleleFreq_1 (snp_id, allele);
-CREATE UNIQUE INDEX allelefreq_2_ukey_snp_id_allele ON AlleleFreq_2 (snp_id, allele);
-CREATE UNIQUE INDEX allelefreq_3_ukey_snp_id_allele ON AlleleFreq_3 (snp_id, allele);
-CREATE UNIQUE INDEX allelefreq_4_ukey_snp_id_allele ON AlleleFreq_4 (snp_id, allele);
+CREATE INDEX allelefreq_1_snp_id_allele ON AlleleFreq_1 (snp_id, allele);
+CREATE INDEX allelefreq_2_snp_id_allele ON AlleleFreq_2 (snp_id, allele);
+CREATE INDEX allelefreq_3_snp_id_allele ON AlleleFreq_3 (snp_id, allele);
+CREATE INDEX allelefreq_4_snp_id_allele ON AlleleFreq_4 (snp_id, allele);
 
 -- Partitioning trigger function
 CREATE OR REPLACE FUNCTION allelefreq_insert_trigger()
