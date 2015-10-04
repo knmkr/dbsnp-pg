@@ -27,10 +27,10 @@ CREATE TABLE AlleleFreq_3 ( CHECK ( source_id = 3 ) ) INHERITS (AlleleFreq);
 CREATE TABLE AlleleFreq_4 ( CHECK ( source_id = 4 ) ) INHERITS (AlleleFreq);
 
 -- Constraints on "child" table
-DROP INDEX IF EXISTS allelefreq_1_ukey_snp_id_allele;
-DROP INDEX IF EXISTS allelefreq_2_ukey_snp_id_allele;
-DROP INDEX IF EXISTS allelefreq_3_ukey_snp_id_allele;
-DROP INDEX IF EXISTS allelefreq_4_ukey_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_1_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_2_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_3_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_4_snp_id_allele;
 CREATE INDEX allelefreq_1_snp_id_allele ON AlleleFreq_1 (snp_id, allele);
 CREATE INDEX allelefreq_2_snp_id_allele ON AlleleFreq_2 (snp_id, allele);
 CREATE INDEX allelefreq_3_snp_id_allele ON AlleleFreq_3 (snp_id, allele);
