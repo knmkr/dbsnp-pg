@@ -5,7 +5,7 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-source_ids=(2)
+source_ids=(2 100 200)
 
 # TODO: Avoid hardcoding source_ids
 declare -A target2filename=( \
@@ -13,6 +13,10 @@ declare -A target2filename=( \
   ["2"]="1000genomes.phase3/ALL.chr*.*.vcf*"
   ["3"]="1000genomes.phase1/ALL.chr*.*.vcf*"
   ["4"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["5"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["6"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["100"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["200"]="1000genomes.phase3/ALL.chr*.*.vcf*"
 )
 
 declare -A target2sample_ids=( \
@@ -20,6 +24,10 @@ declare -A target2sample_ids=( \
   ["2"]="sample_ids.1000genomes.phase3.CHB+JPT.txt"
   ["3"]="sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt"
   ["4"]="sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt"
+  ["5"]="sample_ids.1000genomes.phase3.CHB.txt"
+  ["6"]="sample_ids.1000genomes.phase3.JPT.txt"
+  ["100"]="sample_ids.1000genomes.phase3.CEU.non-rel.txt"
+  ["200"]="sample_ids.1000genomes.phase3.YRI.non-rel.txt"
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."

@@ -9,7 +9,11 @@ CREATE TABLE AlleleFreqSource (
 INSERT INTO AlleleFreqSource VALUES (1, '1000genomes_phase1', '{CHB,JPT}', 'b37'),
                                     (2, '1000genomes_phase3', '{CHB,JPT}', 'b37'),
                                     (3, '1000genomes_phase1', '{CHB,JPT,CHS}', 'b37'),
-                                    (4, '1000genomes_phase3', '{CHB,JPT,CHS}', 'b37');
+                                    (4, '1000genomes_phase3', '{CHB,JPT,CHS}', 'b37'),
+                                    (5, '1000genomes_phase3', '{CHB}', 'b37'),
+                                    (6, '1000genomes_phase3', '{JPT}', 'b37'),
+                                    (100, '1000genomes_phase3', '{CEU}', 'b37'),
+                                    (200, '1000genomes_phase3', '{YRI}', 'b37');
 
 -- Partitioning "master" table
 DROP TABLE IF EXISTS AlleleFreq CASCADE;
@@ -25,16 +29,28 @@ CREATE TABLE AlleleFreq_1 ( CHECK ( source_id = 1 ) ) INHERITS (AlleleFreq);
 CREATE TABLE AlleleFreq_2 ( CHECK ( source_id = 2 ) ) INHERITS (AlleleFreq);
 CREATE TABLE AlleleFreq_3 ( CHECK ( source_id = 3 ) ) INHERITS (AlleleFreq);
 CREATE TABLE AlleleFreq_4 ( CHECK ( source_id = 4 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_5 ( CHECK ( source_id = 5 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_6 ( CHECK ( source_id = 6 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_100 ( CHECK ( source_id = 100 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_200 ( CHECK ( source_id = 200 ) ) INHERITS (AlleleFreq);
 
 -- Constraints on "child" table
 DROP INDEX IF EXISTS allelefreq_1_snp_id_allele;
 DROP INDEX IF EXISTS allelefreq_2_snp_id_allele;
 DROP INDEX IF EXISTS allelefreq_3_snp_id_allele;
 DROP INDEX IF EXISTS allelefreq_4_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_5_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_6_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_100_snp_id_allele;
+DROP INDEX IF EXISTS allelefreq_200_snp_id_allele;
 CREATE INDEX allelefreq_1_snp_id_allele ON AlleleFreq_1 (snp_id, allele);
 CREATE INDEX allelefreq_2_snp_id_allele ON AlleleFreq_2 (snp_id, allele);
 CREATE INDEX allelefreq_3_snp_id_allele ON AlleleFreq_3 (snp_id, allele);
 CREATE INDEX allelefreq_4_snp_id_allele ON AlleleFreq_4 (snp_id, allele);
+CREATE INDEX allelefreq_5_snp_id_allele ON AlleleFreq_5 (snp_id, allele);
+CREATE INDEX allelefreq_6_snp_id_allele ON AlleleFreq_6 (snp_id, allele);
+CREATE INDEX allelefreq_100_snp_id_allele ON AlleleFreq_100 (snp_id, allele);
+CREATE INDEX allelefreq_200_snp_id_allele ON AlleleFreq_200 (snp_id, allele);
 
 -- Partitioning trigger function
 CREATE OR REPLACE FUNCTION allelefreq_insert_trigger()
@@ -48,6 +64,14 @@ RETURNS TRIGGER AS $$
             INSERT INTO allelefreq_3 VALUES (NEW.*);
         ELSIF ( NEW.source_id = 4 ) THEN
             INSERT INTO allelefreq_4 VALUES (NEW.*);
+        ELSIF ( NEW.source_id = 5 ) THEN
+            INSERT INTO allelefreq_5 VALUES (NEW.*);
+        ELSIF ( NEW.source_id = 6 ) THEN
+            INSERT INTO allelefreq_6 VALUES (NEW.*);
+        ELSIF ( NEW.source_id = 100 ) THEN
+            INSERT INTO allelefreq_100 VALUES (NEW.*);
+        ELSIF ( NEW.source_id = 200 ) THEN
+            INSERT INTO allelefreq_200 VALUES (NEW.*);
         ELSE
             RAISE EXCEPTION 'Invalid source_id in allelefreq_insert_trigger()';
         END IF;
