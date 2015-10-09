@@ -85,7 +85,6 @@ def _main():
 def probability(x):
     p = decimal.Decimal(x)
     if 0 < p and p < 1:
-        print >>sys.stderr, x
         return x
     else:
         raise ValueError
