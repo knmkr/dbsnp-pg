@@ -6,4 +6,6 @@ settings.py
 
 hosts
 
+*.log
+
 *.pg_dump
