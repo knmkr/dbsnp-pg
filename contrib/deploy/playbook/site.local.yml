@@ -6,6 +6,6 @@
   roles:
     - { role: pypy }
     - { role: postgresql }
-    - { role: dbsnp_pg_min }
+    - { role: dbsnp_pg_min, tags: ['common','install']}
     - { role: vcftools }
     - { role: dbsnp_pg_min_freq }

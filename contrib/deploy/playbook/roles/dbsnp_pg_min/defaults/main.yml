@@ -1,5 +1,5 @@
 ---
-dbsnp_builds: b142
+dbsnp_builds: b144
 reference_genome_builds: GRCh37
 
 database_user: dbsnp
