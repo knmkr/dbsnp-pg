@@ -1,0 +1,7 @@
+---
+- command: wget -c https://github.com/vcftools/vcftools/releases/download/v{{ version }}/vcftools-{{ version }}.tar.gz
+- command: tar xf vcftools-{{ version }}.tar.gz
+- shell: chdir=vcftools-{{ version }} ./configure && make
+
+- become: yes
+  command: chdir=vcftools-{{ version }} make install

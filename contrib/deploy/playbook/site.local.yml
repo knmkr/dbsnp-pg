@@ -7,4 +7,5 @@
     - { role: pypy }
     - { role: postgresql }
     - { role: dbsnp_pg_min }
+    - { role: vcftools }
     - { role: dbsnp_pg_min_freq }
