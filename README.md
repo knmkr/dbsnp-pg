@@ -2,22 +2,21 @@
 
 [dbsnp-pg-min](https://github.com/knmkr/dbsnp-pg-min) is a minimal PostgreSQL schemas & functions for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
-- NCBI dbSNP (a public archive for genetic variation) is distributed in MS SQL Server schema.
-- We simply port minimal original MS SQL Server schema to PostgreSQL,
-- and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671) in command line interface.
+- NCBI dbSNP is [distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/).
+- We simply ported original schema to PostgreSQL, and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671).
 
 
 ## Getting Started
 
 Create new PostgreSQL database for dbSNP:
 
-    $ createdb --owner=username dbsnp_b142_GRCh37
+    $ createdb --owner=username dbsnp_b144_GRCh37
 
 Then fetch data, create table, and import data:
 
-    $ ./01_fetch_dbsnp.sh       -d b142 -r GRCh37 $PWD/data
-    $ ./02_drop_create_table.sh dbsnp_b142 username $PWD
-    $ ./03_import_data.sh       dbsnp_b142 username $PWD $PWD/data
+    $ ./01_fetch_dbsnp.sh       -d b144 -r GRCh37 $PWD/data
+    $ ./02_drop_create_table.sh dbsnp_b144_GRCh37 username $PWD
+    $ ./03_import_data.sh       dbsnp_b144_GRCh37 username $PWD $PWD/data
 
 Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg-min/releases):
 
