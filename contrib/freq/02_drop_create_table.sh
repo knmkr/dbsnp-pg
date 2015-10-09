@@ -9,6 +9,5 @@ echo "[contrib/freq] [INFO] database_name: ${PG_DB}, database_user: ${PG_USER}, 
 
 psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_tables.sql -q
 psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_functions.sql -q
-psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -q
 
 echo "[contrib/freq] [INFO] Done"

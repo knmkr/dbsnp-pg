@@ -5,18 +5,19 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-source_ids=(2 100 200)
+# source_ids=(2 100 200)
+source_ids=(2)
 
 # TODO: Avoid hardcoding source_ids
 declare -A target2filename=( \
-  ["1"]="1000genomes.phase1/ALL.chr*.*.vcf*"
-  ["2"]="1000genomes.phase3/ALL.chr*.*.vcf*"
-  ["3"]="1000genomes.phase1/ALL.chr*.*.vcf*"
-  ["4"]="1000genomes.phase3/ALL.chr*.*.vcf*"
-  ["5"]="1000genomes.phase3/ALL.chr*.*.vcf*"
-  ["6"]="1000genomes.phase3/ALL.chr*.*.vcf*"
-  ["100"]="1000genomes.phase3/ALL.chr*.*.vcf*"
-  ["200"]="1000genomes.phase3/ALL.chr*.*.vcf*"
+  ["1"]="1000genomes.phase1/ALL.chr*.*.vcf.gz"
+  ["2"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
+  ["3"]="1000genomes.phase1/ALL.chr*.*.vcf.gz"
+  ["4"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
+  ["5"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
+  ["6"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
+  ["100"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
+  ["200"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
 )
 
 declare -A target2sample_ids=( \
@@ -42,17 +43,32 @@ else
   py=$(which python)
 fi
 
+# vcftools is required
+if type vcftools >/dev/null; then
+  vcftools --version
+else
+  echo "[contrib/freq] [FATAL] `date +"%Y-%m-%d %H:%M:%S"` vcftools not found."
+  exit 1
+fi
+
 for target in ${source_ids[@]}; do
     for filename in ${target2filename[${target}]}; do
-        if [ ! -e ${filename} ]; then
-            continue
-        fi
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"`" ${filename}
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
+        vcftools --freq --out ${filename}.frq --keep ${BASE_DIR}/script/${target2sample_ids[${target}]} --gzvcf ${filename}
 
-        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} ..."
-        ${py} ${BASE_DIR}/script/vcf2freq.py ${filename} --sample-ids ${BASE_DIR}/script/${target2sample_ids[${target}]} \
-            | awk -v v="${target}" 'OFS="\t" {print $0,v}' \
-            | psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting ..."
+        paste <(gzip -dc ${filename}| grep -v '##'| cut -f 3| tail -n+2) <(cut -f 5- ${filename}.frq.frq| tail -n+2| ${py} ${BASE_DIR}/script/frq2pg_array.py)| \
+            ${py} ${BASE_DIR}/script/filter.py --source-id ${target} > ${filename}.frq.frq.csv
+
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ..."
+        cat ${filename}.frq.frq.csv| psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
 done;
+
+echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating constraints ..."
+psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -q
+
+# TODO: remove intermediate files
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Done"
