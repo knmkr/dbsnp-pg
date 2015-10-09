@@ -9,19 +9,19 @@
 
 ## Getting Started
 
-    # 0. Create new PostgreSQL database for dbSNP
+Create new PostgreSQL database for dbSNP:
+
     $ createdb --owner=username dbsnp_b142_GRCh37
 
-    # 1. Fetch dbSNP data from NCBI FTP.
-    $ ./01_fetch_dbsnp.sh -d b142 -r GRCh37 $PWD/data
+Then fetch data, create table, and import data:
 
-    # 2. Create PostgreSQL tables for dbSNP
+    $ ./01_fetch_dbsnp.sh       -d b142 -r GRCh37 $PWD/data
     $ ./02_drop_create_table.sh dbsnp_b142 username $PWD
+    $ ./03_import_data.sh       dbsnp_b142 username $PWD $PWD/data
 
-    # 3. Import dbSNP data into PostgreSQL tables,
-    #    and add constraints (index, etc.) to tables
-    $ ./03_import_data.sh dbsnp_b142 username $PWD $PWD/data
+Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg-min/releases):
 
+    $ pg_restore -d dbsnp_b142_GRCh37 ${pg_dump}
 
 ## Usage example
 
