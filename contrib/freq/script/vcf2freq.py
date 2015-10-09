@@ -16,6 +16,7 @@ def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument('vcf')
     parser.add_argument('--sample-ids', required=True)
+    parser.add_argument('--source-id', required=True, type=str)
     args = parser.parse_args()
 
     sample_ids = [l.strip() for l in open(args.sample_ids)]
@@ -30,7 +31,7 @@ def _main():
 
         allele = record['allele_freq'].keys()
         freq = record['allele_freq'].values()
-        print '\t'.join([str(record['rs']), pg_array(allele), pg_array(freq)])
+        print '\t'.join([str(record['rs']), pg_array(allele), pg_array(freq), args.source_id])
 
 if __name__ == '__main__':
     _main()
