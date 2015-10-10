@@ -34,8 +34,8 @@ CREATE TABLE GwasCatalog (
     confidence_interval_95_percent varchar,
     snp_platform                   varchar,
     cnv                            varchar,
-    snp_id                         integer,
+    snp_id_reported                integer,
     risk_allele                    varchar(1024),
     date_downloaded                date     not null,
-    UNIQUE (date_downloaded, pubmed_id, disease_or_trait, snp_id, risk_allele)
+    UNIQUE (date_downloaded, pubmed_id, disease_or_trait, snp_id_reported, risk_allele)
 );
