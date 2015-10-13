@@ -78,8 +78,9 @@ def _main():
 
             row[col_name] = val
         else:
-            row['snp_id'], row['risk_allele'] = split_to_snp_id_and_allele(row['strongest_snp_risk_allele'])
+            row['snp_id_reported'], row['risk_allele'] = split_to_snp_id_and_allele(row['strongest_snp_risk_allele'])
             row['date_downloaded'] = date_downloaded
+            row['snp_id_current'] = row['snp_id_reported']  # In the later fllow, snp_id_current will be updated to current.
             writer.writerow(row)
 
 def probability(x):
