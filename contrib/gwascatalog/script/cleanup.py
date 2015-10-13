@@ -54,7 +54,7 @@ def _main():
 
     decimal.getcontext().prec = 1000
 
-    cols_header = [x[1] for x in cols_map] + ['snp_id', 'risk_allele', 'date_downloaded']
+    cols_header = [x[1] for x in cols_map] + ['snp_id_reported', 'risk_allele', 'date_downloaded', 'snp_id_current']
     writer = csv.DictWriter(sys.stdout, fieldnames=cols_header, delimiter='\t')
 
     for record in csv.DictReader(open(args.gwascatalog), delimiter='\t'):
