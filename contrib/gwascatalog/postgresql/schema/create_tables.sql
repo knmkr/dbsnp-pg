@@ -23,7 +23,7 @@ CREATE TABLE GwasCatalog (
     strongest_snp_risk_allele      varchar,
     strongest_snps                 varchar,
     is_snp_id_merged               boolean,
-    snp_id_current                 varchar,
+    snp_id_current_reported        varchar,
     snp_context                    varchar,
     is_snp_intergenic              boolean,
     risk_allele_freq_reported      real,

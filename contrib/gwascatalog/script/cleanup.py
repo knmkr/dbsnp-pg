@@ -40,7 +40,7 @@ def _main():
                 ('STRONGEST SNP-RISK ALLELE',      'strongest_snp_risk_allele',      str),
                 ('SNPS',                           'strongest_snps',                 str),
                 ('MERGED',                         'is_snp_id_merged',               boolean),
-                ('SNP_ID_CURRENT',                 'snp_id_current',                 str),
+                ('SNP_ID_CURRENT',                 'snp_id_current_reported',        str),
                 ('CONTEXT',                        'snp_context',                    str),
                 ('INTERGENIC',                     'is_snp_intergenic',              boolean),
                 ('RISK ALLELE FREQUENCY',          'risk_allele_freq_reported',      float),

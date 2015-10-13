@@ -34,14 +34,14 @@ for filename in gwas*.tsv; do
 
             -- Ignore duplicate records
             INSERT INTO ${table}
-            SELECT DISTINCT ON (date_downloaded, pubmed_id, disease_or_trait, snp_id, risk_allele) * FROM ${tmp_table}
+            SELECT DISTINCT ON (date_downloaded, pubmed_id, disease_or_trait, snp_id_reported, risk_allele) * FROM ${tmp_table}
             " -q
 
     echo "[contrib/gwascatalog] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Updating snp_id_current ..."
     psql $PG_DB $PG_USER -c "UPDATE ${table}
                              SET snp_id_current = a.rscurrent
                              FROM (SELECT rshigh, rscurrent FROM rsmergearch) a
-                             WHERE ${table}.snp_id = a.rshigh"
+                             WHERE ${table}.snp_id_reported = a.rshigh"
 done
 
 echo "[contrib/gwascatalog] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Done"
