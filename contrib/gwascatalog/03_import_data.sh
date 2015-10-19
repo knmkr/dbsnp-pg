@@ -45,7 +45,7 @@ for filename in gwas*.tsv; do
 done
 
 #
-freq_tsv=gwascatalog_snps_allele_freq_$(date +"%Y-%m-%d").tsv
+freq_tsv=gwascatalog-snps-allele-freq-$(date +"%Y-%m-%d").tsv
 ${BASE_DIR}/script/create_gwascatalog_snp_allele_freq_data.sh $PG_DB $PG_USER ${freq_tsv}
 cat ${freq_tsv}| psql $PG_DB $PG_USER -c "COPY GwasCatalogSNPAlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
 
