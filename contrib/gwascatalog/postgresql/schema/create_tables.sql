@@ -40,3 +40,12 @@ CREATE TABLE GwasCatalog (
     snp_id_current                 integer,
     UNIQUE (date_downloaded, pubmed_id, disease_or_trait, snp_id_reported, risk_allele)
 );
+
+DROP TABLE IF EXISTS GwasCatalogSNPAlleleFreq;
+CREATE TABLE GwasCatalogSNPAlleleFreq (
+    snp_id_current  integer          not null,
+    allele          varchar(1024)[],
+    freq            real[],
+    populations     varchar[]        not null,
+    UNIQUE (snp_id_current)
+);
