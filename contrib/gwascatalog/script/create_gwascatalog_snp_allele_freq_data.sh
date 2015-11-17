@@ -22,7 +22,7 @@ for chunk in gwascatalog_snps.*; do \
     cat ${chunk}| tr \\n ,| awk 'sub(/.$/, "", $0)'                                             >> q.sql
     printf "}')\n"                                                                              >> q.sql
 
-    psql ${PG_DB} ${PG_USER} -f q.sql -A -F $'\t' -t| awk -F $'\t' '{OFS="\t"; print $1,$2,$3,$4,"{CHB,JPT}"}' >> ${dst}.tmp
+    psql ${PG_DB} ${PG_USER} -f q.sql -A -F $'\t' -t| awk -F $'\t' '{OFS="\t"; print $1,$2,$3,"{CHB,JPT}"}' >> ${dst}.tmp
 done
 
 sort -n ${dst}.tmp| uniq > ${dst}
