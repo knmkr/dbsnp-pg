@@ -38,7 +38,7 @@ CREATE TABLE GwasCatalog (
     risk_allele                    varchar(1024),
     date_downloaded                date     not null,
     snp_id_current                 integer,
-    UNIQUE (date_downloaded, pubmed_id, disease_or_trait, snp_id_reported, risk_allele)
+    UNIQUE (date_downloaded, pubmed_id, disease_or_trait, snp_id_current, risk_allele)
 );
 
 DROP TABLE IF EXISTS GwasCatalogSNPAlleleFreq;

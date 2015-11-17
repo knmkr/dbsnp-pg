@@ -2,8 +2,9 @@
 
 DATA_DIR=$1
 
-mkdir -p ${DATA_DIR}
-cd ${DATA_DIR}
+TODAY=$(date +"%Y-%m-%d")
+mkdir -p ${DATA_DIR}/${TODAY}
+cd ${DATA_DIR}/${TODAY}
 
 echo "[contrib/gwascatalog] [INFO] Fetching data..."
 

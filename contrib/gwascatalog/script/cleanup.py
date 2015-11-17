@@ -14,7 +14,7 @@ def _main():
     parser.add_argument('gwascatalog')
     args = parser.parse_args()
 
-    date_downloaded = re.findall(r'gwas_catalog-downloaded_(\d{4}-\d{2}-\d{2}).tsv', os.path.basename(args.gwascatalog))[0]
+    date_downloaded = re.findall(r'gwascatalog-downloaded-(\d{4}-\d{2}-\d{2}).tsv', os.path.basename(args.gwascatalog))[0]
 
     # ref: http://www.ebi.ac.uk/gwas/docs/fileheaders
     cols_map = [('DATE ADDED TO CATALOG',          'date_added',                     date),
