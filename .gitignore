@@ -1,11 +1,20 @@
-.vagrant
-
+# python
 *.py[cod]
 __pycache__/
+
+# web
 settings.py
 
+# deploy
+.vagrant
 hosts
 
+# log
 *.log
 
+# dump
 *.pg_dump
+
+# data dir
+data/
+!test/data/
