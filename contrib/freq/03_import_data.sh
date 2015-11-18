@@ -27,7 +27,7 @@ declare -A target2sample_ids=( \
   ["4"]="sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt"
   ["5"]="sample_ids.1000genomes.phase3.CHB.txt"
   ["6"]="sample_ids.1000genomes.phase3.JPT.txt"
-  ["100"]="sample_ids.1000genomes.phase3.CEU.non-rel.txt"
+  ["100"]="sample_ids.1000genomes.phase3.CEU.no-pat-mat.txt"
   ["200"]="sample_ids.1000genomes.phase3.YRI.non-rel.txt"
 )
 
