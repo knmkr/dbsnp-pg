@@ -28,7 +28,7 @@ declare -A target2sample_ids=( \
   ["5"]="sample_ids.1000genomes.phase3.CHB.txt"
   ["6"]="sample_ids.1000genomes.phase3.JPT.txt"
   ["100"]="sample_ids.1000genomes.phase3.CEU.no-pat-mat.txt"
-  ["200"]="sample_ids.1000genomes.phase3.YRI.non-rel.txt"
+  ["200"]="sample_ids.1000genomes.phase3.YRI.no-pat-mat.txt"
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."

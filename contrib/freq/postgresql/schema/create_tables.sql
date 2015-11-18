@@ -31,8 +31,8 @@ CREATE TABLE AlleleFreq_2 ( CHECK ( source_id = 2 ) ) INHERITS (AlleleFreq);
 -- CREATE TABLE AlleleFreq_4 ( CHECK ( source_id = 4 ) ) INHERITS (AlleleFreq);
 -- CREATE TABLE AlleleFreq_5 ( CHECK ( source_id = 5 ) ) INHERITS (AlleleFreq);
 -- CREATE TABLE AlleleFreq_6 ( CHECK ( source_id = 6 ) ) INHERITS (AlleleFreq);
--- CREATE TABLE AlleleFreq_100 ( CHECK ( source_id = 100 ) ) INHERITS (AlleleFreq);
--- CREATE TABLE AlleleFreq_200 ( CHECK ( source_id = 200 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_100 ( CHECK ( source_id = 100 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_200 ( CHECK ( source_id = 200 ) ) INHERITS (AlleleFreq);
 
 -- Partitioning trigger function
 CREATE OR REPLACE FUNCTION allelefreq_insert_trigger()
@@ -50,10 +50,10 @@ RETURNS TRIGGER AS $$
         --     INSERT INTO allelefreq_5 VALUES (NEW.*);
         -- ELSIF ( NEW.source_id = 6 ) THEN
         --     INSERT INTO allelefreq_6 VALUES (NEW.*);
-        -- ELSIF ( NEW.source_id = 100 ) THEN
-        --     INSERT INTO allelefreq_100 VALUES (NEW.*);
-        -- ELSIF ( NEW.source_id = 200 ) THEN
-        --     INSERT INTO allelefreq_200 VALUES (NEW.*);
+        ELSIF ( NEW.source_id = 100 ) THEN
+            INSERT INTO allelefreq_100 VALUES (NEW.*);
+        ELSIF ( NEW.source_id = 200 ) THEN
+            INSERT INTO allelefreq_200 VALUES (NEW.*);
         ELSE
             RAISE EXCEPTION 'Invalid source_id in allelefreq_insert_trigger()';
         END IF;

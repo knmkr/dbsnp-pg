@@ -28,15 +28,13 @@
 
 ### Sources
 
-| project             | populations |
-|---------------------|-------------|
-| 1000 Genomes Phase1 | CHB+JPT     |
-| 1000 Genomes Phase3 | CHB+JPT     |
+| project             | populations              |
+|---------------------|--------------------------|
+| 1000 Genomes Phase1 | East Asian (CHB+JPT)     |
+| 1000 Genomes Phase3 | East Asian (CHB+JPT)     |
+| 1000 Genomes Phase3 | European (CEU)           |
+| 1000 Genomes Phase3 | African (YRI)            |
+
+- Samples with patternal/matternal sample (father/mathor) in the same projects are excluded.
 
 See datails in `01_fetch_data.sh` and `03_import_data.sh`
-
-
-### TODOs
-
-- [ ] Add European & African population.
-- [ ] Add HapMap
