@@ -5,8 +5,7 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-# source_ids=(2 100 200)
-source_ids=(2)
+source_ids=(2 100 200 300)
 
 # TODO: Avoid hardcoding source_ids
 declare -A target2filename=( \
@@ -14,10 +13,10 @@ declare -A target2filename=( \
   ["2"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
   ["3"]="1000genomes.phase1/ALL.chr*.*.vcf.gz"
   ["4"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
-  ["5"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
   ["6"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
   ["100"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
   ["200"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
+  ["300"]="1000genomes.phase3/ALL.chr*.*.vcf.gz"
 )
 
 declare -A target2sample_ids=( \
@@ -25,10 +24,10 @@ declare -A target2sample_ids=( \
   ["2"]="sample_ids.1000genomes.phase3.CHB+JPT.txt"
   ["3"]="sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt"
   ["4"]="sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt"
-  ["5"]="sample_ids.1000genomes.phase3.CHB.txt"
   ["6"]="sample_ids.1000genomes.phase3.JPT.txt"
   ["100"]="sample_ids.1000genomes.phase3.CEU.no-pat-mat.txt"
   ["200"]="sample_ids.1000genomes.phase3.YRI.no-pat-mat.txt"
+  ["300"]="sample_ids.1000genomes.phase3.no-pat-mat.txt"
 )
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
@@ -52,22 +51,26 @@ else
 fi
 
 for target in ${source_ids[@]}; do
+    echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Target sample ids: ${target2sample_ids[${target}]}"
+
     for filename in ${target2filename[${target}]}; do
-        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"`" ${filename}
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` ${filename}"
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
-        vcftools --freq --out ${filename}.frq --keep ${BASE_DIR}/script/${target2sample_ids[${target}]} --gzvcf ${filename}
+        vcftools --freq --out ${filename}.${target}.frq --keep ${BASE_DIR}/script/${target2sample_ids[${target}]} --gzvcf ${filename}
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting ..."
-        paste <(gzip -dc ${filename}| grep -v '##'| cut -f 3| tail -n+2) <(cut -f 5- ${filename}.frq.frq| tail -n+2| ${py} ${BASE_DIR}/script/frq2pg_array.py)| \
-            ${py} ${BASE_DIR}/script/filter.py --source-id ${target} > ${filename}.frq.frq.csv
+        paste <(gzip -dc ${filename}| grep -v '##'| cut -f 3| tail -n+2) <(cut -f 5- ${filename}.${target}.frq.frq| tail -n+2| ${py} ${BASE_DIR}/script/frq2pg_array.py)| \
+            ${py} ${BASE_DIR}/script/filter.py --source-id ${target} > ${filename}.${target}.frq.frq.csv
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ..."
-        cat ${filename}.frq.frq.csv| psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
+        cat ${filename}.${target}.frq.frq.csv| psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
-done;
 
-echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating constraints ..."
-psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -q
+    echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating constraints ..."
+    psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -c "DROP INDEX IF EXISTS allelefreq_${target}_snp_id_allele" -q
+    psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -c "CREATE INDEX allelefreq_${target}_snp_id_allele ON AlleleFreq_${target} (snp_id, allele)" -q
+
+done;
 
 # TODO: remove intermediate files
 

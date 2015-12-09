@@ -13,7 +13,8 @@ INSERT INTO AlleleFreqSource VALUES (1, '1000genomes_phase1', '{CHB,JPT}', 'b37'
                                     (5, '1000genomes_phase3', '{CHB}', 'b37'),
                                     (6, '1000genomes_phase3', '{JPT}', 'b37'),
                                     (100, '1000genomes_phase3', '{CEU}', 'b37'),
-                                    (200, '1000genomes_phase3', '{YRI}', 'b37');
+                                    (200, '1000genomes_phase3', '{YRI}', 'b37'),
+                                    (300, '1000genomes_phase3', '{GLOBAL}', 'b37');
 
 -- Partitioning "master" table
 DROP TABLE IF EXISTS AlleleFreq CASCADE;
@@ -25,14 +26,15 @@ CREATE TABLE AlleleFreq (
 );
 
 -- Partitioning "child" table
--- CREATE TABLE AlleleFreq_1 ( CHECK ( source_id = 1 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_1 ( CHECK ( source_id = 1 ) ) INHERITS (AlleleFreq);
 CREATE TABLE AlleleFreq_2 ( CHECK ( source_id = 2 ) ) INHERITS (AlleleFreq);
--- CREATE TABLE AlleleFreq_3 ( CHECK ( source_id = 3 ) ) INHERITS (AlleleFreq);
--- CREATE TABLE AlleleFreq_4 ( CHECK ( source_id = 4 ) ) INHERITS (AlleleFreq);
--- CREATE TABLE AlleleFreq_5 ( CHECK ( source_id = 5 ) ) INHERITS (AlleleFreq);
--- CREATE TABLE AlleleFreq_6 ( CHECK ( source_id = 6 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_3 ( CHECK ( source_id = 3 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_4 ( CHECK ( source_id = 4 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_5 ( CHECK ( source_id = 5 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_6 ( CHECK ( source_id = 6 ) ) INHERITS (AlleleFreq);
 CREATE TABLE AlleleFreq_100 ( CHECK ( source_id = 100 ) ) INHERITS (AlleleFreq);
 CREATE TABLE AlleleFreq_200 ( CHECK ( source_id = 200 ) ) INHERITS (AlleleFreq);
+CREATE TABLE AlleleFreq_300 ( CHECK ( source_id = 300 ) ) INHERITS (AlleleFreq);
 
 -- Partitioning trigger function
 CREATE OR REPLACE FUNCTION allelefreq_insert_trigger()
@@ -54,6 +56,8 @@ RETURNS TRIGGER AS $$
             INSERT INTO allelefreq_100 VALUES (NEW.*);
         ELSIF ( NEW.source_id = 200 ) THEN
             INSERT INTO allelefreq_200 VALUES (NEW.*);
+        ELSIF ( NEW.source_id = 300 ) THEN
+            INSERT INTO allelefreq_300 VALUES (NEW.*);
         ELSE
             RAISE EXCEPTION 'Invalid source_id in allelefreq_insert_trigger()';
         END IF;
