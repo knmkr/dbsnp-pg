@@ -24,6 +24,9 @@ def _main():
     cur = conn.cursor()
     cur.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s);", (args.source_id, args.rsids,))
     rows = cur.fetchall()
+
+    records = {}
+
     for row in rows:
         snp_id, snp_current, snp_in_source, allele, freq = row
 
@@ -47,7 +50,11 @@ def _main():
             raw_maf     = '{0: >13.4f}'.format(Decimal(allele_freq[allele[minor]]))
             raw_nchrobs = '{0: >9}'.format('.')
 
-        print raw_chr + raw_snp + raw_a1 + raw_a2 + raw_maf + raw_nchrobs
+        record = raw_chr + raw_snp + raw_a1 + raw_a2 + raw_maf + raw_nchrobs
+        records[snp_id] = record
+
+    for rsid in args.rsids:
+        print records[rsid]
 
 
 if __name__ == '__main__':
