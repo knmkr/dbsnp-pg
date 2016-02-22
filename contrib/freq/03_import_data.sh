@@ -4,6 +4,10 @@ PG_DB=$1
 PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
+FRQ_TOOL=$5
+
+# Set defaults
+: ${FRQ_TOOL:=vcftools}
 
 source_ids=(2 100 200 300)
 
@@ -42,12 +46,12 @@ else
   py=$(which python)
 fi
 
-# vcftools is required
-if type vcftools >/dev/null; then
-  vcftools --version
+# vcftools or plink is required
+if type ${FRQ_TOOL} >/dev/null; then
+    ${FRQ_TOOL} --version
 else
-  echo "[contrib/freq] [FATAL] `date +"%Y-%m-%d %H:%M:%S"` vcftools not found."
-  exit 1
+    echo "[contrib/freq] [FATAL] `date +"%Y-%m-%d %H:%M:%S"` ${FRQ_TOOL} not found."
+    exit 1
 fi
 
 for target in ${source_ids[@]}; do
@@ -55,12 +59,27 @@ for target in ${source_ids[@]}; do
 
     for filename in ${target2filename[${target}]}; do
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` ${filename}"
-        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
-        vcftools --freq --out ${filename}.${target}.frq --keep ${BASE_DIR}/script/${target2sample_ids[${target}]} --gzvcf ${filename}
 
-        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting ..."
-        paste <(gzip -dc ${filename}| grep -v '##'| cut -f 3| tail -n+2) <(cut -f 5- ${filename}.${target}.frq.frq| tail -n+2| ${py} ${BASE_DIR}/script/frq2pg_array.py)| \
-            ${py} ${BASE_DIR}/script/filter.py --source-id ${target} > ${filename}.${target}.frq.frq.csv
+        if [ "${FRQ_TOOL}" = "vcftools" ]; then
+            # vcftools
+            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
+            vcftools --freq --out ${filename}.${target}.frq --keep ${BASE_DIR}/script/${target2sample_ids[${target}]} --gzvcf ${filename}
+
+            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting ..."
+            paste <(gzip -dc ${filename}| grep -v '##'| cut -f 3| tail -n+2) <(cut -f 5- ${filename}.${target}.frq.frq| tail -n+2| ${py} ${BASE_DIR}/script/frq2pg_array.py)| \
+                ${py} ${BASE_DIR}/script/filter.py --source-id ${target} > ${filename}.${target}.frq.frq.csv
+
+        elif [ "${FRQ_TOOL}" = "plink" ]; then
+            # plink
+            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
+            plink --vcf ${filename} --make-bed --out tmp
+            plink --bfile tmp --freq --out ${filename}.${target}.frq
+            rm -f tmp.{bed,fam,log,bim,nosex} ${filename}.${target}.{log,nosex}
+
+            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting ..."
+            cat ${filename}.${target}.frq.frq| ${py} ${BASE_DIR}/script/plinkfrq2pg_array.py| \
+                ${py} ${BASE_DIR}/script/filter.py --source-id ${target} > ${filename}.${target}.frq.frq.csv
+        fi
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ..."
         cat ${filename}.${target}.frq.frq.csv| psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
