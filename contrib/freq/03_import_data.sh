@@ -56,6 +56,8 @@ fi
 
 for target in ${source_ids[@]}; do
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Target sample ids: ${target2sample_ids[${target}]}"
+    echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Drop index if exists ..."
+    psql $PG_DB $PG_USER -c "DROP INDEX IF EXISTS allelefreq_${target}_snp_id" -q
 
     for filename in ${target2filename[${target}]}; do
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` ${filename}"
@@ -86,8 +88,7 @@ for target in ${source_ids[@]}; do
     done;
 
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating constraints ..."
-    psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -c "DROP INDEX IF EXISTS allelefreq_${target}_snp_id_allele" -q
-    psql $PG_DB $PG_USER -f ${BASE_DIR}/postgresql/schema/create_constraints.sql -c "CREATE INDEX allelefreq_${target}_snp_id_allele ON AlleleFreq_${target} (snp_id, allele)" -q
+    psql $PG_DB $PG_USER -c "CREATE INDEX allelefreq_${target}_snp_id ON AlleleFreq_${target} (snp_id)" -q
 
 done;
 
