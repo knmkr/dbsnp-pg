@@ -92,11 +92,8 @@ for source_id in ${source_ids[@]}; do
     psql $PG_DB $PG_USER -c "CREATE INDEX allelefreq_${source_id}_snp_id ON AlleleFreq_${source_id} (snp_id)" -q
 
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Updating snp_id_current ..."
-    psql $PG_DB $PG_USER -c "UPDATE allelefreq_${source_id} \
-                             SET snp_id = a.rscurrent \
-                             FROM (SELECT rshigh, rscurrent FROM rsmergearch) a \
-                             WHERE allelefreq_${source_id}.snp_id = a.rshigh"
-    psql $PG_DB $PG_USER -c "DELETE FROM allelefreq_${source_id} WHERE snp_id IS NULL"
+    psql $PG_DB $PG_USER -c "BEGIN; UPDATE allelefreq_${source_id} a SET snp_id = m.rscurrent FROM rsmergearch m WHERE a.snp_id = m.rshigh; COMMIT"
+    psql $PG_DB $PG_USER -c "BEGIN; DELETE FROM allelefreq_${source_id} WHERE snp_id IS NULL; COMMIT"
 
 done;
 

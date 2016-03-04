@@ -14,6 +14,29 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
+--
+DROP FUNCTION IF EXISTS get_tbl_current_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int
+);
+CREATE OR REPLACE FUNCTION get_tbl_current_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT
+          a.snp_id,
+          CASE WHEN m.rscurrent IS NOT NULL THEN m.rscurrent ELSE a.snp_id END AS snp_current
+      FROM
+          (SELECT unnest(_rs) as snp_id) a
+          LEFT JOIN rsmergearch m ON a.snp_id = m.rshigh
+  );
+END
+$$ LANGUAGE plpgsql;
+
 DROP FUNCTION IF EXISTS get_pos_by_rs(_rs int);
 CREATE OR REPLACE FUNCTION get_pos_by_rs(_rs int)
 RETURNS record AS $$

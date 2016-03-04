@@ -4,63 +4,22 @@ CREATE OR REPLACE FUNCTION get_tbl_allele_freq_by_rs_history(
   _rs int[],
   OUT snp_id int,
   OUT snp_current int,
-  OUT snp_in_source int,
   OUT allele varchar[],
   OUT freq real[]
 ) RETURNS SETOF RECORD AS $$
 BEGIN
   RETURN QUERY (
-  --
-  WITH arg AS (
       SELECT
           a.snp_id,
-          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE a.snp_id END AS snp_current
-      FROM
-          (SELECT unnest(_rs) AS snp_id) AS a
-          LEFT JOIN rsmergearch m ON a.snp_id = m.rshigh
-  ),
-  query AS (
-      SELECT
-          m.rscurrent, m.rshigh, m.rslow
-      FROM
-          rsmergearch m
-      WHERE
-          rshigh = ANY(_rs)
-          OR rslow = ANY(_rs)
-          OR rscurrent = ANY(_rs)
-      UNION
-          SELECT unnest(_rs), NULL, NULL
-  ),
-  -- NOTE: To avoid Seq Scan on `rsmergearch`, split CTE as `info` and `info_with_snp_current`
-  info AS (
-      SELECT
-          f.snp_id,
+          a.snp_current,
           f.allele,
           f.freq
       FROM
-          allelefreq f
+          get_tbl_current_rs(_rs) a
+          LEFT OUTER JOIN allelefreq f ON a.snp_current = f.snp_id  -- f.snp_id have been updated to current while bulk importing
       WHERE
-          f.source_id = _source_id
-          AND f.snp_id IN (
-              SELECT q.rscurrent FROM query q
-              UNION SELECT q.rshigh FROM query q
-              UNION SELECT q.rslow FROM query q
-          )
-  ),
-  info_with_snp_current AS (
-      SELECT
-          i.snp_id,
-          CASE WHEN rscurrent IS NOT NULL THEN rscurrent ELSE i.snp_id END AS snp_current,
-          i.allele,
-          i.freq
-      FROM
-          info i
-          LEFT JOIN rsmergearch m ON i.snp_id = m.rshigh
-  )
-  SELECT
-      arg.snp_id, arg.snp_current, i.snp_id, i.allele, i.freq
-  FROM
-      arg LEFT JOIN info_with_snp_current i USING (snp_current)
+          source_id = _source_id
+          OR source_id IS NULL  -- TODO:
   );
 END
 $$ LANGUAGE plpgsql;

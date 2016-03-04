@@ -28,7 +28,7 @@ def _main():
     records = {}
 
     for row in rows:
-        snp_id, snp_current, snp_in_source, allele, freq = row
+        snp_id, snp_current, allele, freq = row
 
         if not (allele and freq):
             raw_chr     = '{0: >4}'.format('.')
