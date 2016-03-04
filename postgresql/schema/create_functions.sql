@@ -1,3 +1,4 @@
+--
 DROP FUNCTION IF EXISTS get_current_rs(_rs int);
 CREATE OR REPLACE FUNCTION get_current_rs(_rs int)
 RETURNS int AS $$
@@ -37,6 +38,7 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
+--
 DROP FUNCTION IF EXISTS get_pos_by_rs(_rs int);
 CREATE OR REPLACE FUNCTION get_pos_by_rs(_rs int)
 RETURNS record AS $$
@@ -49,6 +51,12 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
+--
+DROP FUNCTION IF EXISTS get_tbl_pos_by_rs(
+  _rs int,
+  OUT chr varchar(32),
+  OUT pos int
+);
 CREATE OR REPLACE FUNCTION get_tbl_pos_by_rs(
   _rs int,
   OUT chr varchar(32),
@@ -62,6 +70,7 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
+--
 DROP FUNCTION IF EXISTS get_rs_by_pos(_chr varchar, _pos int);
 CREATE OR REPLACE FUNCTION get_rs_by_pos(_chr varchar, _pos int)
 RETURNS int[] AS $$
