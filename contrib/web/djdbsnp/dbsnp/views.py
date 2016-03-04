@@ -1,12 +1,30 @@
 import re
 import csv
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from .models import SNP
-
+from .forms import SnpsForm
 
 def index(request):
+    return redirect(snps)
+
+def snps(request):
+    records = {'allele_freqs': None}
+
+    if request.method == "POST":
+        form = SnpsForm(request.POST)
+        if form.is_valid():
+            allele_freq_source_id = 4  # TODO
+            rsids = form.cleaned_data.get('rsids')
+            af = SNP.get_allele_freqs(allele_freq_source_id, rsids)
+            records['allele_freqs'] = af
+
+        # TODO: show error messages for invalid queries
+
+    return render(request, 'snps.html', records)
+
+def snp(request):
     rs_regexp = re.compile('\A(rs)?(\d{1,9})\Z')  # max rs# is 483352819 (b141)
     rs_match = rs_regexp.findall(request.GET.get('rs', ''))
     rs = int(rs_match[0][1]) if rs_match else ''
@@ -27,7 +45,7 @@ def index(request):
 
         allele_freq_source = '1000 Genomes Phase1, CHB+JPT+CHS'  # TODO
         allele_freq_source_id = 1  # TODO
-        af = SNP.get_allele_freq(allele_freq_source_id, rs)
+        af = SNP.get_allele_freqs(allele_freq_source_id, [rs])
         allele_freqs = {allele_freq_source: dict(zip(af['allele'], af['freq']))}
 
         # TODO: JPT, EUR, AFR
@@ -60,4 +78,4 @@ def index(request):
         writer.writerow(records)
         return response
     else:
-        return render(request, 'index.html', records)
+        return render(request, 'snp.html', records)

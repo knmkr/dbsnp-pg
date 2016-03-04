@@ -18,11 +18,11 @@ class SNP(models.Model):
             return row[0]
 
     @classmethod
-    def get_allele_freq(self, source_id, rs):
+    def get_allele_freqs(self, source_id, rsids):
         with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s)", (source_id, [rs],))
+            c.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s)", (source_id, rsids,))
             row = dictfetchall(c)
-            return row[0]
+            return row
 
 
 def dictfetchall(cursor):
