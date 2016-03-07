@@ -4,18 +4,11 @@ from django.db import connections
 
 class SNP(models.Model):
     @classmethod
-    def get_pos_by_rs(self, rs):
+    def get_chr_pos(self, rsids):
         with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT * FROM get_tbl_pos_by_rs(%s)", (rs,))
-            row = c.fetchone()
-            return row[0], row[1]
-
-    @classmethod
-    def get_current_rs(self, rs):
-        with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT get_current_rs(%s)", (rs,))
-            row = c.fetchone()
-            return row[0]
+            c.execute("SELECT * FROM get_tbl_pos_by_rs(%s)", (rsids,))
+            row = dictfetchall(c)
+            return row
 
     @classmethod
     def get_allele_freqs(self, source_id, rsids):

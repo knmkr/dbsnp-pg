@@ -29,7 +29,7 @@ rs672
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
 
-          {% if allele_freqs != None%}
+          {% if allele_freqs != None %}
           <h2 class="sub-header">Results</h2>
             {% if allele_freqs %}
             <table class="table">
@@ -45,6 +45,27 @@ rs672
                 <th>{{ af.allele.0 }}</th>
                 <th>{{ af.allele.1 }}</th>
                 <td>{{ af.freq.0 }}</td>
+              </tr>
+              {% endfor %}
+            </table>
+            {% else %}
+            <p>Not found.</p>
+            {% endif %}
+          {% endif %}
+
+          {% if chr_pos != None %}
+            {% if chr_pos %}
+            <table class="table">
+              <tr>
+                <th>snp id</th>
+                <th>Chrom (GRCh37.p13)</th>
+                <th>Position (GRCh37.p13)</th>
+              </tr>
+              {% for pos in chr_pos %}
+              <tr>
+                <th>{{ pos.snp_id }}</th>
+                <th>{{ pos.chr }}</th>
+                <th>{{ pos.pos }}</th>
               </tr>
               {% endfor %}
             </table>
