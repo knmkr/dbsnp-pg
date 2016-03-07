@@ -53,18 +53,26 @@ $$ LANGUAGE plpgsql;
 
 --
 DROP FUNCTION IF EXISTS get_tbl_pos_by_rs(
-  _rs int,
-  OUT chr varchar(32),
+  _rs int[],
+  OUT snp_id int,
+  OUT chr varchar,
   OUT pos int
 );
 CREATE OR REPLACE FUNCTION get_tbl_pos_by_rs(
-  _rs int,
-  OUT chr varchar(32),
+  _rs int[],
+  OUT snp_id int,
+  OUT chr varchar,
   OUT pos int
 ) RETURNS SETOF RECORD AS $$
 BEGIN
   RETURN QUERY (
-      SELECT s.chr, s.pos + 1 FROM snpchrposonref s WHERE snp_id = _rs  -- 0-based to 1-based
+      SELECT
+          a.snp_id,
+          p.chr,
+          p.pos + 1  -- 0-based to 1-based
+      FROM
+          (SELECT unnest(_rs) as snp_id) a
+          LEFT JOIN snpchrposonref p ON a.snp_id = p.snp_id
   );
   RETURN;
 END
