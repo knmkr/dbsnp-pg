@@ -9,9 +9,16 @@ AF_POPULATION_CHOICES = (
     (300, '1000 Genomes Phase3 Global'),
 )
 
+RSID_PLACEHOLDER = '''671
+672
+rs671
+rs672
+...'''
+
+
 class SnpsForm(forms.Form):
     af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=AF_POPULATION_CHOICES)
-    rsids = forms.CharField(widget=forms.Textarea)
+    rsids = forms.CharField(widget=forms.Textarea(attrs={'placeholder': RSID_PLACEHOLDER}))
 
     def clean_rsids(self):
         data = self.cleaned_data['rsids']

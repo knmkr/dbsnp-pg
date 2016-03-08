@@ -25,15 +25,10 @@
             {% csrf_token %}
             <div class="form-group">
               <label for="id_af_population">Allele frequency source population</label>
-              {{ form.af_population|css_class:"form-control" }}
+              {{ form.af_population| css_class:"form-control" }}
 
               <label for="id_rsids">rs IDs</label>
-              <textarea class="form-control" id="id_rsids" name="rsids" rows="10" placeholder="671
-672
-rs671
-rs672
-...
-"></textarea>
+              {{ form.rsids| css_class:"form-control" }}
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
