@@ -17,9 +17,8 @@ def snps(request):
         if form.is_valid():
             allele_freq_source_id = 4  # TODO
             rsids = form.cleaned_data.get('rsids')
-            af = SNP.get_allele_freqs(allele_freq_source_id, rsids)
-            records['allele_freqs'] = af
-            records['chr_pos'] = SNP.get_chr_pos([rec['snp_id'] for rec in af])
+            records['allele_freqs'] = SNP.get_allele_freqs(allele_freq_source_id, rsids)
+            records['chr_pos'] = SNP.get_chr_pos(rsids)
 
         # TODO: show error messages for invalid queries
 
