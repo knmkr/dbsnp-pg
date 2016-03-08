@@ -49,7 +49,6 @@ rs672
           <!-- Tab panes -->
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="af">
-              {% if allele_freqs != None %}
               {% if allele_freqs %}
               <table class="table">
                 <tr>
@@ -61,20 +60,18 @@ rs672
                 {% for af in allele_freqs %}
                 <tr>
                   <th>{{ af.snp_id }}</th>
-                  <th>{{ af.allele.0 }}</th>
-                  <th>{{ af.allele.1 }}</th>
-                  <td>{{ af.freq.0 }}</td>
+                  <th>{{ af.allele.0| na }}</th>
+                  <th>{{ af.allele.1| na }}</th>
+                  <td>{{ af.freq.0| na }}</td>
                 </tr>
                 {% endfor %}
               </table>
               {% else %}
               <p>Not found.</p>
               {% endif %}
-              {% endif %}
             </div>
 
             <div role="tabpanel" class="tab-pane" id="chr_pos">
-              {% if chr_pos != None %}
               {% if chr_pos %}
               <table class="table">
                 <tr>
@@ -84,15 +81,14 @@ rs672
                 </tr>
                 {% for pos in chr_pos %}
                 <tr>
-                  <th>{{ pos.snp_id }}</th>
-                  <th>{{ pos.chr }}</th>
-                  <th>{{ pos.pos }}</th>
+                  <th>{{ pos.snp_id| na }}</th>
+                  <th>{{ pos.chr| na }}</th>
+                  <th>{{ pos.pos| na }}</th>
                 </tr>
                 {% endfor %}
               </table>
               {% else %}
               <p>Not found.</p>
-              {% endif %}
               {% endif %}
             </div>
 
