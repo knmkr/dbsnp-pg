@@ -4,15 +4,17 @@ CREATE TABLE AlleleFreqSource (
        source_id    smallint    primary key,
        project      varchar     not null,
        populations  varchar[]   not null,
-       genome_build varchar
+       genome_build varchar,
+       status       varchar,
+       display_name varchar
 );
-INSERT INTO AlleleFreqSource VALUES (1,   '1000genomes_phase1',  '{JPT}',          'b37'),
-                                    (2,   '1000genomes_phase3',  '{JPT}',          'b37'),
-                                    (3,   '1000genomes_phase1',  '{CHB,JPT,CHS}',  'b37'),
-                                    (4,   '1000genomes_phase3',  '{CHB,JPT,CHS}',  'b37'),
-                                    (100, '1000genomes_phase3',  '{CEU}',          'b37'),
-                                    (200, '1000genomes_phase3',  '{YRI}',          'b37'),
-                                    (300, '1000genomes_phase3',  '{GLOBAL}',       'b37');
+INSERT INTO AlleleFreqSource VALUES (1,   '1000 Genomes Phase 1',  '{JPT}',          'b37',  '',  '1000 Genomes Phase1 JPT'),
+                                    (2,   '1000 Genomes Phase 3',  '{JPT}',          'b37',  '',  '1000 Genomes Phase3 JPT'),
+                                    (3,   '1000 Genomes Phase 1',  '{CHB,JPT,CHS}',  'b37',  '',  '1000 Genomes Phase1 CHB+JPT+CHS'),
+                                    (4,   '1000 Genomes Phase 3',  '{CHB,JPT,CHS}',  'b37',  '',  '1000 Genomes Phase3 CHB+JPT+CHS'),
+                                    (100, '1000 Genomes Phase 3',  '{CEU}',          'b37',  '',  '1000 Genomes Phase3 CEU'),
+                                    (200, '1000 Genomes Phase 3',  '{YRI}',          'b37',  '',  '1000 Genomes Phase3 YRI'),
+                                    (300, '1000 Genomes Phase 3',  '{Global}',       'b37',  '',  '1000 Genomes Phase3 Global');
 
 -- Partitioning "master" table
 DROP TABLE IF EXISTS AlleleFreq CASCADE;

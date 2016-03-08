@@ -10,19 +10,18 @@ def index(request):
     return redirect(snps)
 
 def snps(request):
-    records = {'allele_freqs': None}
+    form = SnpsForm(request.POST)
+    context = {'form': form}
 
     if request.method == "POST":
-        form = SnpsForm(request.POST)
         if form.is_valid():
-            allele_freq_source_id = 4  # TODO
+            af_population = form.cleaned_data.get('af_population')
             rsids = form.cleaned_data.get('rsids')
-            af = SNP.get_allele_freqs(allele_freq_source_id, rsids)
-            records['allele_freqs'] = af
-
+            context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids)
+            context['chr_pos'] = SNP.get_chr_pos(rsids)
         # TODO: show error messages for invalid queries
 
-    return render(request, 'snps.html', records)
+    return render(request, 'snps.html', context)
 
 def snp(request):
     rs_regexp = re.compile('\A(rs)?(\d{1,9})\Z')  # max rs# is 483352819 (b141)

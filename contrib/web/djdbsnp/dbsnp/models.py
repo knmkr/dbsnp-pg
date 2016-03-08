@@ -4,31 +4,36 @@ from django.db import connections
 
 class SNP(models.Model):
     @classmethod
-    def get_pos_by_rs(self, rs):
+    def get_chr_pos(self, rsids):
         with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT * FROM get_tbl_pos_by_rs(%s)", (rs,))
-            row = c.fetchone()
-            return row[0], row[1]
-
-    @classmethod
-    def get_current_rs(self, rs):
-        with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT get_current_rs(%s)", (rs,))
-            row = c.fetchone()
-            return row[0]
+            c.execute('SELECT * FROM get_tbl_pos_by_rs(%s)', (rsids,))
+            row = dictfetchall(c)
+            _assert_query_ids_eq_result_ids(rsids, row)
+            return row
 
     @classmethod
     def get_allele_freqs(self, source_id, rsids):
         with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s)", (source_id, rsids,))
+            c.execute('SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s)', (source_id, rsids,))
             row = dictfetchall(c)
+            _assert_query_ids_eq_result_ids(rsids, row)
             return row
 
+    @classmethod
+    def get_af_sources(self):
+        with connections['dbsnp'].cursor() as c:
+            c.execute("SELECT source_id, display_name FROM allelefreqsource WHERE status = 'ok'")
+            row = c.fetchall()
+            return row
 
 def dictfetchall(cursor):
-    "Returns all rows from a cursor as a dict"
+    '''Returns all rows from a cursor as a dict
+    '''
+
     desc = cursor.description
-    return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
-    ]
+    row = [dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()]
+    return row
+
+def _assert_query_ids_eq_result_ids(query_ids, result_row):
+    result_ids = [x['snp_id'] for x in result_row]
+    assert query_ids == result_ids, '[ERROR] Query ids != Result ids: {} != {}'.format(query_ids, result_ids)

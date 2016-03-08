@@ -1,10 +1,16 @@
+{% load extra %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- bootstrap3 -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <title></title>
+
+    <!-- Bootstrap 3 -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   </head>
 
   <body>
@@ -18,43 +24,83 @@
           <form action="/dbsnp/snps/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-              <label for="exampleInputEmail1">rs IDs</label>
-              <textarea class="form-control" id="id_rsids" name="rsids" rows="10" placeholder="671
-672
-rs671
-rs672
-...
-"></textarea>
+              <label for="id_af_population">Allele frequency source population</label>
+              {{ form.af_population| css_class:"form-control" }}
+
+              <label for="id_rsids">rs IDs</label>
+              {{ form.rsids| css_class:"form-control" }}
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
 
-          {% if allele_freqs != None%}
           <h2 class="sub-header">Results</h2>
-            {% if allele_freqs %}
-            <table class="table">
-              <tr>
-                <th>snp id</th>
-                <th>allele 1</th>
-                <th>allele 2</th>
-                <th>allele 1 freq</th>
-              </tr>
-              {% for af in allele_freqs %}
-              <tr>
-                <th>{{ af.snp_id }}</th>
-                <th>{{ af.allele.0 }}</th>
-                <th>{{ af.allele.1 }}</th>
-                <td>{{ af.freq.0 }}</td>
-              </tr>
-              {% endfor %}
-            </table>
-            {% else %}
-            <p>Not found.</p>
-            {% endif %}
-          {% endif %}
+
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#af" aria-controls="af" role="tab" data-toggle="tab">Allele Freq</a></li>
+            <li role="presentation"><a href="#chr_pos" aria-controls="chr_pos" role="tab" data-toggle="tab">Position (GRCh37.p13)</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="af">
+              {% if allele_freqs %}
+              <table class="table table-striped">
+                <tr>
+                  <th>rs ID</th>
+                  <th>Allele 1</th>
+                  <th>Allele 2</th>
+                  <th>Allele 1 Freq</th>
+                </tr>
+                {% for af in allele_freqs %}
+                <tr>
+                  <th>{{ af.snp_id }}</th>
+                  <th>{{ af.allele.0| na }}</th>
+                  <th>{{ af.allele.1| na }}</th>
+                  <td>{{ af.freq.0| na }}</td>
+                </tr>
+                {% endfor %}
+              </table>
+              {% else %}
+              <div class="alert alert-warning" role="alert">
+                Not found.
+              </div>
+              {% endif %}
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="chr_pos">
+              {% if chr_pos %}
+              <table class="table table-striped">
+                <tr>
+                  <th>rs ID</th>
+                  <th>Chrom</th>
+                  <th>Position</th>
+                </tr>
+                {% for pos in chr_pos %}
+                <tr>
+                  <th>{{ pos.snp_id| na }}</th>
+                  <th>{{ pos.chr| na }}</th>
+                  <th>{{ pos.pos| na }}</th>
+                </tr>
+                {% endfor %}
+              </table>
+              {% else %}
+              <div class="alert alert-warning" role="alert">
+                Not found.
+              </div>
+              {% endif %}
+            </div>
+
+          </div>
 
         </div>
       </div>
     </div>
+
+    <!-- jQuery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Bootstrap 3 -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
   </body>
 </html>
