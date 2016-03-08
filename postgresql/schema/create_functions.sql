@@ -15,6 +15,7 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
+-- TODO: add check for invalid SNPs like rs1
 --
 DROP FUNCTION IF EXISTS get_tbl_current_rs(
   _rs int[],
@@ -55,12 +56,14 @@ $$ LANGUAGE plpgsql;
 DROP FUNCTION IF EXISTS get_tbl_pos_by_rs(
   _rs int[],
   OUT snp_id int,
+  OUT snp_current int,
   OUT chr varchar,
   OUT pos int
 );
 CREATE OR REPLACE FUNCTION get_tbl_pos_by_rs(
   _rs int[],
   OUT snp_id int,
+  OUT snp_current int,
   OUT chr varchar,
   OUT pos int
 ) RETURNS SETOF RECORD AS $$
@@ -68,11 +71,12 @@ BEGIN
   RETURN QUERY (
       SELECT
           a.snp_id,
+          a.snp_current,
           p.chr,
           p.pos + 1  -- 0-based to 1-based
       FROM
-          (SELECT unnest(_rs) as snp_id) a
-          LEFT JOIN snpchrposonref p ON a.snp_id = p.snp_id
+          get_tbl_current_rs(_rs) a
+          LEFT JOIN snpchrposonref p ON a.snp_current = p.snp_id
   );
   RETURN;
 END
