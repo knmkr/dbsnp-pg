@@ -45,7 +45,7 @@
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="af">
               {% if allele_freqs %}
-              <table class="table">
+              <table class="table table-striped">
                 <tr>
                   <th>rs ID</th>
                   <th>Allele 1</th>
@@ -62,13 +62,15 @@
                 {% endfor %}
               </table>
               {% else %}
-              <p>Not found.</p>
+              <div class="alert alert-warning" role="alert">
+                Not found.
+              </div>
               {% endif %}
             </div>
 
             <div role="tabpanel" class="tab-pane" id="chr_pos">
               {% if chr_pos %}
-              <table class="table">
+              <table class="table table-striped">
                 <tr>
                   <th>rs ID</th>
                   <th>Chrom</th>
@@ -83,7 +85,9 @@
                 {% endfor %}
               </table>
               {% else %}
-              <p>Not found.</p>
+              <div class="alert alert-warning" role="alert">
+                Not found.
+              </div>
               {% endif %}
             </div>
 
