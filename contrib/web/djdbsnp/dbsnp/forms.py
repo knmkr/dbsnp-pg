@@ -1,23 +1,16 @@
 from django import forms
-
-AF_POPULATION_CHOICES = (
-    (3,   '1000 Genomes Phase1 CHB+JPT+CHS'),
-    (0,   '-------------------------------'),
-    (4,   '1000 Genomes Phase3 CHB+JPT+CHS'),
-    (100, '1000 Genomes Phase3 CEU'),
-    (200, '1000 Genomes Phase3 YRI'),
-    (300, '1000 Genomes Phase3 Global'),
-)
+from .models import SNP
 
 RSID_PLACEHOLDER = '''671
 672
 rs671
 rs672
-...'''
+...
+'''
 
 
 class SnpsForm(forms.Form):
-    af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=AF_POPULATION_CHOICES)
+    af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=SNP.get_af_sources())
     rsids = forms.CharField(widget=forms.Textarea(attrs={'placeholder': RSID_PLACEHOLDER}))
 
     def clean_rsids(self):

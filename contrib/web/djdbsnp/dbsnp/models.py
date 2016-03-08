@@ -19,6 +19,13 @@ class SNP(models.Model):
             _assert_query_ids_eq_result_ids(rsids, row)
             return row
 
+    @classmethod
+    def get_af_sources(self):
+        with connections['dbsnp'].cursor() as c:
+            c.execute("SELECT source_id, display_name FROM allelefreqsource WHERE status = 'ok'")
+            row = c.fetchall()
+            return row
+
 def dictfetchall(cursor):
     '''Returns all rows from a cursor as a dict
     '''
