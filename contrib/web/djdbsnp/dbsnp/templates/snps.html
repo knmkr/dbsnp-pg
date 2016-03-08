@@ -1,3 +1,5 @@
+{% load extra %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,7 +24,10 @@
           <form action="/dbsnp/snps/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-              <label for="exampleInputEmail1">rs IDs</label>
+              <label for="id_af_population">Allele frequency source population</label>
+              {{ form.af_population|css_class:"form-control" }}
+
+              <label for="id_rsids">rs IDs</label>
               <textarea class="form-control" id="id_rsids" name="rsids" rows="10" placeholder="671
 672
 rs671
