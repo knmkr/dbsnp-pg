@@ -47,7 +47,7 @@ BEGIN
           p.chr,
           p.pos + 1  -- 0-based to 1-based
       FROM
-          get_tbl_current_rs(_rs) a
+          get_current_rs(_rs) a
           LEFT JOIN snpchrposonref p ON a.snp_current = p.snp_id
   );
   RETURN;

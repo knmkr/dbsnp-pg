@@ -1,5 +1,5 @@
 --
-CREATE OR REPLACE FUNCTION get_tbl_allele_freq_by_rs_history(
+CREATE OR REPLACE FUNCTION get_allele_freq(
   _source_id int,
   _rs int[],
   OUT snp_id int,
@@ -15,7 +15,7 @@ BEGIN
           f.allele,
           f.freq
       FROM
-          get_tbl_current_rs(_rs) a
+          get_current_rs(_rs) a
           LEFT OUTER JOIN (SELECT af.snp_id, af.allele, af.freq FROM allelefreq af WHERE source_id = _source_id) f ON a.snp_current = f.snp_id  -- f.snp_id have been updated to current while bulk importing
   );
 END
