@@ -19,9 +19,12 @@ CREATE UNIQUE INDEX SnpChrCode_ukey_code ON SnpChrCode (code);
 
 -- CREATE CLUSTERED INDEX [i_rsH] ON [RsMergeArch] ([rsHigh] ASC)
 -- CREATE NONCLUSTERED INDEX [i_rsL] ON [RsMergeArch] ([rsLow] ASC)
+-- CREATE CLUSTERED INDEX [i_rs] ON [SNP] ([snp_id] ASC)
 CREATE INDEX i_rsH ON RsMergeArch (rsHigh);
 CLUSTER RsMergeArch USING i_rsH;
 CREATE INDEX i_rsL ON RsMergeArch (rsLow);
+CREATE INDEX i_rs ON SNP (snp_id);
+CLUSTER SNP USING i_rs;
 
 --
 CREATE UNIQUE INDEX SNPChrPosOnRef_ukey_rs ON SNPChrPosOnRef (snp_id);
