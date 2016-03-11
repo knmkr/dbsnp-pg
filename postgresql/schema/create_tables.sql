@@ -1,4 +1,6 @@
--- ftp.ncbi.nih.gov:/snp/database/shared_schema/dbSNP_main_table.sql.gz
+-- Table/column description: http://www.ncbi.nlm.nih.gov/projects/SNP/snp_db_list_table.cgi?
+
+-- Schema: ftp.ncbi.nih.gov:/snp/database/shared_schema/dbSNP_main_table.sql.gz
 
 -- CREATE TABLE [Allele]
 -- (
@@ -43,7 +45,7 @@ CREATE TABLE SnpChrCode (
 );
 
 
--- ftp.ncbi.nih.gov:/snp/organisms/human_9606/database/organism_schema/human_9606_table.sql.gz
+-- Schema: ftp.ncbi.nih.gov:/snp/organisms/human_9606/database/organism_schema/human_9606_table.sql.gz
 
 -- DROP TABLE IF EXISTS SNPHistory;
 -- CREATE TABLE SNPHistory (
@@ -79,6 +81,39 @@ CREATE TABLE RsMergeArch (
        rsCurrent         integer,
        orien2Current     bit,
        comment           varchar(255)
+);
+
+-- CREATE TABLE [SNP]                     -- refSNP property table.
+-- (
+-- [snp_id] [int] NULL ,                  -- RefSNP Cluster Id. This is the ubiquitous rs# for dbSNP RefSNP.
+-- [avg_heterozygosity] [real] NULL ,     -- The average heterozygosity of a snp. This field has value when there is frequency data for the snp.
+-- [het_se] [real] NULL ,                 -- Standard error of the the above average heterozygosity.
+-- [create_time] [datetime] NULL ,        -- The first time this refSNP cluster is created.
+-- [last_updated_time] [datetime] NULL ,  -- Last time this row of SNP data is updated. This is implementation specific. It does not mean the last time the snp submission data is updated. For ex. This time could be when validation_status was updated for this snp.
+-- [CpG_code] [tinyint] NULL ,            -- CpG_code describes the DNA CpG motif. This is a foreign key to lookup table CpGCode.
+-- [tax_id] [int] NULL ,                  -- NCBI taxonomy id for an organism.
+-- [validation_status] [tinyint] NULL ,   -- This is a foreign key to lookup table SnpValidatonCode, which describes the definition of each validation status.
+-- [exemplar_subsnp_id] [int] NOT NULL ,  -- snp_id is the id for a refSNP Cluster of one or more submitted snp that all have the same mapping positions. The subsnp_id ( id for the submitted snp) with the longest flanking sequence is the exemplar_subsnp_id. An rs fasta sequence is the sequence of the exemplar ss ( may be in the reverse orientation. See SNPSubSNPLink.substrand_reversed_flag for more details. )
+-- [univar_id] [int] NULL ,               -- Uni-variation id. This is the foreign key to lookup table UniVariation. Each submitted snp has a variation( See ObsVariation Table). UniVariation standardize on the order of each allele and corrects typo/format problems of the submitted variations. Many observed variation in submitted snp may be curated to be the same univariation. For ex. -/ATATAT is the same as -/(AT)3.
+-- [cnt_subsnp] [int] NULL ,              -- Number of submitted snp (subsnp, or ss) in the refSNP cluster.
+-- [map_property] [tinyint] NULL          -- Stores interim data for internal use only
+-- )
+-- go
+
+DROP TABLE IF EXISTS SNP;
+CREATE TABLE SNP (
+       snp_id              integer,
+       avg_heterozygosity  real,
+       het_se              real,
+       create_time         timestamp,
+       last_updated_time   timestamp,
+       CpG_code            smallint,
+       tax_id              integer,
+       validation_status   smallint,
+       exemplar_subsnp_id  integer     not null,
+       univar_id           integer,
+       cnt_subsnp          integer,
+       map_property        smallint
 );
 
 -- CREATE TABLE [b141_SNPChrPosOnRef]  -- This table stores the chromosome position(0 based) of uniquely mapped snp on NCBI reference assembly. It has one
