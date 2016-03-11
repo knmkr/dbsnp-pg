@@ -27,18 +27,15 @@ Or pg_restore from [pg_dump files (listed in the release page)](https://github.c
 ### Get chrom and position
 
 ```
-=> SELECT * FROM get_pos_by_rs(ARRAY[1,2,3,671,2230021]);
+=> SELECT * FROM get_pos_by_rs(ARRAY[3,671]);
 
  snp_id  | snp_current | chr |    pos
 ---------+-------------+-----+-----------
-       1 |           1 |     |
-       2 |           2 |     |
        3 |           3 | 13  |  32446842
      671 |         671 | 12  | 112241766
- 2230021 |         671 | 12  | 112241766
 ```
 
-### Get current rs\#
+### Get current rs ID
 
 ```
 => SELECT * FROM get_current_rs(ARRAY[1,2,3,671,2230021]);
@@ -55,12 +52,12 @@ Or pg_restore from [pg_dump files (listed in the release page)](https://github.c
 ### Get allele frequency
 
 ```
-=> SELECT * FROM get_allele_freq(2, ARRAY[671, 2230021]);
+=> SELECT * FROM get_allele_freq(3, ARRAY[671, 2230021]);
 
-  snp_id  | snp_current | snp_in_source | allele |      freq
-----------+-------------+---------------+--------+-----------------
-      671 |         671 |           671 | {G,A}  | {0.7995,0.2005}
-  2230021 |         671 |           671 | {G,A}  | {0.7995,0.2005}
+ snp_id  | snp_current | allele |      freq
+---------+-------------+--------+-----------------
+     671 |         671 | {A,G}  | {0.2168,0.7832}
+ 2230021 |         671 | {A,G}  | {0.2168,0.7832}
 ```
 
 See details in `contrib/freq`
@@ -103,15 +100,15 @@ Requirements:
 
 ## Notes
 
-- Only human [9606] data is supported.
-- Build versions of dbSNP and references genome assemblies depend on the versions in NCBI FTP release:
+- Only human [taxonomy id: 9606] data is supported.
+- dbSNP builds and human references genome builds are depend on the releases on the NCBI FTP:
 
-| PostgreSQL database name  | dbSNP    | reference genome |
-|---------------------------|----------|------------------|
-| dbsnp_b144_GRCh38         | b144     | GRCh38p2         |
-| dbsnp_b144_GRCh37         | b144     | GRCh37p13        |
-| dbsnp_b142_GRCh38         | b142     | GRCh38           |
-| dbsnp_b142_GRCh37         | b142     | GRCh37p13        |
+| dbSNP    | Reference Genome |
+|----------|------------------|
+| b146     | GRCh38p2         |
+| b146     | GRCh37p13        |
+| b144     | GRCh38p2         |
+| b144     | GRCh37p13        |
 
 
 ## Requirements
