@@ -1,66 +1,38 @@
 --
-DROP FUNCTION IF EXISTS get_current_rs(_rs int);
-CREATE OR REPLACE FUNCTION get_current_rs(_rs int)
-RETURNS int AS $$
-DECLARE
-  snp_current int;
-BEGIN
-  --
-  SELECT INTO snp_current rscurrent FROM rsmergearch WHERE rshigh = _rs;
-  IF snp_current IS NULL THEN
-      RETURN _rs;
-  ELSE
-      RETURN snp_current;
-  END IF;
-END
-$$ LANGUAGE plpgsql;
-
--- TODO: add check for invalid SNPs like rs1
+-- => SELECT * FROM get_current_rs(ARRAY[1,2,3,671,2230021]);
+--  snp_id  | snp_valid | snp_merged_into | snp_current
+-- ---------+-----------+-----------------+-------------
+--        1 |           |                 |
+--        2 |           |                 |
+--        3 |         3 |                 |           3
+--      671 |       671 |                 |         671
+--  2230021 |           |             671 |         671
 --
-DROP FUNCTION IF EXISTS get_tbl_current_rs(
+CREATE OR REPLACE FUNCTION get_current_rs(
   _rs int[],
   OUT snp_id int,
-  OUT snp_current int
-);
-CREATE OR REPLACE FUNCTION get_tbl_current_rs(
-  _rs int[],
-  OUT snp_id int,
+  OUT snp_valid int,
+  OUT snp_merged_into int,
   OUT snp_current int
 ) RETURNS SETOF RECORD AS $$
 BEGIN
   RETURN QUERY (
       SELECT
           a.snp_id,
-          CASE WHEN m.rscurrent IS NOT NULL THEN m.rscurrent ELSE a.snp_id END AS snp_current
+          snp.snp_id AS snp_valid,
+          m.rscurrent AS snp_merged_into,
+          CASE WHEN snp.snp_id IS NOT NULL THEN snp.snp_id
+               WHEN m.rscurrent IS NOT NULL THEN m.rscurrent END AS snp_current
       FROM
           (SELECT unnest(_rs) as snp_id) a
+          LEFT JOIN snp ON a.snp_id = snp.snp_id
           LEFT JOIN rsmergearch m ON a.snp_id = m.rshigh
   );
 END
 $$ LANGUAGE plpgsql;
 
 --
-DROP FUNCTION IF EXISTS get_pos_by_rs(_rs int);
-CREATE OR REPLACE FUNCTION get_pos_by_rs(_rs int)
-RETURNS record AS $$
-DECLARE
-  ret record;
-BEGIN
-  --
-  SELECT INTO ret chr, pos + 1 FROM snpchrposonref WHERE snp_id = _rs;  -- 0-based to 1-based
-  RETURN ret;
-END
-$$ LANGUAGE plpgsql;
-
---
-DROP FUNCTION IF EXISTS get_tbl_pos_by_rs(
-  _rs int[],
-  OUT snp_id int,
-  OUT snp_current int,
-  OUT chr varchar,
-  OUT pos int
-);
-CREATE OR REPLACE FUNCTION get_tbl_pos_by_rs(
+CREATE OR REPLACE FUNCTION get_pos_by_rs(
   _rs int[],
   OUT snp_id int,
   OUT snp_current int,
@@ -83,7 +55,6 @@ END
 $$ LANGUAGE plpgsql;
 
 --
-DROP FUNCTION IF EXISTS get_rs_by_pos(_chr varchar, _pos int);
 CREATE OR REPLACE FUNCTION get_rs_by_pos(_chr varchar, _pos int)
 RETURNS int[] AS $$
 BEGIN
