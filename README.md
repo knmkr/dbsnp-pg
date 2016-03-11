@@ -20,28 +20,43 @@ Then fetch data, create table, and import data:
 
 Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg-min/releases):
 
-    $ pg_restore -d dbsnp_b142_GRCh37 ${pg_dump}
+    $ pg_restore -d dbsnp_b144_GRCh37 ${pg_dump}
 
 ## Usage example
 
-### Get chrom and position for given rs\#.
+### Get chrom and position
 
 ```
-SELECT get_pos_by_rs(333333);
-(3,124609540)
+=> SELECT * FROM get_pos_by_rs(ARRAY[1,2,3,671,2230021]);
+
+ snp_id  | snp_current | chr |    pos
+---------+-------------+-----+-----------
+       1 |           1 |     |
+       2 |           2 |     |
+       3 |           3 | 13  |  32446842
+     671 |         671 | 12  | 112241766
+ 2230021 |         671 | 12  | 112241766
 ```
 
-### Get current rs\# for given rs\#.
+### Get current rs\#
 
 ```
-SELECT get_current_rs(332);
-121909001
+=> SELECT * FROM get_current_rs(ARRAY[1,2,3,671,2230021]);
+
+ snp_id  | snp_valid | snp_merged_into | snp_current
+---------+-----------+-----------------+-------------
+       1 |           |                 |
+       2 |           |                 |
+       3 |         3 |                 |           3
+     671 |       671 |                 |         671
+ 2230021 |           |             671 |         671
 ```
 
-### Get allele frequency for given rs\#.
+### Get allele frequency
 
 ```
-SELECT * FROM get_tbl_allele_freq_by_rs_history(2, ARRAY[671, 2230021]);
+=> SELECT * FROM get_allele_freq(2, ARRAY[671, 2230021]);
+
   snp_id  | snp_current | snp_in_source | allele |      freq
 ----------+-------------+---------------+--------+-----------------
       671 |         671 |           671 | {G,A}  | {0.7995,0.2005}
@@ -50,10 +65,10 @@ SELECT * FROM get_tbl_allele_freq_by_rs_history(2, ARRAY[671, 2230021]);
 
 See details in `contrib/freq`
 
-### Get GWAS Catalog data for given rs\#.
+### Get GWAS Catalog data
 
 ```
-SELECT pubmed_id, disease_or_trait, snp_id, risk_allele, odds_ratio_or_beta_coeff
+=> SELECT pubmed_id, disease_or_trait, snp_id, risk_allele, odds_ratio_or_beta_coeff
 FROM gwascatalog
 WHERE snp_id = 671
 AND risk_allele IS NOT NULL;
