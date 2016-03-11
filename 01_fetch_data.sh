@@ -55,6 +55,7 @@ declare -A ref_code=( \
 
 echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                                  # ~150 MB
 echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/SNP.bcp.gz{,.md5}                                          # ~1.7 GB
+echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz{,.md5}      # ~141 KB
 echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz{,.md5}  # ~500 MB
 echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz{,.md5}    # ~3.3 GB
 echo wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                                                       #  ~70 MB
@@ -77,6 +78,7 @@ for src in *.gz; do
 done
 
 # Unifying bcp name
+cp ${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz ContigInfo.bcp.gz
 cp ${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz SNPChrPosOnRef.bcp.gz
 cp ${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz SNPContigLoc.bcp.gz
 

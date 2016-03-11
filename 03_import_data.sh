@@ -10,7 +10,7 @@ if [ "$#" -ne 4 ]; then
     exit 1
 fi
 
-target=(Allele SnpChrCode RsMergeArch SNP SNPChrPosOnRef)
+target=(Allele SnpChrCode RsMergeArch SNP ContigInfo SNPChrPosOnRef SNPContigLoc)
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
 echo "[INFO] database_name: ${PG_DB}, database_user: ${PG_USER}, base_dir: ${BASE_DIR}, data_dir: ${DATA_DIR}"
