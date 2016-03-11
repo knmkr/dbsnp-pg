@@ -98,7 +98,6 @@ CREATE TABLE RsMergeArch (
 -- [cnt_subsnp] [int] NULL ,              -- Number of submitted snp (subsnp, or ss) in the refSNP cluster.
 -- [map_property] [tinyint] NULL          -- Stores interim data for internal use only
 -- )
--- go
 
 DROP TABLE IF EXISTS SNP;
 CREATE TABLE SNP (
@@ -114,6 +113,83 @@ CREATE TABLE SNP (
        univar_id           integer,
        cnt_subsnp          integer,
        map_property        smallint
+);
+
+-- CREATE TABLE [b144_ContigInfo_105]              -- ContigInfo has the information for each contig the snp has mapped to. All position is 0 based.
+-- (
+-- [ctg_id] [int] NOT NULL ,                       -- contig id. This id is unqiue across all organisms. It is constructed as tax_id *
+--                                                    100,000 + N, where N is a sequential number of the contig.
+--                                                    ctg_id corresponds to a unique combination of NCBI contig accession and
+--                                                    version.
+--                                                    In databases, ContigInfo tablename has a prefix of snp build id and a suffix of
+--                                                    NCBI genome build id.
+--                                                    If the same contig is used in two genome build, the ctg_id remains the same
+--                                                    and is present in both ContigInfo table.
+--                                                    For ex. ctg_id 960600001 is for NT_077402.1, which is in both human build
+--                                                    35.1 and 36.1.
+--                                                    So this ctg_id record is in both table b126_ContigInfo_35_1 and b125_ContigInfo_36_1.
+-- [tax_id] [int] NOT NULL ,
+-- [contig_acc] [varchar](32) NOT NULL ,
+-- [contig_ver] [smallint] NOT NULL ,
+-- [contig_name] [varchar](63) NULL ,
+-- [contig_chr] [varchar](32) NULL ,               -- The chromosome the contig is on.
+-- [contig_start] [int] NULL ,
+-- [contig_end] [int] NULL ,
+-- [orient] [tinyint] NULL ,
+-- [contig_gi] [int] NOT NULL ,
+-- [group_term] [varchar](32) NULL ,
+-- [group_label] [varchar](32) NULL ,
+-- [contig_label] [varchar](32) NULL ,             -- Label used to label a particular contig in an assembly. For example, in mouse,
+--                                                    the NCBI-assembly team have grouped all contigs that are of
+--                                                    type 129/??? for annotation purposes. When the NCBI-assembly team display
+--                                                    a particular contig, it would be useful to display the actual strain name (129/Sv,
+--                                                    129/Ola, etc). Example values: C57BL/6J,129/SvJ,129/SvEvTac
+-- [primary_fl] [tinyint] NOT NULL ,
+-- [genbank_gi] [int] NULL ,
+-- [genbank_acc] [varchar](32) NULL ,
+-- [genbank_ver] [smallint] NULL ,
+-- [build_id] [int] NOT NULL ,
+-- [build_ver] [int] NOT NULL ,
+-- [last_updated_time] [smalldatetime] NOT NULL ,
+-- [placement_status] [tinyint] NOT NULL ,
+-- [asm_acc] [varchar](32) NOT NULL ,
+-- [asm_version] [smallint] NOT NULL ,
+-- [chr_gi] [int] NULL ,
+-- [par_fl] [tinyint] NULL ,
+-- [top_level_fl] [tinyint] NOT NULL ,
+-- [gen_rgn] [varchar](32) NULL ,
+-- [contig_length] [int] NULL
+-- )
+DROP TABLE IF EXISTS ContigInfo;
+CREATE TABLE ContigInfo (
+    ctg_id             integer      not null,
+    tax_id             integer      not null,
+    contig_acc         varchar(32)  not null,
+    contig_ver         smallint     not null,
+    contig_name        varchar(63),
+    contig_chr         varchar(32),
+    contig_start       integer,
+    contig_end         integer,
+    orient             smallint,
+    contig_gi          integer      not null,
+    group_term         varchar(32),
+    group_label        varchar(32),
+    contig_label       varchar(32),
+    primary_fl         smallint     not null,
+    genbank_gi         integer,
+    genbank_acc        varchar(32),
+    genbank_ver        smallint,
+    build_id           integer      not null,
+    build_ver          integer      not null,
+    last_updated_time  timestamp    not null,
+    placement_status   smallint     not null,
+    asm_acc            varchar(32)  not null,
+    asm_version        smallint     not null,
+    chr_gi             integer,
+    par_fl             smallint,
+    top_level_fl       smallint     not null,
+    gen_rgn            varchar(32),
+    contig_length      integer
 );
 
 -- CREATE TABLE [b141_SNPChrPosOnRef]  -- This table stores the chromosome position(0 based) of uniquely mapped snp on NCBI reference assembly. It has one
@@ -139,3 +215,122 @@ CREATE TABLE SNPChrPosOnRef (
        neighbor_snp_list         integer,
        isPAR                     varchar(1)     not null
 );
+
+-- CREATE TABLE [b144_SNPContigLoc_105]        -- SNPContigLoc table stores snp mapping positions to contigs in all assemblies. A snp may have different map positions
+--                                                on different genome builds. To make the genome build number/version explicit, the table name is suffixed with
+--                                                "_build_ver" and prefixed with snp build number. For ex. in dbSNP build 125, human snp is both mapped to NCBI build
+--                                                35.1 and build 34.3. So we have two tables: b125_SNPContigLoc_35_1 and b125_SNPContigLoc_34_3. Please note
+--                                                that to look for uniquely mapped snp on each assembly (For ex. Human has several assemblies, such as the NCBI
+--                                                assembly and the Celera assembly), you need to look at SNPMapInfo and ContigInfo table for the same build. An
+--                                                example sql to get all trueSNP that has unique mapping position on NCBI b35.1 reference assembly is:
+--
+--                                                Select distinct m.snp_id
+--                                                From b125_SNPContigLoc_35_1 m join b125_ContigInfo_35_1 i on i.ctg_id = m.ctg_id and i.contig_label='reference'
+--                                                Join b125_SNPMapInfo_35_1 w on w.snp_id = m.snp_id and w.assembly = i.contig_label and w.weight = 1
+--                                                Join SNP s on s.snp_id = m.snp_id
+--                                                Join UniVariation u on u.univar_id = s.univar_id and u.subsnp_class = 1
+--
+--                                                Please see table descriptions for SNPMapInfo, ContigInfo, SNP, UniVariation for more details.
+--
+-- (
+-- [snp_type] [varchar](2) NOT NULL ,          -- "rs" or "ss". For snp external users, this value should always be "rs". Internally,
+--                                                during build prepartion, when the snp is not clustered, the snp_id will be "ss".
+-- [snp_id] [int] NULL ,                       -- rs#. Foreign key to SNP table.
+-- [ctg_id] [int] NULL ,                       -- ctg_id is the foreign key to ContigInfo.
+-- [asn_from] [int] NULL ,                     -- Start position of snp on contig, counting from 0. This position is always from the
+--                                                beginning of the contig regardless of the snp orienation to contig and
+--                                                regardless of the contig orienation to chromosome.
+-- [asn_to] [int] NULL ,                       -- end position of snp on contig
+-- [lf_ngbr] [int] NULL ,
+-- [rf_ngbr] [int] NULL ,
+-- [lc_ngbr] [int] NULL ,
+-- [rc_ngbr] [int] NULL ,
+-- [loc_type] [tinyint] NULL ,
+-- [phys_pos_from] [int] NULL ,                -- Start position of snp on chromosome. Phys_pos_from is obtained by adding
+--                                                asn_from to the contig start position in ContigInfo table. It is always the position
+--                                                from the beginning of the chromosome regardless of the snp orienation to
+--                                                contig and regardless of contig orienation to chromosome.
+-- [snp_bld_id] [int] NOT NULL ,
+-- [last_updated_time] [smalldatetime] NULL ,
+-- [process_status] [int] NOT NULL ,
+-- [orientation] [int] NULL ,
+-- [allele] [varchar](255) NULL ,
+-- [loc_sts_uid] [int] NULL ,
+-- [aln_quality] [real] NULL ,
+-- [num_mism] [int] NULL ,
+-- [num_del] [int] NULL ,
+-- [num_ins] [int] NULL ,
+-- [tier] [int] NULL
+-- )
+DROP TABLE IF EXISTS SNPContigLoc;
+CREATE TABLE SNPContigLoc (
+    snp_type           varchar(2)     not null,
+    snp_id             integer,
+    ctg_id             integer,
+    asn_from           integer,
+    asn_to             integer,
+    lf_ngbr            integer,
+    rf_ngbr            integer,
+    lc_ngbr            integer,
+    rc_ngbr            integer,
+    loc_type           smallint,
+    phys_pos_from      integer,
+    snp_bld_id         integer        not null,
+    last_updated_time  timestamp,
+    process_status     integer        not null,
+    orientation        integer,
+    allele             varchar(255),
+    loc_sts_uid        integer,
+    aln_quality        real,
+    num_mism           integer,
+    num_del            integer,
+    num_ins            integer,
+    tier               integer
+);
+
+-- CREATE TABLE [b144_SNPMapInfo_105]  -- SNPMapInfo has the mapping summary information for snp for each assembly the snp is mapped to for the current
+--                                        build. Two columns snp_id and assembly together unqiuely identify each row in this table.
+-- (
+-- [snp_type] [varchar](2) NOT NULL ,  -- same description as SNPContigLoc.snp_type.
+-- [snp_id] [int] NULL ,               -- same description as SNPContigLoc.snp_id.
+-- [chr_cnt] [int] NOT NULL ,          -- Number of chromosomes the snp has hits on.
+-- [contig_cnt] [int] NOT NULL ,       -- Number of contig the snp has hits on.
+-- [loc_cnt] [int] NOT NULL ,          -- Number of locations the snp has been mapped to. This could be bigger than
+--                                        contig_cnt if a snp hits a contig more than one place.
+-- [weight] [int] NOT NULL ,           -- A number that codes for the mapping quality of the snp on each assembly:
+--                                        1 = snp aligns at exactly one locus
+--                                        2 = snp aligns at two locus on same chromosome
+--                                        3 = snp aligns at less than 10 locus
+--                                        10= snp aligns at more than 10 locations
+-- [hap_cnt] [int] NULL ,
+-- [placed_cnt] [int] NOT NULL ,
+-- [unlocalized_cnt] [int] NOT NULL ,
+-- [unplaced_cnt] [int] NOT NULL ,
+-- [aligned_cnt] [int] NOT NULL ,
+-- [md5] [char](32) NULL ,
+-- [asm_acc] [varchar](32) NULL ,
+-- [asm_version] [smallint] NULL ,
+-- [assembly] [varchar](32) NULL
+-- )
+--
+-- Mapping Weight
+-- ==============
+--
+-- > Your descriptions of mapweight in the FTP README for Chromosome Reports and for SNPMapInfo in the data dictionary
+-- > are contradictory. Which is correct?
+--
+-- The definitions of map weight for chromosome reports and database tables are indeed different:
+--
+-- | Chromosome Reports                                                       | Database Tables                                          |
+-- |--------------------------------------------------------------------------|----------------------------------------------------------|
+-- | Mapweight 1 = Unmapped                                                   | Mapweight 1 = SNP aligns exactly at one locus            |
+-- | Mapweight 2 = Mapped to single position in genome                        | Mapweight 2 = SNP aligns at two locus on same chromosome |
+-- | Mapweight 3 = Mapped to 2 positions on a single chromosome               | Mapweight 3 = SNP aligns at less than 10 locus           |
+-- | Mapweight 4 = Mapped to 3-10 positions in genome (possible paralog hits) |                                                          |
+-- | Mapweight 5 = Mapped to >10 positions in genome                          | Mapweight 10= SNP aligns at more than 10 locations       |
+--
+-- The mapweight definitions for the database are different for historical reasons, so both definition series are correct: The
+-- mapweights defined in the chromosome reports section of the FTP README are true for chromosome reports, and the
+-- definitions given for the database tables in the database dictionary are true for all FTP data table files. (07/14/08)
+--
+-- Ref: http://www.ncbi.nlm.nih.gov/books/NBK44455/#Build.Mapping_Weight

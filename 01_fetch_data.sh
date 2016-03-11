@@ -78,5 +78,6 @@ done
 
 # Unifying bcp name
 cp ${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz SNPChrPosOnRef.bcp.gz
+cp ${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz SNPContigLoc.bcp.gz
 
 echo "[INFO] Done"
