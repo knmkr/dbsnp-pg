@@ -16,10 +16,7 @@ BEGIN
           f.freq
       FROM
           get_tbl_current_rs(_rs) a
-          LEFT OUTER JOIN allelefreq f ON a.snp_current = f.snp_id  -- f.snp_id have been updated to current while bulk importing
-      WHERE
-          source_id = _source_id
-          OR source_id IS NULL  -- TODO:
+          LEFT OUTER JOIN (SELECT af.snp_id, af.allele, af.freq FROM allelefreq af WHERE source_id = _source_id) f ON a.snp_current = f.snp_id  -- f.snp_id have been updated to current while bulk importing
   );
 END
 $$ LANGUAGE plpgsql;
