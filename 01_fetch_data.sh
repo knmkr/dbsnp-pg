@@ -56,6 +56,7 @@ declare -A SNPChrPosOnRef=( \
 )
 
 wget -c ftp.ncbi.nih.gov/snp/organisms/${fpt_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                     # ~150 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${fpt_name[${database}]}/database/organism_data/SNP.bcp.gz{,.md5}                             # ~1.7 GB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${fpt_name[${database}]}/database/organism_data/${SNPChrPosOnRef[${database}]}.bcp.gz{,.md5}  # ~500 MB
 wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                               #  ~70 MB
 wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                                           #   ~1 KB
