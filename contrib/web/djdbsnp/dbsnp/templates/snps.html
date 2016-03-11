@@ -48,6 +48,7 @@
               <table class="table table-striped">
                 <tr>
                   <th>rs ID</th>
+                  <th>Current rs ID</th>
                   <th>Allele 1</th>
                   <th>Allele 2</th>
                   <th>Allele 1 Freq</th>
@@ -55,6 +56,7 @@
                 {% for af in allele_freqs %}
                 <tr>
                   <th>{{ af.snp_id }}</th>
+                  <th>{{ af.snp_current| na }}</th>
                   <th>{{ af.allele.0| na }}</th>
                   <th>{{ af.allele.1| na }}</th>
                   <td>{{ af.freq.0| na }}</td>
@@ -73,12 +75,14 @@
               <table class="table table-striped">
                 <tr>
                   <th>rs ID</th>
+                  <th>Current rs ID</th>
                   <th>Chrom</th>
                   <th>Position</th>
                 </tr>
                 {% for pos in chr_pos %}
                 <tr>
                   <th>{{ pos.snp_id| na }}</th>
+                  <th>{{ pos.snp_current| na }}</th>
                   <th>{{ pos.chr| na }}</th>
                   <th>{{ pos.pos| na }}</th>
                 </tr>
