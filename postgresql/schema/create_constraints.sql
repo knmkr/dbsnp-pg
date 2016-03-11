@@ -29,6 +29,5 @@ CLUSTER SNP USING i_rs;
 --
 CREATE UNIQUE INDEX SNPChrPosOnRef_ukey_rs ON SNPChrPosOnRef (snp_id);
 CREATE INDEX SNPChrPosOnRef_chr_pos ON SNPChrPosOnRef (chr, pos);
-CREATE UNIQUE INDEX SNPContigLoc_ukey_rs ON SNPContigLoc (snp_id);
-CREATE INDEX SNPContigLoc_chr_pos ON SNPContigLoc (chr, pos);
+CREATE INDEX SNPContigLoc_rs_ctg ON SNPContigLoc (snp_id, ctg_id);  --  (snp_type, snp_id, ctg_id);
 CREATE UNIQUE INDEX ContigInfo_ukey_ctg ON ContigInfo (ctg_id);
