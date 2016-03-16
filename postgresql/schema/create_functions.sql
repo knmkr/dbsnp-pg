@@ -62,3 +62,27 @@ BEGIN
   RETURN (SELECT array_agg(snp_id) FROM snpchrposonref WHERE chr = _chr AND pos = _pos - 1);  -- 1-based to 0-based
 END
 $$ LANGUAGE plpgsql;
+
+--
+CREATE OR REPLACE FUNCTION get_all_pos_by_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int,
+  OUT chr varchar,
+  OUT pos int
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT
+          a.snp_id,
+          a.snp_current,
+          ctg.contig_chr AS chr,
+          loc.phys_pos_from + 1 AS pos  -- 0-based to 1-based
+      FROM
+          get_current_rs(_rs) a
+          LEFT JOIN (SELECT l.snp_id, l.ctg_id, l.phys_pos_from FROM snpcontigloc l WHERE l.snp_type = 'rs') loc ON a.snp_current = loc.snp_id
+          LEFT JOIN contiginfo ctg USING (ctg_id)
+  );
+  RETURN;
+END
+$$ LANGUAGE plpgsql;
