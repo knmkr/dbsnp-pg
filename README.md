@@ -1,6 +1,6 @@
-# dbsnp-pg-min
+# dbsnp-pg
 
-[dbsnp-pg-min](https://github.com/knmkr/dbsnp-pg-min) is a minimal PostgreSQL schemas for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+[dbsnp-pg](https://github.com/knmkr/dbsnp-pg) is a minimal PostgreSQL schemas for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
 - NCBI dbSNP is [distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/).
 - We simply ported original schema to PostgreSQL, and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671).
@@ -18,7 +18,7 @@ Then fetch data, create table, and import data:
     $ ./02_drop_create_table.sh dbsnp_b144_GRCh37 username $PWD
     $ ./03_import_data.sh       dbsnp_b144_GRCh37 username $PWD $PWD/data
 
-Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg-min/releases):
+Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg/releases):
 
     $ pg_restore -d dbsnp_b144_GRCh37 ${pg_dump}
 
@@ -120,6 +120,14 @@ Requirements:
 ## License
 
 See `LICENSE.txt`
+
+### dbsnp-pg
+
+Copyright (c) 2014,2015,2016 Kensuke Numakura
+
+### termcolor
+
+Copyright (c) 2008-2011 Volvox Development Team
 
 
 ## Author
