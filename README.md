@@ -121,13 +121,8 @@ Requirements:
 
 See `LICENSE.txt`
 
-### dbsnp-pg
-
-Copyright (c) 2014,2015,2016 Kensuke Numakura
-
-### termcolor
-
-Copyright (c) 2008-2011 Volvox Development Team
+- **dbsnp-pg**: Copyright (c) 2014,2015,2016 Kensuke Numakura
+- **termcolor**: Copyright (c) 2008-2011 Volvox Development Team
 
 
 ## Author
