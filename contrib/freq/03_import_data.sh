@@ -46,7 +46,7 @@ fi
 
 # vcftools or plink is required
 if type ${FRQ_TOOL} >/dev/null; then
-    ${FRQ_TOOL} --version
+    :
 else
     echo "[contrib/freq] [FATAL] `date +"%Y-%m-%d %H:%M:%S"` ${FRQ_TOOL} not found."
     exit 1
