@@ -17,40 +17,40 @@ def _main():
     date_downloaded = re.findall(r'gwascatalog-downloaded-(\d{4}-\d{2}-\d{2}).tsv', os.path.basename(args.gwascatalog))[0]
 
     # ref: http://www.ebi.ac.uk/gwas/docs/fileheaders
-    cols_map = [('DATE ADDED TO CATALOG',          'date_added',                     date),
-                ('PUBMEDID',                       'pubmed_id',                      int),
-                ('FIRST AUTHOR',                   'first_author',                   str),
-                ('DATE',                           'date_published',                 date),
-                ('JOURNAL',                        'journal',                        str),
-                ('LINK',                           'pubmed_url',                     str),
-                ('STUDY',                          'study_title',                    str),
-                ('DISEASE/TRAIT',                  'disease_or_trait',               str),
-                ('INITIAL SAMPLE DESCRIPTION',     'initial_sample',                 str),
-                ('REPLICATION SAMPLE DESCRIPTION', 'replication_sample',             str),
-                ('REGION',                         'region',                         str),
-                ('CHR_ID',                         'chrom_reported',                 chrom),
-                ('CHR_POS',                        'pos_reported',                   int),
-                ('REPORTED GENE(S)',               'gene_reported',                  str),
-                ('MAPPED_GENE',                    'gene_mapped',                    str),
-                ('UPSTREAM_GENE_ID',               'upstream_entrez_gene_id',        str),  # when rs is not within gene
-                ('DOWNSTREAM_GENE_ID',             'downstream_entrez_gene_id',      str),  # when rs is not within gene
-                ('SNP_GENE_IDS',                   'entrez_gene_id',                 str),  # when rs is within gene
-                ('UPSTREAM_GENE_DISTANCE',         'upstream_gene_distance_kb',      float),
-                ('DOWNSTREAM_GENE_DISTANCE',       'downstream_gene_distance_kb',    float),
-                ('STRONGEST SNP-RISK ALLELE',      'strongest_snp_risk_allele',      str),
-                ('SNPS',                           'strongest_snps',                 str),
-                ('MERGED',                         'is_snp_id_merged',               boolean),
-                ('SNP_ID_CURRENT',                 'snp_id_current_reported',        str),
-                ('CONTEXT',                        'snp_context',                    str),
-                ('INTERGENIC',                     'is_snp_intergenic',              boolean),
-                ('RISK ALLELE FREQUENCY',          'risk_allele_freq_reported',      float),
-                ('P-VALUE',                        'p_value',                        probability),
-                ('PVALUE_MLOG',                    'minus_log_p_value',              float),
-                ('P-VALUE (TEXT)',                 'p_value_text',                   str),
-                ('OR or BETA',                     'odds_ratio_or_beta_coeff',       float),
-                ('95% CI (TEXT)',                  'confidence_interval_95_percent', str),
-                ('PLATFORM [SNPS PASSING QC]',     'snp_platform',                   str),
-                ('CNV',                            'cnv',                            str)]
+    cols_map = [(['DATE ADDED TO CATALOG'],          'date_added',                     date),
+                (['PUBMEDID'],                       'pubmed_id',                      int),
+                (['FIRST AUTHOR'],                   'first_author',                   str),
+                (['DATE'],                           'date_published',                 date),
+                (['JOURNAL'],                        'journal',                        str),
+                (['LINK'],                           'pubmed_url',                     str),
+                (['STUDY'],                          'study_title',                    str),
+                (['DISEASE/TRAIT'],                  'disease_or_trait',               str),
+                (['INITIAL SAMPLE DESCRIPTION', 'INITIAL SAMPLE SIZE'],         'initial_sample',                 str),
+                (['REPLICATION SAMPLE DESCRIPTION', 'REPLICATION SAMPLE SIZE'], 'replication_sample',             str),
+                (['REGION'],                         'region',                         str),
+                (['CHR_ID'],                         'chrom_reported',                 chrom),
+                (['CHR_POS'],                        'pos_reported',                   int),
+                (['REPORTED GENE(S)'],               'gene_reported',                  str),
+                (['MAPPED_GENE'],                    'gene_mapped',                    str),
+                (['UPSTREAM_GENE_ID'],               'upstream_entrez_gene_id',        str),  # when rs is not within gene
+                (['DOWNSTREAM_GENE_ID'],             'downstream_entrez_gene_id',      str),  # when rs is not within gene
+                (['SNP_GENE_IDS'],                   'entrez_gene_id',                 str),  # when rs is within gene
+                (['UPSTREAM_GENE_DISTANCE'],         'upstream_gene_distance_kb',      float),
+                (['DOWNSTREAM_GENE_DISTANCE'],       'downstream_gene_distance_kb',    float),
+                (['STRONGEST SNP-RISK ALLELE'],      'strongest_snp_risk_allele',      str),
+                (['SNPS'],                           'strongest_snps',                 str),
+                (['MERGED'],                         'is_snp_id_merged',               boolean),
+                (['SNP_ID_CURRENT'],                 'snp_id_current_reported',        str),
+                (['CONTEXT'],                        'snp_context',                    str),
+                (['INTERGENIC'],                     'is_snp_intergenic',              boolean),
+                (['RISK ALLELE FREQUENCY'],          'risk_allele_freq_reported',      float),
+                (['P-VALUE'],                        'p_value',                        probability),
+                (['PVALUE_MLOG'],                    'minus_log_p_value',              float),
+                (['P-VALUE (TEXT)'],                 'p_value_text',                   str),
+                (['OR or BETA'],                     'odds_ratio_or_beta_coeff',       float),
+                (['95% CI (TEXT)'],                  'confidence_interval_95_percent', str),
+                (['PLATFORM [SNPS PASSING QC]'],     'snp_platform',                   str),
+                (['CNV'],                            'cnv',                            str)]
 
     decimal.getcontext().prec = 1000
 
@@ -59,8 +59,11 @@ def _main():
 
     for record in csv.DictReader(open(args.gwascatalog), delimiter='\t'):
         row = {}
-        for orig_name, col_name, col_type in cols_map:
-            val = record[orig_name]
+        for orig_names, col_name, col_type in cols_map:
+            for orig_name in orig_names:
+                val = record.get(orig_name)
+                if val:
+                    break
 
             if val == None:
                 print >>sys.stderr, '[WARN] Invalid row? {}'.format(record)

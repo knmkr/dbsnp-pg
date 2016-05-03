@@ -47,5 +47,5 @@ CREATE TABLE GwasCatalogSNPAlleleFreq (
     allele          varchar(1024)[],
     freq            real[],
     populations     varchar[]        not null,
-    UNIQUE (snp_id_current)
+    UNIQUE (snp_id_current, populations)
 );
