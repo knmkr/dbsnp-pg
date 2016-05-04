@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -o pipefail
+
 dbsnp_builds=("b147" "b146" "b144")
 reference_genome_builds=("GRCh38" "GRCh37")
 
@@ -23,6 +26,14 @@ shift $((OPTIND - 1))
 
 if [ "$#" -ne 1 ]; then
     usage_exit
+fi
+
+# Requirements: wget
+if type wget >/dev/null 2>/dev/null; then
+  :
+else
+  echo "[FATAL] `date +"%Y-%m-%d %H:%M:%S"` Command not found: wget"
+  exit 1
 fi
 
 # Set defaults

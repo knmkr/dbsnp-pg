@@ -100,6 +100,7 @@ See details in `contrib/gwascatalog`
 
 - PostgreSQL (>9.3 is preferred)
 - Bash >4.x
+- wget, nkf
 
 
 ## Unit Tests
