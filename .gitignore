@@ -27,3 +27,4 @@ hosts
 # data dir
 data/
 !test/data/
+release/

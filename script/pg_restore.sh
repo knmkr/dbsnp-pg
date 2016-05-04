@@ -6,9 +6,12 @@ PG_DB=$1
 PG_USER=$2
 TAG=$3
 
-PG_DUMP=${PG_DB//_/-}-${TAG}.pg_dump  # replace `_` to `-`
+RELEASE=release/${TAG}/${PG_DB/dbsnp_/}  # release/x.x.x/bxxx_GRChxx/
+mkdir -p ${RELEASE}
+cd ${RELEASE}
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Fetchging data ..."
+PG_DUMP=${PG_DB//_/-}-${TAG}.pg_dump  # dbsnp-bxxx-GRChxx-x.x.x.pg_dump
 wget -c https://github.com/knmkr/dbsnp-pg/releases/download/${TAG}/${PG_DUMP}.a{a,b,c,d,e,f,g}
 cat ${PG_DUMP}.a{a,b,c,d,e,f,g} > ${PG_DUMP}
 rm ${PG_DUMP}.a{a,b,c,d,e,f,g}
