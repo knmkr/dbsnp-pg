@@ -1,11 +1,11 @@
-# [dbsnp-pg](https://github.com/knmkr/dbsnp-pg) 
+# dbsnp-pg
 
-dbsnp-pg is a PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+A PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
-- [NCBI dbSNP is distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/). We simply ported original schema to PostgreSQL, and implemented query functions to get SNP information like in dbSNP website.
+[NCBI dbSNP is distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/). We simply ported original schema to PostgreSQL, and implemented query functions to get SNP information like in dbSNP website.
 
 
-## Getting Started
+# How to install
 
 ### A. Build from resources
 
@@ -26,7 +26,7 @@ Or pg_restore from [pg_dump files (listed in the release page)](https://github.c
     $ pg_restore -d dbsnp_b144_GRCh37 dbsnp-pg.pg_dump
 
 
-## Usage Examples
+## How to use
 
 ### Get chrom and position
 
