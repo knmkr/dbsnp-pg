@@ -3,7 +3,7 @@
 - Allele frequencies based on public genotype data.
 
 
-## Usage example
+## How to use
 
 ```
 => SELECT * FROM AlleleFreqSource;
@@ -24,9 +24,7 @@
 ```
 
 
-## Notes
-
-### Sources
+## Data Reources
 
 | project             | populations              |
 |---------------------|--------------------------|
@@ -38,3 +36,8 @@
 - Samples with patternal/matternal sample (father/mathor) in the same projects are excluded.
 
 See datails in `01_fetch_data.sh` and `03_import_data.sh`
+
+
+## Software Requirements
+
+- [PLINK](http://pngu.mgh.harvard.edu/~purcell/plink/) or [VCFtools](https://github.com/vcftools/vcftools/)
