@@ -22,8 +22,8 @@ Create a new PostgreSQL user `dbsnp` and database `dbsnp_b146_GRCh37`
 Then fetch data, create table, and import data:
 
     $ ./01_fetch_dbsnp.sh       -d b146 -r GRCh37 $PWD/data
-    $ ./02_drop_create_table.sh dbsnp_b146_GRCh37 username $PWD
-    $ ./03_import_data.sh       dbsnp_b146_GRCh37 username $PWD $PWD/data
+    $ ./02_drop_create_table.sh dbsnp_b146_GRCh37 dbsnp $PWD
+    $ ./03_import_data.sh       dbsnp_b146_GRCh37 dbsnp $PWD $PWD/data
 
 ### B. Restore from pg_dump
 
