@@ -1,6 +1,0 @@
----
-- command: wget -c https://bitbucket.org/squeaky/portable-pypy/downloads/{{ pypy }}.tar.bz2
-- command: tar xf {{ pypy }}.tar.bz2
-
-- become: yes
-  command: mv {{ pypy }} /opt/pypy creates=/opt/pypy
