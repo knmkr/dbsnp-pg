@@ -21,8 +21,8 @@ Create a new PostgreSQL database for dbSNP. Then fetch data, create table, and i
 
 Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg/releases):
 
-    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.5/dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e}
-    $ cat dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e} > dbsnp.pg_dump
+    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.5/dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g}
+    $ cat dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g} > dbsnp.pg_dump
     $ pg_restore -C -d dbsnp_b146_GRCh37 dbsnp.pg_dump
 
 
