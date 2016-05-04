@@ -16,7 +16,7 @@ class Logger(object):
         self.logger.setLevel(logging.INFO)
         self.stdout = logging.StreamHandler()
         self.stdout.setLevel(logging.INFO)
-        self.stdout.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(message)s'))
+        self.stdout.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', '%Y-%m-%d %H:%M:%S'))
         self.logger.addHandler(self.stdout)
 
     def __getattr__(self, status, attrs=[]):

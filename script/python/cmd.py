@@ -8,13 +8,20 @@ from log import Logger
 log = Logger(__name__)
 
 
-def run(cmd):
+def call(cmd):
     log.info(colored('$ {}'.format(cmd), 'green', attrs=['bold', 'underline']))
     log.info(subprocess.check_output(shlex.split(cmd), stderr=subprocess.STDOUT).strip())
 
+def run(cmd):
+    try:
+        call(cmd)
+    except subprocess.CalledProcessError as e:
+        log.error(e.output.strip())
+        raise e
+
 def force(cmd):
     try:
-        run(cmd)
+        call(cmd)
     except subprocess.CalledProcessError as e:
         log.warn(e.output.strip())
 
