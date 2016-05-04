@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dbsnp_builds=("b146" "b144")
+dbsnp_builds=("b147" "b146" "b144")
 reference_genome_builds=("GRCh38" "GRCh37")
 
 usage_exit() {
@@ -43,23 +43,25 @@ database="${dbsnp}_${ref}"
 echo "[INFO] Fetching data for ${database} to ${data_dir}..."
 
 declare -A ftp_name=( \
-  ["b144_GRCh37"]="b144_GRCh37p13" \
-  ["b144_GRCh38"]="b144_GRCh38p2"  \
-  ["b146_GRCh37"]="b146_GRCh37p13" \
-  ["b146_GRCh38"]="b146_GRCh38p2"
+  ["b144_GRCh37"]="archive/human_9606_b144_GRCh37p13" \
+  ["b144_GRCh38"]="archive/human_9606_b144_GRCh38p2"  \
+  ["b146_GRCh37"]="human_9606_b146_GRCh37p13" \
+  ["b146_GRCh38"]="human_9606_b146_GRCh38p2"
+  ["b147_GRCh37"]="human_9606_b147_GRCh37p13" \
+  ["b147_GRCh38"]="human_9606_b147_GRCh38p2"
 )
 declare -A ref_code=( \
   ["GRCh37"]="105" \
   ["GRCh38"]="107"
 )
 
-echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                                  # ~150 MB
-echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/SNP.bcp.gz{,.md5}                                          # ~1.7 GB
-echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz{,.md5}      # ~141 KB
-echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz{,.md5}  # ~500 MB
-echo wget -c ftp.ncbi.nih.gov/snp/organisms/human_9606_${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz{,.md5}    # ~3.3 GB
-echo wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                                                       #  ~70 MB
-echo wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                                                                   #   ~1 KB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                                  # ~150 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/SNP.bcp.gz{,.md5}                                          # ~1.7 GB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz{,.md5}      # ~141 KB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz{,.md5}  # ~500 MB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz{,.md5}    # ~3.3 GB
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                                            #  ~70 MB
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz{,.md5}                                                                        #   ~1 KB
 
 echo "[INFO] Checking md5..."
 
