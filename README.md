@@ -1,6 +1,6 @@
 # dbsnp-pg
 
-[dbsnp-pg](https://github.com/knmkr/dbsnp-pg) is a minimal PostgreSQL schemas for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+[dbsnp-pg](https://github.com/knmkr/dbsnp-pg) is a PostgreSQL schemas for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
 - NCBI dbSNP is [distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/).
 - We simply ported original schema to PostgreSQL, and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671).
@@ -84,6 +84,12 @@ AND risk_allele IS NOT NULL;
 See details in `contrib/gwascatalog`
 
 
+## Software Requirements
+
+- PostgreSQL (>9.3 is preferred)
+- Bash >4.x
+
+
 ## Unit Tests
 
 To run tests:
@@ -98,26 +104,25 @@ Requirements:
   - [pg_prove (a command-line tool for running and harnessing pgTAP tests)](http://search.cpan.org/dist/TAP-Parser-SourceHandler-pgTAP/)
 
 
-## Notes
+## Data Resources
 
-- Only human [taxonomy id: 9606] data is supported.
-- dbSNP builds and human references genome builds are depend on the releases on the NCBI FTP:
+- **Database of Single Nucleotide Polymorphisms (dbSNP).** Bethesda (MD): National Center for Biotechnology Information, National Library of Medicine. (dbSNP Build ID: b144,146,147).
+Available from: http://www.ncbi.nlm.nih.gov/SNP/
 
 | dbSNP    | Reference Genome |
 |----------|------------------|
+| b147     | GRCh38p2         |
+| b147     | GRCh37p13        |
 | b146     | GRCh38p2         |
 | b146     | GRCh37p13        |
 | b144     | GRCh38p2         |
 | b144     | GRCh37p13        |
 
-
-## Requirements
-
-- PostgreSQL (>9.3 is preferred)
-- Bash >4.x
+- Only human [taxonomy id: 9606] data is supported.
+- Builds of dbSNP and human references genome are depend on the releases on the NCBI FTP.
 
 
-## License
+## Software Licenses
 
 See `LICENSE.txt`
 
@@ -125,6 +130,6 @@ See `LICENSE.txt`
 - **termcolor**: Copyright (c) 2008-2011 Volvox Development Team
 
 
-## Author
+## Authors
 
 [@knmkr](https://github.com/knmkr)
