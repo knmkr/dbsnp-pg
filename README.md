@@ -26,7 +26,7 @@ Or pg_restore from [pg_dump files (listed in the release page)](https://github.c
     $ pg_restore -d dbsnp_b144_GRCh37 dbsnp-pg.pg_dump
 
 
-## Usage example
+## Usage Examples
 
 ### Get chrom and position
 
