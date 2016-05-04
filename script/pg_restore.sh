@@ -9,9 +9,9 @@ TAG=$3
 PG_DUMP=${PG_DB//_/-}-${TAG}.pg_dump  # replace `_` to `-`
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Fetchging data ..."
-wget -c https://github.com/knmkr/dbsnp-pg/releases/download/${TAG}/${PG_DUMP}.a{a,b,c,d,e}
-cat ${PG_DUMP}.a{a,b,c,d,e} > ${PG_DUMP}
-rm ${PG_DUMP}.a{a,b,c,d,e}
+wget -c https://github.com/knmkr/dbsnp-pg/releases/download/${TAG}/${PG_DUMP}.a{a,b,c,d,e,f,g}
+cat ${PG_DUMP}.a{a,b,c,d,e,f,g} > ${PG_DUMP}
+rm ${PG_DUMP}.a{a,b,c,d,e,f,g}
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` pg_restore ..."
 NUM_JOB=$(getconf _NPROCESSORS_ONLN)
