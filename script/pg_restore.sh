@@ -17,7 +17,7 @@ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/${TAG}/${PG_DUMP}.a{
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` pg_restore ..."
 cat ${PG_DUMP}.a{a,b,c,d,e,f,g} > ${PG_DUMP}
 NUM_JOB=$(getconf _NPROCESSORS_ONLN)
-pg_restore -C -d ${PG_DB} -U ${PG_USER} -j ${NUM_JOB} ${PG_DUMP}
+pg_restore -v --clean --if-exists -n public -d ${PG_DB}_restored -U ${PG_USER} -j ${NUM_JOB} ${PG_DUMP}
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Remove intermediate files"
 rm ${PG_DUMP}.a{a,b,c,d,e,f,g}
