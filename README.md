@@ -12,18 +12,18 @@ A PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 Create a new PostgreSQL database for dbSNP. Then fetch data, create table, and import data:
 
     $ createuser dbsnp
-    $ createdb --owner=dbsnp dbsnp_b144_GRCh37
-    $ ./01_fetch_dbsnp.sh       -d b144 -r GRCh37 $PWD/data
-    $ ./02_drop_create_table.sh dbsnp_b144_GRCh37 username $PWD
-    $ ./03_import_data.sh       dbsnp_b144_GRCh37 username $PWD $PWD/data
+    $ createdb --owner=dbsnp dbsnp_b146_GRCh37
+    $ ./01_fetch_dbsnp.sh       -d b146 -r GRCh37 $PWD/data
+    $ ./02_drop_create_table.sh dbsnp_b146_GRCh37 username $PWD
+    $ ./03_import_data.sh       dbsnp_b146_GRCh37 username $PWD $PWD/data
 
 ### B. Restore from pg_dump
 
 Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg/releases):
 
-    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.x.x/dbsnp-pg-0.x.x-b144-GRCh37.pg_dump.a{a,b,c,d,e}
-    $ cat dbsnp-pg-0.x.x-b144-GRCh37.pg_dump.a{a,b,c,d,e} > dbsnp-pg.pg_dump
-    $ pg_restore -d dbsnp_b144_GRCh37 dbsnp-pg.pg_dump
+    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.5/dbsnp-b146-GRCh37.0.5.5.pg_dump.a{a,b,c,d,e}
+    $ cat dbsnp-b146-GRCh37.0.5.5.pg_dump.a{a,b,c,d,e} > dbsnp.pg_dump
+    $ pg_restore -C -d dbsnp_b146_GRCh37 dbsnp.pg_dump
 
 
 ## How to use
