@@ -1,9 +1,8 @@
 # [dbsnp-pg](https://github.com/knmkr/dbsnp-pg) 
 
-A PostgreSQL porting of [the NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+dbsnp-pg is a PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
-- [dbSNP is distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/).
-- We simply ported original schema to PostgreSQL, and implemented query functions to get SNP information like in dbSNP website.
+- [NCBI dbSNP is distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/). We simply ported original schema to PostgreSQL, and implemented query functions to get SNP information like in dbSNP website.
 
 
 ## Getting Started
