@@ -1,28 +1,32 @@
-# dbsnp-pg
+# [dbsnp-pg](https://github.com/knmkr/dbsnp-pg) 
 
-[dbsnp-pg](https://github.com/knmkr/dbsnp-pg) is a PostgreSQL schemas for Human data in [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
+dbsnp-pg is a PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
-- NCBI dbSNP is [distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/).
-- We simply ported original schema to PostgreSQL, and implemented query functions to get [SNP information like in dbSNP web CGI](http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=671).
+- [NCBI dbSNP is distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/). We simply ported original schema to PostgreSQL, and implemented query functions to get SNP information like in dbSNP website.
 
 
 ## Getting Started
 
-Create new PostgreSQL database for dbSNP:
+### A. Build from resources
 
-    $ createdb --owner=username dbsnp_b144_GRCh37
+Create a new PostgreSQL database for dbSNP. Then fetch data, create table, and import data:
 
-Then fetch data, create table, and import data:
-
+    $ createuser dbsnp
+    $ createdb --owner=dbsnp dbsnp_b144_GRCh37
     $ ./01_fetch_dbsnp.sh       -d b144 -r GRCh37 $PWD/data
     $ ./02_drop_create_table.sh dbsnp_b144_GRCh37 username $PWD
     $ ./03_import_data.sh       dbsnp_b144_GRCh37 username $PWD $PWD/data
 
+### B. Restore from pg_dump
+
 Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg/releases):
 
-    $ pg_restore -d dbsnp_b144_GRCh37 ${pg_dump}
+    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.x.x/dbsnp-pg-0.x.x-b144-GRCh37.pg_dump.a{a,b,c,d,e}
+    $ cat dbsnp-pg-0.x.x-b144-GRCh37.pg_dump.a{a,b,c,d,e} > dbsnp-pg.pg_dump
+    $ pg_restore -d dbsnp_b144_GRCh37 dbsnp-pg.pg_dump
 
-## Usage example
+
+## Usage Examples
 
 ### Get chrom and position
 
