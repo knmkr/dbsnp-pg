@@ -69,6 +69,7 @@ declare -A ref_code=( \
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/OmimVarLocusIdSNP.bcp.gz{,.md5}                            # ~200 KB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                                  # ~150 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/SNP.bcp.gz{,.md5}                                          # ~1.7 GB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/SNP3D.bcp.gz{,.md5}                                        #  ~18 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz{,.md5}      # ~141 KB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz{,.md5}  # ~500 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz{,.md5}    # ~3.3 GB

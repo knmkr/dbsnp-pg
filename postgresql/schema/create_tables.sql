@@ -132,6 +132,35 @@ CREATE TABLE SNP (
        map_property        smallint
 );
 
+-- CREATE TABLE [SNP3D]                 -- SNP linked to 3D structure.
+-- (
+-- [snp_id] [int] NOT NULL ,            -- snp_id, foreign key to SNP table.
+-- [protein_acc] [char](50) NOT NULL ,  -- Accession of protein this snp is on.
+-- [master_gi] [int] NOT NULL ,         -- The gi of the protein.
+-- [neighbor_gi] [int] NOT NULL ,       -- The gi of the neighbor (related) protein structure.
+-- [aa_position] [int] NOT NULL ,       -- Amino acid position on the master protein gi.
+-- [var_res] [char](100) NOT NULL ,     -- Amino acid with the snp variance.
+-- [contig_res] [char](3) NOT NULL ,    -- Amino acid with the contig allele.
+-- [neighbor_res] [char](3) NOT NULL ,  -- Amino acid on the neighbor protein structure.
+-- [neighbor_pos] [int] NOT NULL ,      -- Amino acide position on the neighbor protein structure.
+-- [var_color] [int] NOT NULL ,         -- 1- synonnymous: orange;2- nonsynonymous: green
+-- [var_label] [int] NOT NULL           -- 1 - Neighbor protein is labeled if the amino acid is identical to the one on the master
+--                                         protein. Otherwise, this value is 0.
+DROP TABLE IF EXISTS SNP3D;
+CREATE TABLE SNP3D (
+       snp_id        integer    not null,
+       protein_acc   char(50)   not null,
+       master_gi     integer    not null,
+       neighbor_gi   integer    not null,
+       aa_position   integer    not null,
+       var_res       char(100)  not null,
+       contig_res    char(3)    not null,
+       neighbor_res  char(3)    not null,
+       neighbor_pos  integer    not null,
+       var_color     integer    not null,
+       var_label     integer    not null
+);
+
 -- CREATE TABLE [b144_ContigInfo_105]              -- ContigInfo has the information for each contig the snp has mapped to. All position is 0 based.
 -- (
 -- [ctg_id] [int] NOT NULL ,                       -- contig id. This id is unqiue across all organisms. It is constructed as tax_id *

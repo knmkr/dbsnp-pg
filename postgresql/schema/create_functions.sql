@@ -109,3 +109,24 @@ BEGIN
   RETURN;
 END
 $$ LANGUAGE plpgsql;
+
+--
+CREATE OR REPLACE FUNCTION get_snp3d_by_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int,
+  OUT protein_acc char(50)
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT
+          a.snp_id,
+          a.snp_current,
+          s.protein_acc
+      FROM
+          get_current_rs(_rs) a
+          LEFT JOIN snp3d s ON a.snp_current = s.snp_id
+  );
+  RETURN;
+END
+$$ LANGUAGE plpgsql;
