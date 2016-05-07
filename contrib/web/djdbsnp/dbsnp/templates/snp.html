@@ -10,7 +10,7 @@
             <h1>rs{{ rsid }}</h1>
           </div>
 
-          <h2 class="sub-header">location</h2>
+          <h3>Location</h3>
 
           <table class="table">
             <tr>
@@ -27,7 +27,7 @@
             {% endfor %}
           </table>
 
-          <h2 class="sub-header">merge history</h2>
+          <h3>Merge History</h3>
           <table class="table">
             <tr>
               <th>rs id</th>
@@ -43,7 +43,29 @@
             </tr>
           </table>
 
-          <h2 class="sub-header">allele freq</h2>
+          <h3>NCBI Resource Links</h3>
+          <table class="table">
+            <tr>
+              <th>3D structure mapping</th>
+              <th>OMIM</th>
+            </tr>
+            <tr>
+              <td>TODO</td>
+              <td>
+                {% for o in omim %}
+                  {% if o.omim_id %}
+                    <a href="//omim.org/entry/{{ o.omim_id }}#{{ o.omimvar_id }}" target="_blank">
+                      <span class="label label-success">{{ o.omim_id }}.{{ o.omimvar_id }}</span>
+                    </a>
+                  {% else %}
+                    N/A
+                  {% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+          </table>
+
+          <h3>Allele Freq</h3>
           <table class="table">
             {% for source, allele_freq in allele_freqs.items %}
               {% for allele, freq in allele_freq.items %}

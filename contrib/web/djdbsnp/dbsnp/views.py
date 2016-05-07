@@ -24,7 +24,11 @@ def snps(request):
     return render(request, 'snps.html', context)
 
 def snp(request, rsid):
-    context = {'rsid': int(rsid)}
+    context = {
+        'rsid': int(rsid),
+        'dbsnp_build': settings.DBSNP_BUILD,
+        'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
+    }
 
     context['chr_pos'] = SNP.get_all_pos_by_rs([context['rsid']])
 
@@ -36,16 +40,11 @@ def snp(request, rsid):
 
     # TODO: JPT, EUR, AFR
 
-    # TODO: OMIM
+    context['omim'] = SNP.get_omim_by_rs([context['rsid']])
 
     # TODO: LD
 
     # TODO: GWAS
-
-    context.update(
-        {'dbsnp_build': settings.DBSNP_BUILD,
-         'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
-    })
 
     fmt = request.GET.get('fmt', '')
 

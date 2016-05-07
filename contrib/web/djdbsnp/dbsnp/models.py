@@ -23,6 +23,13 @@ class SNP(models.Model):
             return row
 
     @classmethod
+    def get_omim_by_rs(self, rsids):
+        with connections['dbsnp'].cursor() as c:
+            c.execute('SELECT * FROM get_omim_by_rs(%s)', (rsids,))
+            row = dictfetchall(c)
+            return row
+
+    @classmethod
     def get_allele_freqs(self, source_id, rsids):
         with connections['dbsnp'].cursor() as c:
             try:
