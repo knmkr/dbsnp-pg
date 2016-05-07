@@ -66,6 +66,7 @@ declare -A ref_code=( \
   ["GRCh38"]="107"
 )
 
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/OmimVarLocusIdSNP.bcp.gz{,.md5}                            # ~200 KB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                                  # ~150 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/SNP.bcp.gz{,.md5}                                          # ~1.7 GB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz{,.md5}      # ~141 KB

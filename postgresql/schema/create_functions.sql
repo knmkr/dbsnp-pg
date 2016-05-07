@@ -86,3 +86,26 @@ BEGIN
   RETURN;
 END
 $$ LANGUAGE plpgsql;
+
+--
+CREATE OR REPLACE FUNCTION get_omim_by_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int,
+  OUT omim_id int,
+  OUT omimvar_id char(4)
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT
+          a.snp_id,
+          a.snp_current,
+          o.omim_id,
+          o.omimvar_id
+      FROM
+          get_current_rs(_rs) a
+          LEFT JOIN omimvarlocusidsnp o ON a.snp_current = o.snp_id
+  );
+  RETURN;
+END
+$$ LANGUAGE plpgsql;

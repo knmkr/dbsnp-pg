@@ -46,16 +46,33 @@ CREATE TABLE SnpChrCode (
 
 
 -- Schema: ftp.ncbi.nih.gov:/snp/organisms/human_9606/database/organism_schema/human_9606_table.sql.gz
+-- Column Description: http://www.ncbi.nlm.nih.gov/projects/SNP/snp_db_table_description.cgi?t=<table_name>
 
--- DROP TABLE IF EXISTS SNPHistory;
--- CREATE TABLE SNPHistory (
---        snp_id          integer  primary key,
---        create_time     timestamp,
---        last_updated_time        timestamp,
---        history_create_time      timestamp,
---        sometext1                 text,
---        sometext2                 text
--- );
+-- CREATE TABLE [OmimVarLocusIdSNP]
+-- (
+-- [omim_id] [int] NOT NULL ,
+-- [locus_id] [int] NULL ,
+-- [omimvar_id] [char](4) NULL ,
+-- [locus_symbol] [char](10) NULL ,
+-- [var1] [char](20) NULL ,
+-- [aa_position] [int] NULL ,
+-- [var2] [char](20) NULL ,
+-- [var_class] [int] NOT NULL ,
+-- [snp_id] [int] NOT NULL
+-- )
+DROP TABLE IF EXISTS OmimVarLocusIdSNP;
+CREATE TABLE OmimVarLocusIdSNP (
+       omim_id       integer   not null,
+       locus_id      integer,
+       omimvar_id    char(4),
+       locus_symbol  char(10),
+       var1          char(20),
+       aa_position   integer,
+       var2          char(20),
+       var_class     integer   not null,
+       snp_id        integer   not null
+);
+
 
 -- CREATE TABLE [RsMergeArch]                 -- refSNP(rs) cluster is based on unique genome position. On new genome assembly, previously different contig may
 --                                               align. So different rs clusters map to the same location. In this case, we merge the rs. This table tracks this merging.
