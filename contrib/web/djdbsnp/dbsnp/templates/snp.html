@@ -14,17 +14,17 @@
 
           <table class="table">
             <tr>
-              <th>chrom</th>
-              <td>{{ chr_pos.0.chr }}</td>
+              <th>Assembly</th>
+              <th>Chr</th>
+              <th>Chr Pos</th>
             </tr>
+            {% for pos in chr_pos %}
             <tr>
-              <th>position</th>
-              <td>{{ chr_pos.0.pos }}</td>
-            </tr>
-            <tr>
-              <th>reference genome build</th>
               <td>{{ dbsnp_ref_genome_build }}</td>
+              <td>{{ pos.chr }}</td>
+              <td>{{ pos.pos }}</td>
             </tr>
+            {% endfor %}
           </table>
 
           <h2 class="sub-header">merge history</h2>

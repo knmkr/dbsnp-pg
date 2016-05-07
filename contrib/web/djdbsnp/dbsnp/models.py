@@ -8,11 +8,18 @@ log = logging.getLogger('django')
 
 class SNP(models.Model):
     @classmethod
-    def get_chr_pos(self, rsids):
+    def get_pos_by_rs(self, rsids):
         with connections['dbsnp'].cursor() as c:
             c.execute('SELECT * FROM get_pos_by_rs(%s)', (rsids,))
             row = dictfetchall(c)
             _assert_query_ids_eq_result_ids(rsids, row)
+            return row
+
+    @classmethod
+    def get_all_pos_by_rs(self, rsids):
+        with connections['dbsnp'].cursor() as c:
+            c.execute('SELECT * FROM get_all_pos_by_rs(%s)', (rsids,))
+            row = dictfetchall(c)
             return row
 
     @classmethod

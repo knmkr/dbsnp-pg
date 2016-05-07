@@ -18,7 +18,7 @@ def snps(request):
             af_population = form.cleaned_data.get('af_population')
             rsids = form.cleaned_data.get('rsids')
             context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids)
-            context['chr_pos'] = SNP.get_chr_pos(rsids)
+            context['chr_pos'] = SNP.get_pos_by_rs(rsids)
         # TODO: show error messages for invalid queries
 
     return render(request, 'snps.html', context)
@@ -26,7 +26,7 @@ def snps(request):
 def snp(request, rsid):
     context = {'rsid': int(rsid)}
 
-    context['chr_pos'] = SNP.get_chr_pos([context['rsid']])
+    context['chr_pos'] = SNP.get_all_pos_by_rs([context['rsid']])
 
     # TODO: gene
 
