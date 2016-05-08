@@ -50,13 +50,25 @@
               <th>OMIM</th>
             </tr>
             <tr>
-              <td>TODO</td>
+              <td>
+                {% for s in snp3d %}
+                  {% if s.protein_acc %}
+                    <a href="//www.ncbi.nlm.nih.gov/projects/SNP/snp3D.cgi?rsnum={{ rsid }}" target="_blank">
+                      <span class="label label-success">{{ s.protein_acc }}</span>
+                    </a>
+                    &nbsp
+                  {% else %}
+                    N/A
+                  {% endif %}
+                {% endfor %}
+              </td>
               <td>
                 {% for o in omim %}
                   {% if o.omim_id %}
                     <a href="//omim.org/entry/{{ o.omim_id }}#{{ o.omimvar_id }}" target="_blank">
                       <span class="label label-success">{{ o.omim_id }}.{{ o.omimvar_id }}</span>
                     </a>
+                    &nbsp
                   {% else %}
                     N/A
                   {% endif %}
