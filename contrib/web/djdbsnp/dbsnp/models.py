@@ -12,7 +12,7 @@ class SNP(models.Model):
         with connections['dbsnp'].cursor() as c:
             c.execute('SELECT * FROM get_pos_by_rs(%s)', (rsids,))
             row = dictfetchall(c)
-            _assert_query_ids_eq_result_ids(rsids, row)
+            assert_query_ids_eq_result_ids(rsids, row)
             return row
 
     @classmethod
@@ -49,7 +49,7 @@ class SNP(models.Model):
             try:
                 c.execute('SELECT * FROM get_allele_freq(%s, %s)', (source_id, rsids,))
                 row = dictfetchall(c)
-                _assert_query_ids_eq_result_ids(rsids, row)
+                assert_query_ids_eq_result_ids(rsids, row)
                 return row
             except Exception as e:
                 log.warn(e)
@@ -71,9 +71,15 @@ def dictfetchall(cursor):
     '''
 
     desc = cursor.description
-    row = [dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()]
+    row = [dict(zip([col[0] for col in desc], [strip(v) for v in row])) for row in cursor.fetchall()]
     return row
 
-def _assert_query_ids_eq_result_ids(query_ids, result_row):
+def strip(x):
+    if type(x) in (str, unicode):
+        return x.strip()
+    else:
+        return x
+
+def assert_query_ids_eq_result_ids(query_ids, result_row):
     result_ids = [x['snp_id'] for x in result_row]
     assert query_ids == result_ids, '[ERROR] Query ids != Result ids: {} != {}'.format(query_ids, result_ids)
