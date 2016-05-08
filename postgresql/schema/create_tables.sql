@@ -334,6 +334,101 @@ CREATE TABLE SNPContigLoc (
     tier               integer
 );
 
+-- CREATE TABLE [b146_MapLinkInfo_105]    -- MapLinkInfo table stores accession.version for the gi in MapLink table.
+-- (
+-- [gi] [bigint] NOT NULL ,               -- MapLink.gi refers to this gi. This is the gi for RefSeq NM/NG/NR/XR/XM sequence.
+-- [accession] [varchar](32) NOT NULL ,   -- This is the accession corresponds to the gi.
+-- [accession_ver] [smallint] NOT NULL ,  -- This is the version of the accession corresponds to the gi. gi and accession.ver
+--                                           has a one-to-one correspondence. One accession could have several versions
+--                                           and each version has a different gi.
+-- [acc] [varchar](32) NOT NULL ,
+-- [version] [smallint] NOT NULL ,
+-- [status] [varchar](32) NULL ,
+-- [create_dt] [smalldatetime] NULL ,
+-- [update_dt] [smalldatetime] NULL ,
+-- [cds_from] [int] NULL ,
+-- [cds_to] [int] NULL
+-- )
+DROP TABLE IF EXISTS MapLinkInfo;
+CREATE TABLE MapLinkInfo (
+       gi             bigint       not null,
+       accession      varchar(32)  not null,
+       accession_ver  smallint     not null,
+       acc            varchar(32)  not null,
+       version        smallint     not null,
+       status         varchar(32),
+       create_dt      timestamp,
+       update_dt      timestamp,
+       cds_from       integer,
+       cds_to         integer
+);
+
+-- CREATE TABLE [b146_MapLink_105]      -- MapLink table stores snp mapping to RefSeq sequences with accession starts with letter: NM, NG, XM, NR, XR.
+-- (
+-- [snp_type] [char](2) NULL ,          -- "rs" or "ss". For snp external users, this value should always be "rs".
+--                                         Internally, during build prepartion, when the snp is not clustered, the snp_id
+--                                         will be "ss".
+-- [snp_id] [int] NULL ,                -- rs#. Foreign key to SNP table.
+-- [gi] [int] NULL ,                    -- NCBI gi. The accession.version for the gi is in MapLinkInfo table.
+-- [accession_how_cd] [tinyint] NULL ,  -- Internal code.
+-- [offset] [int] NULL ,                -- Start position of snp on the gi, counting from 0. This position is always from
+--                                         the beginning of the sequence identified by the gi regardless of the snp
+--                                         orienation to the sequence.
+-- [asn_to] [int] NULL ,                -- end position of snp on gi
+-- [lf_ngbr] [int] NULL ,
+-- [rf_ngbr] [int] NULL ,
+-- [lc_ngbr] [int] NULL ,
+-- [rc_ngbr] [int] NULL ,
+-- [loc_type] [tinyint] NULL ,          -- loc_type is a code referring to LocTypeCode. Loc_type describes how snp
+--                                         maps to gi. Table LocTypeCode also has the code description.
+-- [build_id] [int] NOT NULL ,          -- NCBI build id.
+-- [process_time] [datetime] NULL ,
+-- [process_status] [tinyint] NULL ,
+-- [orientation] [tinyint] NULL ,       -- Orientation of snp_id with respect to gi. 0 means the snp is in the same
+--                                         orienation as the gi. 1 means reverse orientation.
+-- [allele] [varchar](1024) NULL ,      -- allele on the sequence identified by gi at the snp position. This is always
+--                                         in gi strand.
+-- [aln_quality] [float] NULL ,
+-- [num_mism] [int] NULL ,
+-- [num_del] [int] NULL ,
+-- [num_ins] [int] NULL ,
+-- [tier] [int] NULL ,
+-- [ctg_gi] [int] NULL ,
+-- [ctg_from] [int] NULL ,
+-- [ctg_to] [int] NULL ,
+-- [ctg_orient] [tinyint] NULL ,
+-- [source] [varchar](64) NULL
+-- )
+DROP TABLE IF EXISTS MapLink;
+CREATE TABLE MapLink (
+       snp_type          char(2),
+       snp_id            integer,
+       gi                integer,
+       accession_how_cd  smallint,
+       "offset"          integer,
+       asn_to            integer,
+       lf_ngbr           integer,
+       rf_ngbr           integer,
+       lc_ngbr           integer,
+       rc_ngbr           integer,
+       loc_type          smallint,
+       build_id          integer         not null,
+       process_time      timestamp,
+       process_status    smallint,
+       orientation       smallint,
+       allele            varchar(1024),
+       aln_quality       float,
+       num_mism          integer,
+       num_del           integer,
+       num_ins           integer,
+       tier              integer,
+       ctg_gi            integer,
+       ctg_from          integer,
+       ctg_to            integer,
+       ctg_orient        smallint,
+       "source"          varchar(64)
+);
+
 -- CREATE TABLE [b144_SNPMapInfo_105]  -- SNPMapInfo has the mapping summary information for snp for each assembly the snp is mapped to for the current
 --                                        build. Two columns snp_id and assembly together unqiuely identify each row in this table.
 -- (

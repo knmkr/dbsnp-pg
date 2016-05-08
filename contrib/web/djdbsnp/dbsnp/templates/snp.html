@@ -31,17 +31,50 @@
 
           <table class="table">
             <tr>
-              <th>SNP to RefSeq</th>
               <th>RefSeq ID</th>
+              <th>SNP to RefSeq</th>
               <th>Position</th>
               <th>Allele</th>
             </tr>
+            {% for s in refseq %}
+              {% if s.accession %}
+                <tr>
+                  <td>{{ s.accession }}.{{ s.accession_ver }}</td>
+                  <td>{{ s.orientation| fwd_or_rev }}</td>
+                  <td>{{ s.pos }}</td>
+                  <td>{{ s.allele }}</td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </table>
+
+          <table class="table">
             <tr>
-              <td>Fwd or Rev</td>
-              <td>TODO</td>
-              <td>TODO</td>
-              <td>TODO</td>
+              <th>RefSeq ID</th>
+              <th>Position</th>
+              <th>Residue change</th>
             </tr>
+            {% for s in snp3d %}
+              {% if s.protein_acc %}
+                <tr>
+                  <td>{{ s.protein_acc }}</td>
+                  <td>{{ s.aa_position }}</td>
+                  <td>{{ s.contig_res }} => {{ s.var_res }}</td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
           </table>
 
           <h3>NCBI Resource Links</h3>

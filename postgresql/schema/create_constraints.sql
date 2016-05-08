@@ -29,6 +29,8 @@ CLUSTER SNP USING i_rs;
 --
 CREATE INDEX omimvar_snp_id ON OmimVarLocusIdSNP (snp_id);
 CREATE INDEX snp3d_snp_id ON SNP3D (snp_id);
+CREATE INDEX maplinkinfo_gi ON MapLinkInfo (gi);
+CREATE INDEX maplink_snp_id ON MapLink (snp_id);
 CREATE UNIQUE INDEX SNPChrPosOnRef_ukey_rs ON SNPChrPosOnRef (snp_id);
 CREATE INDEX SNPChrPosOnRef_chr_pos ON SNPChrPosOnRef (chr, pos);
 CREATE INDEX SNPContigLoc_rs_ctg ON SNPContigLoc (snp_id, ctg_id);  --  (snp_type, snp_id, ctg_id);

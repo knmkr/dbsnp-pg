@@ -34,11 +34,9 @@ def snp(request, rsid):
 
     # TODO: gene
 
-    # TODO: reference sequence
+    context['refseq'] = SNP.get_refseq_by_rs([context['rsid']])
 
     # TODO: snp fasta sequence
-
-    # TODO: JPT, EUR, AFR
 
     context['snp3d'] = SNP.get_snp3d_by_rs([context['rsid']])
     context['omim'] = SNP.get_omim_by_rs([context['rsid']])
