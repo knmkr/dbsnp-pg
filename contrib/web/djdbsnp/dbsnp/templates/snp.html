@@ -27,22 +27,6 @@
             {% endfor %}
           </table>
 
-          <h3>Merge History</h3>
-          <table class="table">
-            <tr>
-              <th>rs id</th>
-              <td>{{ rsid }}</td>
-            </tr>
-            <tr>
-              <th>current</th>
-              <td>{{ chr_pos.0.snp_current }}</td>
-            </tr>
-            <tr>
-              <th>dbsnp build</th>
-              <td>{{ dbsnp_build }}</td>
-            </tr>
-          </table>
-
           <h3>NCBI Resource Links</h3>
           <table class="table">
             <tr>
@@ -92,6 +76,9 @@
               </tr>
             {% endfor %}
           </table>
+
+          <hr>
+          <p class="text-right">dbSNP build: <strong>{{ dbsnp_build }}</strong></p>
 
         </div>
       </div>
