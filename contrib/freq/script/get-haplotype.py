@@ -8,10 +8,10 @@ from itertools import chain
 from collections import Counter
 
 import numpy as np
-# try:
-#     import psycopg2cffi as psycopg2
-# except ImportError:
-#     import psycopg2
+try:
+    import psycopg2cffi as psycopg2
+except ImportError:
+    import psycopg2
 
 def main():
     parser = argparse.ArgumentParser()
@@ -20,17 +20,17 @@ def main():
     parser.add_argument('--source-id', required=True, choices=[4], type=int, help='Source ID. Currently, only 1000 Genomes Phase3 (CHB+JPT+CHS) is supported.')
     parser.add_argument('--rsids', required=True, nargs=2, type=int)
     parser.add_argument('--phased-allele-pair-only', action='store_true')
+    parser.add_argument('--no-header', action='store_true')
     args = parser.parse_args()
 
     rsids = args.rsids
 
     # Get current chrom/pos
-    # conn = psycopg2.connect("dbname={} user={}".format(args.dbname, args.dbuser))
-    # cur = conn.cursor()
-    # cur.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s);", (args.source_id, args.rsids,))
-    # rows = cur.fetchall()
-
-    positions = [('1', '113189053'), ('1', '113179597')]
+    conn = psycopg2.connect("dbname={} user={}".format(args.dbname, args.dbuser))
+    cur = conn.cursor()
+    cur.execute("SELECT chr, pos FROM get_pos_by_rs(ARRAY[%s, %s]);", (rsids[0], rsids[1],))
+    rows = cur.fetchall()
+    positions = rows
 
     sample = './sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt'
     vcf = '../data/1000genomes.phase3/ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz'
@@ -40,7 +40,7 @@ def main():
 
     # Get phased genotypes
     for i, (chrom, pos) in enumerate(positions):
-        cmd = shlex.split('bcftools view --no-header --regions "{chrpos}" --phased --samples-file {sample} {vcf}'.format(chrpos=':'.join([chrom, pos]),
+        cmd = shlex.split('bcftools view --no-header --regions "{chrpos}" --phased --samples-file {sample} {vcf}'.format(chrpos='{}:{}'.format(chrom, pos),
                                                                                                                          sample=sample,
                                                                                                                          vcf=vcf.format(chrom=chrom)))
         records = subprocess.check_output(cmd, stderr=subprocess.STDOUT).strip().split('\t')
@@ -64,12 +64,14 @@ def main():
 
         # TODO: tri allele?
 
-        print '\t'.join(['snp_a_id', 'phased_a1', 'phased_a2', 'snp_b_id', 'phased_b1', 'phased_b2'])
+        if not args.no_header:
+            print '\t'.join(['snp_a_id', 'phased_a1', 'phased_a2', 'snp_b_id', 'phased_b1', 'phased_b2'])
         print '\t'.join([str(rsids[0]), phased_alleles[0], phased_alleles[2], str(rsids[1]), phased_alleles[1], phased_alleles[3]])
 
     else:
         # Get haplotypes
-        print '\t'.join(['observed_haplotype_count'] + [str(rsid) for rsid in rsids])
+        if not args.no_header:
+            print '\t'.join(['observed_haplotype_count'] + [str(rsid) for rsid in rsids])
 
         for haplotype, count in c.most_common():
             phased_alleles = []
