@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import argparse
 import shlex
 import subprocess
@@ -12,6 +13,8 @@ try:
     import psycopg2cffi as psycopg2
 except ImportError:
     import psycopg2
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def main():
     parser = argparse.ArgumentParser()
@@ -32,8 +35,8 @@ def main():
     rows = cur.fetchall()
     positions = rows
 
-    sample = './sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt'
-    vcf = '../data/1000genomes.phase3/ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz'
+    sample = os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt')
+    vcf = os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz')
 
     alleles = {}
     gt_matrix = None
