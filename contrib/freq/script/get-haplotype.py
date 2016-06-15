@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 import os
 import argparse
 import shlex
@@ -43,10 +44,31 @@ def main():
 
     # Get phased genotypes
     for i, (chrom, pos) in enumerate(positions):
-        cmd = shlex.split('bcftools view --no-header --regions "{chrpos}" --phased --samples-file {sample} {vcf}'.format(chrpos='{}:{}'.format(chrom, pos),
-                                                                                                                         sample=sample,
-                                                                                                                         vcf=vcf.format(chrom=chrom)))
-        records = subprocess.check_output(cmd, stderr=subprocess.STDOUT).strip().split('\t')
+        # bcftools view         View, subset and filter VCF or BCF files by position and filtering expression. Convert between VCF and BCF. Former bcftools subset.
+        #
+        # --no-header           suppress the header in VCF output
+        # --regions             Comma-separated list of regions, see also -R, --regions-file. Note that -r cannot be used in combination with -R.
+        # --phased              print sites where all samples are phased. Haploid genotypes are considered phased. Missing genotypes considered unphased unless the phased bit is set.
+        # --trim-alt-alleles    trim alternate alleles not seen in subset. Type A, G and R INFO and FORMAT fields will also be trimmed
+        # --exclude-uncalled    exclude sites without a called genotype
+        # --samples-file        File of sample names to include or exclude if prefixed with "^". One sample per line.
+        cmd = shlex.split('bcftools view --no-header --regions "{chrpos}" --phased --trim-alt-alleles --exclude-uncalled --samples-file {sample} {vcf}'.format(chrpos='{}:{}'.format(chrom, pos),
+                                                                                                                                                               sample=sample,
+                                                                                                                                                               vcf=vcf.format(chrom=chrom)))
+
+        results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
+        for result in results:
+            records = result.split('\t')
+            if records[0] == chrom and int(records[1]) == pos:
+                break
+        else:
+            print >>sys.stderr, 'vcf record not found (error code NA1). source_id:{}, chrom:{}, position:{}'.format(args.source_id, chrom, pos)
+            sys.exit(0)
+
+        if records == ['']:
+            print >>sys.stderr, 'vcf record not found (error code NA2). source_id:{}, chrom:{}, position:{}'.format(args.source_id, chrom, pos)
+            sys.exit(0)
+
         rsid, ref, alt = records[2:5]
         alleles[i] = [ref] + alt.split(',')
         genotypes = list(chain.from_iterable([[int(x) for x in gt.split('|')] for gt in records[9:]]))
@@ -60,12 +82,25 @@ def main():
 
     if args.phased_allele_pair_only:
         # Get phased allele pair
+        most_common_haplotypes = c.most_common(2)
+
+        h1 = c.most_common(2)[0][0]
+        h2 = c.most_common(2)[1][0]
+        if h1[0] == h2[0] or h1[1] == h2[1]:
+            print >>sys.stderr, 'ambiguous haplotypes (error code UM1). source_id:{}, chrom:{}, position:{}, count:{}'.format(args.source_id, chrom, pos, c)
+            sys.exit(0)
+
         phased_alleles = []
-        for haplotype, count in c.most_common(2):
+        for haplotype, count in most_common_haplotypes:
             for i, gt in enumerate(haplotype):
                 phased_alleles.append(alleles[i][gt])
 
         # TODO: tri allele?
+
+        # Abort if a1 == a2 or b1 == b2
+        if phased_alleles[0] == phased_alleles[2] or phased_alleles[1] == phased_alleles[3]:
+            print >>sys.stderr, 'ambiguous haplotypes (error code AM1). source_id:{}, chrom:{}, position:{}, count:{}'.format(args.source_id, chrom, pos, c)
+            sys.exit(0)
 
         if not args.no_header:
             print '\t'.join(['snp_a_id', 'phased_a1', 'phased_a2', 'snp_b_id', 'phased_b1', 'phased_b2'])
