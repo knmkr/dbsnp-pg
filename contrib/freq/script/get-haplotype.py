@@ -21,7 +21,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dbname', required=True)
     parser.add_argument('--dbuser', required=True)
-    parser.add_argument('--source-id', required=True, choices=[4], type=int, help='Source ID. Currently, only 1000 Genomes Phase3 (CHB+JPT+CHS) is supported.')
     parser.add_argument('--rsids', required=True, nargs=2, type=int)
     parser.add_argument('--phased-allele-pair-only', action='store_true')
     parser.add_argument('--no-header', action='store_true')
@@ -62,11 +61,11 @@ def main():
             if records[0] == chrom and int(records[1]) == pos:
                 break
         else:
-            print >>sys.stderr, 'vcf record not found (error code NA1). source_id:{}, chrom:{}, position:{}'.format(args.source_id, chrom, pos)
+            print >>sys.stderr, 'vcf record not found (error code NA1). chrom:{}, position:{}'.format(chrom, pos)
             sys.exit(0)
 
         if records == ['']:
-            print >>sys.stderr, 'vcf record not found (error code NA2). source_id:{}, chrom:{}, position:{}'.format(args.source_id, chrom, pos)
+            print >>sys.stderr, 'vcf record not found (error code NA2). chrom:{}, position:{}'.format(chrom, pos)
             sys.exit(0)
 
         rsid, ref, alt = records[2:5]
@@ -87,7 +86,7 @@ def main():
         h1 = c.most_common(2)[0][0]
         h2 = c.most_common(2)[1][0]
         if h1[0] == h2[0] or h1[1] == h2[1]:
-            print >>sys.stderr, 'ambiguous haplotypes (error code UM1). source_id:{}, chrom:{}, position:{}, count:{}'.format(args.source_id, chrom, pos, c)
+            print >>sys.stderr, 'ambiguous haplotypes (error code UM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c)
             sys.exit(0)
 
         phased_alleles = []
@@ -99,7 +98,7 @@ def main():
 
         # Abort if a1 == a2 or b1 == b2
         if phased_alleles[0] == phased_alleles[2] or phased_alleles[1] == phased_alleles[3]:
-            print >>sys.stderr, 'ambiguous haplotypes (error code AM1). source_id:{}, chrom:{}, position:{}, count:{}'.format(args.source_id, chrom, pos, c)
+            print >>sys.stderr, 'ambiguous haplotypes (error code AM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c)
             sys.exit(0)
 
         if not args.no_header:
