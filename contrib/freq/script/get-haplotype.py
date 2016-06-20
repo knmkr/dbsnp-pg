@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--source-id', required=True, choices=[3,4], type=int)
     parser.add_argument('--phased-allele-pair-only', action='store_true')
     parser.add_argument('--no-header', action='store_true')
+    parser.add_argument('--no-tri-allele', action='store_true')
     args = parser.parse_args()
 
     rsids = args.rsids
@@ -103,7 +104,11 @@ def main():
             for i, gt in enumerate(haplotype):
                 phased_alleles.append(alleles[i][gt])
 
-        # TODO: tri allele?
+        if not args.no_tri_allele:
+            common_haplotypes = c.most_common()
+            if len(set([x[0][0] for x in common_haplotypes])) > 2 or len(set([x[0][1] for x in common_haplotypes])) > 2:
+                print >>sys.stderr, 'tri allelic snp (error code TR1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c)
+            sys.exit(0)
 
         # Abort if a1 == a2 or b1 == b2
         if phased_alleles[0] == phased_alleles[2] or phased_alleles[1] == phased_alleles[3]:
