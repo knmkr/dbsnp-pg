@@ -4,6 +4,7 @@
 import sys
 import os
 import argparse
+import glob
 import shlex
 import subprocess
 from itertools import chain
@@ -22,6 +23,7 @@ def main():
     parser.add_argument('--dbname', required=True)
     parser.add_argument('--dbuser', required=True)
     parser.add_argument('--rsids', required=True, nargs=2, type=int)
+    parser.add_argument('--source-id', required=True, choices=[3,4], type=int)
     parser.add_argument('--phased-allele-pair-only', action='store_true')
     parser.add_argument('--no-header', action='store_true')
     args = parser.parse_args()
@@ -35,8 +37,15 @@ def main():
     rows = cur.fetchall()
     positions = rows
 
-    sample = os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt')
-    vcf = os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz')
+    sample = {
+        3: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt'),
+        4: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt'),
+    }[args.source_id]
+
+    vcf = {
+        3: os.path.join(BASE_DIR, '..', 'data/1000genomes.phase1/ALL.chr{chrom}.*.vcf.gz'),
+        4: os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.*.vcf.gz'),
+    }[args.source_id]
 
     alleles = {}
     gt_matrix = None
@@ -53,7 +62,7 @@ def main():
         # --samples-file        File of sample names to include or exclude if prefixed with "^". One sample per line.
         cmd = shlex.split('bcftools view --no-header --regions "{chrpos}" --phased --trim-alt-alleles --exclude-uncalled --samples-file {sample} {vcf}'.format(chrpos='{}:{}'.format(chrom, pos),
                                                                                                                                                                sample=sample,
-                                                                                                                                                               vcf=vcf.format(chrom=chrom)))
+                                                                                                                                                               vcf=glob.glob(vcf.format(chrom=chrom))[0]))
 
         results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
         for result in results:
@@ -70,7 +79,7 @@ def main():
 
         rsid, ref, alt = records[2:5]
         alleles[i] = [ref] + alt.split(',')
-        genotypes = list(chain.from_iterable([[int(x) for x in gt.split('|')] for gt in records[9:]]))
+        genotypes = list(chain.from_iterable([[int(x) for x in gt.split('|')] for gt in [a.split(':')[0] for a in records[9:]]]))
 
         if gt_matrix is None:
             gt_matrix = np.array(genotypes)
