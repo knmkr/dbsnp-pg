@@ -20,22 +20,30 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dbname', required=True)
-    parser.add_argument('--dbuser', required=True)
-    parser.add_argument('--rsids', required=True, nargs=2, type=int)
     parser.add_argument('--source-id', required=True, choices=[3,4], type=int)
     parser.add_argument('--phased-allele-pair-only', action='store_true')
     parser.add_argument('--no-header', action='store_true')
+    parser.add_argument('--rsids', required=True, nargs=2, type=int)
+    parser.add_argument('--dbname')
+    parser.add_argument('--dbuser')
+    parser.add_argument('--regions', nargs=2, type=str)
     args = parser.parse_args()
 
     rsids = args.rsids
 
-    # Get current chrom/pos
-    conn = psycopg2.connect("dbname={} user={}".format(args.dbname, args.dbuser))
-    cur = conn.cursor()
-    cur.execute("SELECT chr, pos FROM get_pos_by_rs(ARRAY[%s, %s]);", (rsids[0], rsids[1],))
-    rows = cur.fetchall()
-    positions = rows
+    if args.regions:
+        positions = [tuple(x.split(':')) for x in args.regions]
+    else:
+        if not args.dbname or not args.dbuser:
+            print >>sys.stderr, '[ERROR] If --regions is not set, you need to set --dbname and --dbuser (error code AR1).'
+            sys.exit(1)
+
+        # Get current chrom/pos
+        conn = psycopg2.connect("dbname={} user={}".format(args.dbname, args.dbuser))
+        cur = conn.cursor()
+        cur.execute("SELECT chr, pos FROM get_pos_by_rs(ARRAY[%s, %s]);", (rsids[0], rsids[1],))
+        rows = cur.fetchall()
+        positions = rows
 
     sample = {
         3: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt'),
@@ -63,11 +71,12 @@ def main():
         cmd = shlex.split('bcftools view --no-header --regions "{chrpos}" --phased --trim-alt-alleles --exclude-uncalled --samples-file {sample} {vcf}'.format(chrpos='{}:{}'.format(chrom, pos),
                                                                                                                                                                sample=sample,
                                                                                                                                                                vcf=glob.glob(vcf.format(chrom=chrom))[0]))
-
         results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
+
         for result in results:
             records = result.split('\t')
-            if records[0] == chrom and int(records[1]) == pos:
+
+            if records[0] == chrom and int(records[1]) == int(pos):
                 break
         else:
             print >>sys.stderr, 'vcf record not found (error code NA1). chrom:{}, position:{}'.format(chrom, pos)
