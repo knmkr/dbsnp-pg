@@ -68,22 +68,32 @@ def main():
         # --trim-alt-alleles    trim alternate alleles not seen in subset. Type A, G and R INFO and FORMAT fields will also be trimmed
         # --exclude-uncalled    exclude sites without a called genotype
         # --samples-file        File of sample names to include or exclude if prefixed with "^". One sample per line.
+
+        vcf_in = glob.glob(vcf.format(chrom=chrom))
+
+        if not vcf_in:
+            log(rsids[i], 'vcf record not found (error code NA4). chrom:{}, position:{}'.format(chrom, pos))
+            sys.exit(0)
+
         cmd = shlex.split('bcftools view --no-header --regions "{chrpos}" --phased --trim-alt-alleles --exclude-uncalled --samples-file {sample} {vcf}'.format(chrpos='{}:{}'.format(chrom, pos),
                                                                                                                                                                sample=sample,
-                                                                                                                                                               vcf=glob.glob(vcf.format(chrom=chrom))[0]))
-        results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
+                                                                                                                                                               vcf=vcf_in[0]))
+        try:
+            results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
+        except Exception as e:
+            log(rsids[i], 'vcf record not found (error code NA3). chrom:{}, position:{}'.format(chrom, pos))
+            sys.exit(0)
 
         for result in results:
             records = result.split('\t')
-
             if records[0] == chrom and int(records[1]) == int(pos):
                 break
         else:
-            print >>sys.stderr, 'vcf record not found (error code NA1). chrom:{}, position:{}'.format(chrom, pos)
+            log(rsids[i], 'vcf record not found (error code NA1). chrom:{}, position:{}'.format(chrom, pos))
             sys.exit(0)
 
         if records == ['']:
-            print >>sys.stderr, 'vcf record not found (error code NA2). chrom:{}, position:{}'.format(chrom, pos)
+            log(rsids[i], 'vcf record not found (error code NA2). chrom:{}, position:{}, id:rs{}'.format(chrom, pos))
             sys.exit(0)
 
         rsid, ref, alt = records[2:5]
@@ -104,7 +114,8 @@ def main():
         h1 = c.most_common(2)[0][0]
         h2 = c.most_common(2)[1][0]
         if h1[0] == h2[0] or h1[1] == h2[1]:
-            print >>sys.stderr, 'ambiguous haplotypes (error code UM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c)
+            log(rsids[0], 'ambiguous haplotypes (error code UM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
+            log(rsids[1], 'ambiguous haplotypes (error code UM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
             sys.exit(0)
 
         phased_alleles = []
@@ -115,11 +126,14 @@ def main():
         # Tri allele?
         common_haplotypes = c.most_common()
         if len(set([x[0][0] for x in common_haplotypes])) > 2 or len(set([x[0][1] for x in common_haplotypes])) > 2:
-            print >>sys.stderr, 'tri allelic snp (warning code TR1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c)
+            log(rsids[0], 'tri allelic snp (warning code TR1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
+            log(rsids[1], 'tri allelic snp (warning code TR1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
+            sys.exit(0)
 
         # Abort if a1 == a2 or b1 == b2
         if phased_alleles[0] == phased_alleles[2] or phased_alleles[1] == phased_alleles[3]:
-            print >>sys.stderr, 'ambiguous haplotypes (error code AM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c)
+            log(rsids[0], 'ambiguous haplotypes (error code AM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
+            log(rsids[1], 'ambiguous haplotypes (error code AM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
             sys.exit(0)
 
         if not args.no_header:
@@ -137,6 +151,10 @@ def main():
                 phased_alleles.append(alleles[i][gt])
 
             print '\t'.join([str(count)] + phased_alleles)
+
+
+def log(rsid, msg):
+    print >>sys.stderr, '{}\t{}'.format(rsid, msg)
 
 
 if __name__ == '__main__':
