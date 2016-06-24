@@ -114,8 +114,8 @@ def main():
         h1 = c.most_common(2)[0][0]
         h2 = c.most_common(2)[1][0]
         if h1[0] == h2[0] or h1[1] == h2[1]:
-            log(rsids[0], 'ambiguous haplotypes (error code UM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
-            log(rsids[1], 'ambiguous haplotypes (error code UM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
+            log(rsids[0], 'ambiguous haplotypes (error code UM1). position:{}, count:{}'.format(positions[0], c))
+            log(rsids[1], 'ambiguous haplotypes (error code UM1). position:{}, count:{}'.format(positions[1], c))
             sys.exit(0)
 
         phased_alleles = []
@@ -126,14 +126,14 @@ def main():
         # Tri allele?
         common_haplotypes = c.most_common()
         if len(set([x[0][0] for x in common_haplotypes])) > 2 or len(set([x[0][1] for x in common_haplotypes])) > 2:
-            log(rsids[0], 'tri allelic snp (warning code TR1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
-            log(rsids[1], 'tri allelic snp (warning code TR1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
+            log(rsids[0], 'tri allelic snp (warning code TR1). position:{}, count:{}'.format(positions[0], c))
+            log(rsids[1], 'tri allelic snp (warning code TR1). position:{}, count:{}'.format(positions[1], c))
             sys.exit(0)
 
         # Abort if a1 == a2 or b1 == b2
         if phased_alleles[0] == phased_alleles[2] or phased_alleles[1] == phased_alleles[3]:
-            log(rsids[0], 'ambiguous haplotypes (error code AM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
-            log(rsids[1], 'ambiguous haplotypes (error code AM1). chrom:{}, position:{}, count:{}'.format(chrom, pos, c))
+            log(rsids[0], 'ambiguous haplotypes (error code AM1). position:{}, count:{}'.format(positions[0], c))
+            log(rsids[1], 'ambiguous haplotypes (error code AM1). position:{}, count:{}'.format(positions[1], c))
             sys.exit(0)
 
         if not args.no_header:
