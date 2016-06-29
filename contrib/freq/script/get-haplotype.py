@@ -16,7 +16,7 @@ try:
 except ImportError:
     import psycopg2
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 def main():
     parser = argparse.ArgumentParser()
@@ -108,14 +108,19 @@ def main():
     c = Counter([tuple(gt_matrix[:,i]) for i in xrange(gt_matrix.shape[1])])
 
     if args.phased_allele_pair_only:
+        # Tri allele?
+        common_haplotypes = c.most_common()
+        if len(set([x[0][0] for x in common_haplotypes])) > 2 or len(set([x[0][1] for x in common_haplotypes])) > 2:
+            log(rsids[1], 'tri allelic snp (warning code TR1). SNP A id:{}, SNP A position:{}, SNP B id: {}, SNP B position:{}, count:{}'.format(rsids[0], positions[0], rsids[1], positions[1], c))
+            sys.exit(0)
+
         # Get phased allele pair
         most_common_haplotypes = c.most_common(2)
 
         h1 = c.most_common(2)[0][0]
         h2 = c.most_common(2)[1][0]
         if h1[0] == h2[0] or h1[1] == h2[1]:
-            log(rsids[0], 'ambiguous haplotypes (error code UM1). position:{}, count:{}'.format(positions[0], c))
-            log(rsids[1], 'ambiguous haplotypes (error code UM1). position:{}, count:{}'.format(positions[1], c))
+            log(rsids[1], 'ambiguous haplotypes (error code AM1). SNP A id:{}, SNP A position:{}, SNP B id: {}, SNP B position:{}, count:{}'.format(rsids[0], positions[0], rsids[1], positions[1], c))
             sys.exit(0)
 
         phased_alleles = []
@@ -123,17 +128,9 @@ def main():
             for i, gt in enumerate(haplotype):
                 phased_alleles.append(alleles[i][gt])
 
-        # Tri allele?
-        common_haplotypes = c.most_common()
-        if len(set([x[0][0] for x in common_haplotypes])) > 2 or len(set([x[0][1] for x in common_haplotypes])) > 2:
-            log(rsids[0], 'tri allelic snp (warning code TR1). position:{}, count:{}'.format(positions[0], c))
-            log(rsids[1], 'tri allelic snp (warning code TR1). position:{}, count:{}'.format(positions[1], c))
-            sys.exit(0)
-
         # Abort if a1 == a2 or b1 == b2
         if phased_alleles[0] == phased_alleles[2] or phased_alleles[1] == phased_alleles[3]:
-            log(rsids[0], 'ambiguous haplotypes (error code AM1). position:{}, count:{}'.format(positions[0], c))
-            log(rsids[1], 'ambiguous haplotypes (error code AM1). position:{}, count:{}'.format(positions[1], c))
+            log(rsids[1], 'ambiguous haplotypes (error code AM2). SNP A id:{}, SNP A position:{}, SNP B id: {}, SNP B position:{}, count:{}'.format(rsids[0], positions[0], rsids[1], positions[1], c))
             sys.exit(0)
 
         if not args.no_header:
