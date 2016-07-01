@@ -3,7 +3,7 @@
 
 import argparse
 import sys
-from decimal import *
+from decimal import Decimal, InvalidOperation
 
 for line in sys.stdin:
     # Convert from .frq to .csv
@@ -21,7 +21,11 @@ for line in sys.stdin:
         continue
 
     chrom, snp, a1_minor, a2_major, a1_af, nchrobs = [x for x in line.split(' ') if x != '']
-    a2_af = '{}'.format(Decimal(1) - Decimal(a1_af))
+    try:
+        a2_af = '{}'.format(Decimal(1) - Decimal(a1_af))
+    except InvalidOperation:
+        print >>sys.stderr, '[ERROR] Invalid .frq line', line
+        continue
 
     print '\t'.join([snp,
                      '{' + ','.join([a1_minor, a2_major]) + '}',

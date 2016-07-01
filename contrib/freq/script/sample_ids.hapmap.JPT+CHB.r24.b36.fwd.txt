@@ -1,0 +1,1 @@
+/home/numa/reference/dbsnp-pg-min/contrib/freq/hapmap/r24/sample_ids.hapmap.JPT+CHB.r24.b36.fwd.txt
