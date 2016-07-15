@@ -95,10 +95,10 @@ for src in *.gz; do
 done
 
 # Unifying bcp name
-cp ${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz     ContigInfo.bcp.gz
-cp ${dbsnp}_MapLinkInfo_${ref_code[${ref}]}.bcp.gz    MapLinkInfo.bcp.gz
-cp ${dbsnp}_MapLink_${ref_code[${ref}]}.bcp.gz        MapLink.bcp.gz
-cp ${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz SNPChrPosOnRef.bcp.gz
-cp ${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz   SNPContigLoc.bcp.gz
+ln -s ${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz     ContigInfo.bcp.gz
+ln -s ${dbsnp}_MapLinkInfo_${ref_code[${ref}]}.bcp.gz    MapLinkInfo.bcp.gz
+ln -s ${dbsnp}_MapLink_${ref_code[${ref}]}.bcp.gz        MapLink.bcp.gz
+ln -s ${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz SNPChrPosOnRef.bcp.gz
+ln -s ${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz   SNPContigLoc.bcp.gz
 
 echo "[INFO] Done"
