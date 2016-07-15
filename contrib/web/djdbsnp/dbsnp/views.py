@@ -18,63 +18,45 @@ def snps(request):
             af_population = form.cleaned_data.get('af_population')
             rsids = form.cleaned_data.get('rsids')
             context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids)
-            context['chr_pos'] = SNP.get_chr_pos(rsids)
+            context['chr_pos'] = SNP.get_pos_by_rs(rsids)
         # TODO: show error messages for invalid queries
 
     return render(request, 'snps.html', context)
 
-def snp(request):
-    rs_regexp = re.compile('\A(rs)?(\d{1,9})\Z')  # max rs# is 483352819 (b141)
-    rs_match = rs_regexp.findall(request.GET.get('rs', ''))
-    rs = int(rs_match[0][1]) if rs_match else ''
-    records = {'rs': rs}
+def snp(request, rsid):
+    context = {
+        'rsid': int(rsid),
+        'dbsnp_build': settings.DBSNP_BUILD,
+        'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
+    }
 
-    # TODO: handle not found records
-    if rs:
-        chrom, pos = SNP.get_pos_by_rs(rs)
-        # TODO: chrom, pos on b37, b38
+    context['chr_pos'] = SNP.get_all_pos_by_rs([context['rsid']])
 
-        # TODO: gene
+    # TODO: gene
 
-        # TODO: reference sequence
+    context['refseq'] = SNP.get_refseq_by_rs([context['rsid']])
 
-        # TODO: snp fasta sequence
+    # TODO: snp fasta sequence
 
-        rs_current = SNP.get_current_rs(rs)
+    context['snp3d'] = SNP.get_snp3d_by_rs([context['rsid']])
+    context['omim'] = SNP.get_omim_by_rs([context['rsid']])
 
-        allele_freq_source = '1000 Genomes Phase1, CHB+JPT+CHS'  # TODO
-        allele_freq_source_id = 1  # TODO
-        af = SNP.get_allele_freqs(allele_freq_source_id, [rs])
-        allele_freqs = {allele_freq_source: dict(zip(af['allele'], af['freq']))}
+    # TODO: LD
 
-        # TODO: JPT, EUR, AFR
-
-        # TODO: OMIM
-
-        # TODO: LD
-
-        # TODO: GWAS
-
-        records.update({'dbsnp_build': settings.DBSNP_BUILD,
-                        'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
-                        'rs': rs,
-                        'chrom': chrom,
-                        'pos': pos,
-                        'rs_current': rs_current,
-                        'allele_freqs': allele_freqs})
+    # TODO: GWAS
 
     fmt = request.GET.get('fmt', '')
 
     if fmt == 'json':
-        response = JsonResponse(records)
+        response = JsonResponse(context)
         return response
-    elif fmt == 'tsv':
-        # TODO: need to format nested records (allele freqs)
-        response = HttpResponse(content_type='text/tab-separated-values')
-        response['Content-Disposition'] = 'attachment; filename="rs{}.tsv"'.format(rs)
-        writer = csv.DictWriter(response, fieldnames=records.keys(), delimiter='\t')
-        writer.writeheader()
-        writer.writerow(records)
-        return response
+    # elif fmt == 'tsv':
+    #     # TODO: need to format nested context
+    #     response = HttpResponse(content_type='text/tab-separated-values')
+    #     response['Content-Disposition'] = 'attachment; filename="rs{}.tsv"'.format(rs)
+    #     writer = csv.DictWriter(response, fieldnames=context.keys(), delimiter='\t')
+    #     writer.writeheader()
+    #     writer.writerow(context)
+    #     return response
     else:
-        return render(request, 'snp.html', records)
+        return render(request, 'snp.html', context)

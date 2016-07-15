@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>NCBI Graphical Sequence Viewer Embedding Demo</title>
+  </head>
+  <body>
+    <h1>NCBI Graphical Sequence Viewer Embedding Demo</h1>
+
+    <h2>Embed viewer for rs671 / NC_000012.12 / 111,803,912 to 111,804,012</h2>
+
+    <div id="sv1" class="SeqViewerApp" style="width:1526px"></div>
+
+    <p><a href="//www.ncbi.nlm.nih.gov/tools/sviewer/embedding-api/">API Doc [www.ncbi.nlm.nih.gov/tools/sviewer/embedding-api]</a></p>
+
+    <script type="text/javascript" src="//www.ncbi.nlm.nih.gov/projects/sviewer/js/sviewer.js"></script>
+    <script type="text/javascript">
+      SeqViewOnReady( function() {
+        var app = new SeqView.App("sv1");
+        app.load("embedded=true&id=NC_000012.12&v=111803912:111804012&mk=111803962|rs671|!&toolbar=zr&tracks=[key:sequence_track]");
+      }
+      );
+    </script>
+  </body>
+</html>

@@ -10,7 +10,8 @@ rs672
 
 
 class SnpsForm(forms.Form):
-    af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=SNP.get_af_sources())
+    choices = SNP.get_af_sources() or [(0, 'N/A')]
+    af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=choices)
     rsids = forms.CharField(widget=forms.Textarea(attrs={'placeholder': RSID_PLACEHOLDER}))
 
     def clean_rsids(self):

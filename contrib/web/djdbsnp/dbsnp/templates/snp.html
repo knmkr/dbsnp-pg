@@ -1,56 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "layout.html" %}
+{% load extra %}
+{% block title %}Dashboard{% endblock %}
 
-    <!-- bootstrap3 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  </head>
-
-  <body>
+{% block main %}
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <h1>rs id: {{ rs }}</h2>
+          <div class="page-header">
+            <h1>rs{{ rsid }}</h1>
+          </div>
 
-          {% if rs %}
-          <h2 class="sub-header">location</h2>
+          <h3>Location</h3>
+
           <table class="table">
             <tr>
-              <th>chrom</th>
-              <td>{{ chrom }}</td>
+              <th>Assembly</th>
+              <th>Chr</th>
+              <th>Chr Pos</th>
             </tr>
+            {% for pos in chr_pos %}
             <tr>
-              <th>position</th>
-              <td>{{ pos }}</td>
-            </tr>
-            <tr>
-              <th>reference genome build</th>
               <td>{{ dbsnp_ref_genome_build }}</td>
+              <td>{{ pos.chr }}</td>
+              <td>{{ pos.pos }}</td>
             </tr>
+            {% endfor %}
           </table>
 
-          <h2 class="sub-header">merge history</h2>
+          <h3>RefSeq Mapping</h3>
+
           <table class="table">
             <tr>
-              <th>rs id</th>
-              <td>{{ rs }}</td>
+              <th>RefSeq ID</th>
+              <th>SNP to RefSeq</th>
+              <th>Position</th>
+              <th>Allele</th>
+            </tr>
+            {% for s in refseq %}
+              {% if s.accession %}
+                <tr>
+                  <td>{{ s.accession }}.{{ s.accession_ver }}</td>
+                  <td>{{ s.orientation| fwd_or_rev }}</td>
+                  <td>{{ s.pos }}</td>
+                  <td>{{ s.allele }}</td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </table>
+
+          <table class="table">
+            <tr>
+              <th>RefSeq ID</th>
+              <th>Position</th>
+              <th>Residue change</th>
+            </tr>
+            {% for s in snp3d %}
+              {% if s.protein_acc %}
+                <tr>
+                  <td>{{ s.protein_acc }}</td>
+                  <td>{{ s.aa_position }}</td>
+                  <td>{{ s.contig_res }} => {{ s.var_res }}</td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </table>
+
+          <h3>NCBI Resource Links</h3>
+          <table class="table">
+            <tr>
+              <th>3D structure mapping</th>
+              <th>OMIM</th>
             </tr>
             <tr>
-              <th>current</th>
-              <td>{{ rs_current }}</td>
-            </tr>
-            <tr>
-              <th>old</th>
-              <td>TODO</td>
-            </tr>
-            <tr>
-              <th>dbsnp build</th>
-              <td>{{ dbsnp_build }}</td>
+              <td>
+                {% for s in snp3d %}
+                  {% if s.protein_acc %}
+                    <a href="//www.ncbi.nlm.nih.gov/projects/SNP/snp3D.cgi?rsnum={{ rsid }}" target="_blank">
+                      <span class="label label-success">{{ s.protein_acc }}</span>
+                    </a>
+                    &nbsp
+                  {% else %}
+                    N/A
+                  {% endif %}
+                {% endfor %}
+              </td>
+              <td>
+                {% for o in omim %}
+                  {% if o.omim_id %}
+                    <a href="//omim.org/entry/{{ o.omim_id }}#{{ o.omimvar_id }}" target="_blank">
+                      <span class="label label-success">{{ o.omim_id }}.{{ o.omimvar_id }}</span>
+                    </a>
+                    &nbsp
+                  {% else %}
+                    N/A
+                  {% endif %}
+                {% endfor %}
+              </td>
             </tr>
           </table>
 
-          <h2 class="sub-header">allele freq</h2>
+          <h3>Allele Freq</h3>
           <table class="table">
             {% for source, allele_freq in allele_freqs.items %}
               {% for allele, freq in allele_freq.items %}
@@ -66,9 +127,10 @@
             {% endfor %}
           </table>
 
-          {% endif %}
+          <hr>
+          <p class="text-right">dbSNP build: <strong>{{ dbsnp_build }}</strong></p>
+
         </div>
       </div>
     </div>
-  </body>
-</html>
+{% endblock %}

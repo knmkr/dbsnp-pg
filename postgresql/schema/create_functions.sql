@@ -86,3 +86,83 @@ BEGIN
   RETURN;
 END
 $$ LANGUAGE plpgsql;
+
+--
+CREATE OR REPLACE FUNCTION get_refseq_by_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int,
+  OUT accession varchar,
+  OUT accession_ver smallint,
+  OUT orientation smallint,
+  OUT pos int,
+  OUT allele varchar
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT
+          a.snp_id,
+          a.snp_current,
+          i.accession,
+          i.accession_ver,
+          m.orientation,
+          m.offset + 1 AS pos,
+          m.allele
+      FROM
+          get_current_rs(_rs) a
+          LEFT JOIN MapLink m ON a.snp_current = m.snp_id
+          LEFT JOIN MapLinkInfo i USING (gi)
+  );
+  RETURN;
+END
+$$ LANGUAGE plpgsql;
+
+--
+CREATE OR REPLACE FUNCTION get_omim_by_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int,
+  OUT omim_id int,
+  OUT omimvar_id char(4)
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT
+          a.snp_id,
+          a.snp_current,
+          o.omim_id,
+          o.omimvar_id
+      FROM
+          get_current_rs(_rs) a
+          LEFT JOIN omimvarlocusidsnp o ON a.snp_current = o.snp_id
+  );
+  RETURN;
+END
+$$ LANGUAGE plpgsql;
+
+--
+CREATE OR REPLACE FUNCTION get_snp3d_by_rs(
+  _rs int[],
+  OUT snp_id int,
+  OUT snp_current int,
+  OUT protein_acc char(50),
+  OUT aa_position int,
+  OUT contig_res char(3),
+  OUT var_res char(3)
+) RETURNS SETOF RECORD AS $$
+BEGIN
+  RETURN QUERY (
+      SELECT
+          a.snp_id,
+          a.snp_current,
+          s.protein_acc,
+          s.aa_position,
+          s.contig_res,
+          s.var_res
+      FROM
+          get_current_rs(_rs) a
+          LEFT JOIN snp3d s ON a.snp_current = s.snp_id
+  );
+  RETURN;
+END
+$$ LANGUAGE plpgsql;

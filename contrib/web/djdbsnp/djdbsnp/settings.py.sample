@@ -73,9 +73,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'djdbsnp.wsgi.application'
 
 # dbsnp
-DBSNP_BUILD = 'b141'
-DBSNP_REF_GENOME_BUILD = 'b37'
-DBSNP_DB_NAME = '_'.join(['dbsnp', DBSNP_BUILD, DBSNP_REF_GENOME_BUILD])
+DBSNP_BUILD = 'b146'
+DBSNP_REF_GENOME_BUILD = 'GRCh37.p13'
+DBSNP_DB_NAME = 'dbsnp_b146_GRCh37'
 DBSNP_DB_USER= 'dbsnp'
 DBSNP_DB_HOST = '127.0.0.1'
 DBSNP_DB_PORT = '5432'
@@ -119,3 +119,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}

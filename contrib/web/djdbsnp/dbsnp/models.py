@@ -1,39 +1,85 @@
+import logging
+
 from django.db import models
 from django.db import connections
+
+log = logging.getLogger('django')
 
 
 class SNP(models.Model):
     @classmethod
-    def get_chr_pos(self, rsids):
+    def get_pos_by_rs(self, rsids):
         with connections['dbsnp'].cursor() as c:
             c.execute('SELECT * FROM get_pos_by_rs(%s)', (rsids,))
             row = dictfetchall(c)
-            _assert_query_ids_eq_result_ids(rsids, row)
+            assert_query_ids_eq_result_ids(rsids, row)
+            return row
+
+    @classmethod
+    def get_all_pos_by_rs(self, rsids):
+        with connections['dbsnp'].cursor() as c:
+            c.execute('SELECT * FROM get_all_pos_by_rs(%s)', (rsids,))
+            row = dictfetchall(c)
+            return row
+
+    @classmethod
+    def get_refseq_by_rs(self, rsids):
+        with connections['dbsnp'].cursor() as c:
+            c.execute('SELECT * FROM get_refseq_by_rs(%s)', (rsids,))
+            row = dictfetchall(c)
+            return row
+
+    @classmethod
+    def get_omim_by_rs(self, rsids):
+        with connections['dbsnp'].cursor() as c:
+            c.execute('SELECT * FROM get_omim_by_rs(%s)', (rsids,))
+            row = dictfetchall(c)
+            return row
+
+    @classmethod
+    def get_snp3d_by_rs(self, rsids):
+        with connections['dbsnp'].cursor() as c:
+            c.execute('SELECT * FROM get_snp3d_by_rs(%s)', (rsids,))
+            row = dictfetchall(c)
             return row
 
     @classmethod
     def get_allele_freqs(self, source_id, rsids):
         with connections['dbsnp'].cursor() as c:
-            c.execute('SELECT * FROM get_allele_freq(%s, %s)', (source_id, rsids,))
-            row = dictfetchall(c)
-            _assert_query_ids_eq_result_ids(rsids, row)
-            return row
+            try:
+                c.execute('SELECT * FROM get_allele_freq(%s, %s)', (source_id, rsids,))
+                row = dictfetchall(c)
+                assert_query_ids_eq_result_ids(rsids, row)
+                return row
+            except Exception as e:
+                log.warn(e)
+                return []
 
     @classmethod
     def get_af_sources(self):
         with connections['dbsnp'].cursor() as c:
-            c.execute("SELECT source_id, display_name FROM allelefreqsource WHERE status = 'ok'")
-            row = c.fetchall()
-            return row
+            try:
+                c.execute("SELECT source_id, display_name FROM allelefreqsource WHERE status = 'ok'")
+                row = c.fetchall()
+                return row
+            except Exception as e:
+                log.warn(e)
+                return []
 
 def dictfetchall(cursor):
     '''Returns all rows from a cursor as a dict
     '''
 
     desc = cursor.description
-    row = [dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()]
+    row = [dict(zip([col[0] for col in desc], [strip(v) for v in row])) for row in cursor.fetchall()]
     return row
 
-def _assert_query_ids_eq_result_ids(query_ids, result_row):
+def strip(x):
+    if type(x) in (str, unicode):
+        return x.strip()
+    else:
+        return x
+
+def assert_query_ids_eq_result_ids(query_ids, result_row):
     result_ids = [x['snp_id'] for x in result_row]
     assert query_ids == result_ids, '[ERROR] Query ids != Result ids: {} != {}'.format(query_ids, result_ids)
