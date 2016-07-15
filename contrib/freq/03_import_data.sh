@@ -51,11 +51,13 @@ else
     exit 1
 fi
 
+psql="psql $PG_DB $PG_USER --no-psqlrc --single-transaction "
+
 for source_id in ${source_ids[@]}; do
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Target sample ids: ${source_id2sample_ids[${source_id}]}"
 
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Drop index if exists ..."
-    psql $PG_DB $PG_USER -c "DROP INDEX IF EXISTS allelefreq_${source_id}_snp_id" -q
+    $psql -q -c "DROP INDEX IF EXISTS allelefreq_${source_id}_snp_id"
 
     keep_ids=${source_id2sample_ids[${source_id}]}
     awk '{print $1,$1}' ${BASE_DIR}/script/${keep_ids} > ${keep_ids}.fam
@@ -78,17 +80,17 @@ for source_id in ${source_ids[@]}; do
             > ${filename}.${source_id}.frq.csv
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ..."
-        cat ${filename}.${source_id}.frq.csv| psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
+        cat ${filename}.${source_id}.frq.csv| $psql -q -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''"
     done;
 
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating constraints ..."
-    psql $PG_DB $PG_USER -c "CREATE INDEX allelefreq_${source_id}_snp_id ON AlleleFreq_${source_id} (snp_id)" -q
+    $psql -q -c "CREATE INDEX allelefreq_${source_id}_snp_id ON AlleleFreq_${source_id} (snp_id)"
 
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Updating snp_id_current ..."
-    psql $PG_DB $PG_USER -c "BEGIN; DELETE FROM allelefreq_${source_id} USING rsmergearch m WHERE snp_id = m.rshigh AND m.rscurrent IS NULL; COMMIT"
-    psql $PG_DB $PG_USER -c "BEGIN; UPDATE allelefreq_${source_id} a SET snp_id = m.rscurrent FROM rsmergearch m WHERE a.snp_id = m.rshigh; COMMIT"
+    $psql -c "DELETE FROM allelefreq_${source_id} USING rsmergearch m WHERE snp_id = m.rshigh AND m.rscurrent IS NULL"
+    $psql -c "UPDATE allelefreq_${source_id} a SET snp_id = m.rscurrent FROM rsmergearch m WHERE a.snp_id = m.rshigh"
 
-    psql $PG_DB $PG_USER -c "UPDATE allelefreqsource s SET status = 'ok' WHERE s.source_id = ${source_id}"
+    $psql -c "UPDATE allelefreqsource s SET status = 'ok' WHERE s.source_id = ${source_id}"
 
 done;
 
