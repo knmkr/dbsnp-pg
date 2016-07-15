@@ -25,4 +25,7 @@ cd ..
 # # HapMap
 # wget -c ftp://ftp.ncbi.nlm.nih.gov/hapmap/phasing/2009-02_phaseIII/HapMap3_r2/JPT+CHB/hapmap3_r2_b36_fwd.consensus.qc.poly.chr{1..22}_jpt+chb.unr.phased.gz
 
+# TODO: refer `../../data/Allele.bcp.gz`
+wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}
+
 echo "[contrib/freq] [INFO] Done"

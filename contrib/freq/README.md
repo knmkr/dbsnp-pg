@@ -40,4 +40,4 @@ See datails in `01_fetch_data.sh` and `03_import_data.sh`
 
 ## Software Requirements
 
-- [PLINK](http://pngu.mgh.harvard.edu/~purcell/plink/) or [VCFtools](https://github.com/vcftools/vcftools/)
+- [PLINK](http://pngu.mgh.harvard.edu/~purcell/plink/)

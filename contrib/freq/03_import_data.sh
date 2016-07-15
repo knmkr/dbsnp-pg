@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
+set -e
+set -o pipefail
+
 PG_DB=$1
 PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
-FRQ_TOOL=$5
-
-# Set defaults
-: ${FRQ_TOOL:=vcftools}
 
 source_ids=(3 4 100 200 300)
 
@@ -39,66 +38,59 @@ cd ${DATA_DIR}
 
 # Use pypy if available
 if type pypy >/dev/null; then
-  py=$(which pypy)
+    py=$(which pypy)
 else
-  py=$(which python)
+    py=$(which python)
 fi
 
-# vcftools or plink is required
-if type ${FRQ_TOOL} >/dev/null; then
+# plink is required
+if type plink >/dev/null; then
     :
 else
-    echo "[contrib/freq] [FATAL] `date +"%Y-%m-%d %H:%M:%S"` ${FRQ_TOOL} not found."
+    echo "[contrib/freq] [FATAL] `date +"%Y-%m-%d %H:%M:%S"` plink not found."
     exit 1
 fi
 
 for source_id in ${source_ids[@]}; do
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Target sample ids: ${source_id2sample_ids[${source_id}]}"
+
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Drop index if exists ..."
     psql $PG_DB $PG_USER -c "DROP INDEX IF EXISTS allelefreq_${source_id}_snp_id" -q
+
+    keep_ids=${source_id2sample_ids[${source_id}]}
+    awk '{print $1,$1}' ${BASE_DIR}/script/${keep_ids} > ${keep_ids}.fam
 
     for filename in ${source_id2filename[${source_id}]}; do
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` ${filename}"
 
-        keep_ids=${BASE_DIR}/script/${source_id2sample_ids[${source_id}]}
-
-        if [ "${FRQ_TOOL}" = "vcftools" ]; then
-            # vcftools
-            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
-            vcftools --freq --out ${filename}.${source_id}.frq --keep ${keep_ids} --gzvcf ${filename}
-
-            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting ..."
-            paste <(gzip -dc ${filename}| grep -v '##'| cut -f 3| tail -n+2) <(cut -f 5- ${filename}.${source_id}.frq.frq| tail -n+2| ${py} ${BASE_DIR}/script/frq2pg_array.py)| \
-                ${py} ${BASE_DIR}/script/filter.py --source-id ${source_id} > ${filename}.${source_id}.frq.frq.csv
-
-        elif [ "${FRQ_TOOL}" = "plink" ]; then
-            # plink
-            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
-            awk '{print $1,$1}' ${keep_ids} > tmp.keep_ids.fam
-            plink --vcf ${filename} --make-bed --keep tmp.keep_ids.fam --out tmp
-            plink --bfile tmp --freq --out ${filename}.${source_id}.frq
-            rm -f tmp.{bed,fam,log,bim,nosex,keep_ids.fam} ${filename}.${source_id}.{log,nosex}
-
-            echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting ..."
-            cat ${filename}.${source_id}.frq.frq| ${py} ${BASE_DIR}/script/plinkfrq2pg_array.py| \
-                ${py} ${BASE_DIR}/script/filter.py --source-id ${source_id} > ${filename}.${source_id}.frq.frq.csv
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Create .bed if not exists ..."
+        if [ ! -f ${filename}.bim ] || [ ! -f ${filename}.bed ] || [ ! -f ${filename}.fam ]; then
+            plink --vcf ${filename} --make-bed --out ${filename}
         fi
 
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
+        plink --bfile ${filename} --freq --keep ${keep_ids}.fam --out ${filename}.${source_id}
+
+        echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting and filtering..."
+        cat ${filename}.${source_id}.frq| \
+            ${py} ${BASE_DIR}/script/plinkfrq2pg_array.py| \
+            ${py} ${BASE_DIR}/script/filter.py --source-id ${source_id} \
+            > ${filename}.${source_id}.frq.csv
+
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ..."
-        cat ${filename}.${source_id}.frq.frq.csv| psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
+        cat ${filename}.${source_id}.frq.csv| psql $PG_DB $PG_USER -c "COPY AlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
     done;
 
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating constraints ..."
     psql $PG_DB $PG_USER -c "CREATE INDEX allelefreq_${source_id}_snp_id ON AlleleFreq_${source_id} (snp_id)" -q
 
     echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Updating snp_id_current ..."
+    psql $PG_DB $PG_USER -c "BEGIN; DELETE FROM allelefreq_${source_id} USING rsmergearch m WHERE snp_id = m.rshigh AND m.rscurrent IS NULL; COMMIT"
     psql $PG_DB $PG_USER -c "BEGIN; UPDATE allelefreq_${source_id} a SET snp_id = m.rscurrent FROM rsmergearch m WHERE a.snp_id = m.rshigh; COMMIT"
-    psql $PG_DB $PG_USER -c "BEGIN; DELETE FROM allelefreq_${source_id} WHERE snp_id IS NULL; COMMIT"
 
     psql $PG_DB $PG_USER -c "UPDATE allelefreqsource s SET status = 'ok' WHERE s.source_id = ${source_id}"
 
 done;
 
-# TODO: remove intermediate files
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Done"
