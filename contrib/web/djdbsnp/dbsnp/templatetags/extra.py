@@ -9,3 +9,12 @@ def css_class(value, arg):
 @register.filter
 def na(value):
     return value if value else 'N/A'
+
+@register.filter
+def fwd_or_rev(value):
+    if value == 0:
+        return 'Fwd'
+    elif value == 1:
+        return 'Rev'
+    else:
+        return 'N/A'

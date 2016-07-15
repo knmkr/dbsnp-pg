@@ -66,9 +66,13 @@ declare -A ref_code=( \
   ["GRCh38"]="107"
 )
 
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/OmimVarLocusIdSNP.bcp.gz{,.md5}                            # ~200 KB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/RsMergeArch.bcp.gz{,.md5}                                  # ~150 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/SNP.bcp.gz{,.md5}                                          # ~1.7 GB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/SNP3D.bcp.gz{,.md5}                                        #  ~18 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz{,.md5}      # ~141 KB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_MapLinkInfo_${ref_code[${ref}]}.bcp.gz{,.md5}     # ~970 KB
+wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_MapLink_${ref_code[${ref}]}.bcp.gz{,.md5}         # ~1.2 GB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz{,.md5}  # ~500 MB
 wget -c ftp.ncbi.nih.gov/snp/organisms/${ftp_name[${database}]}/database/organism_data/${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz{,.md5}    # ~3.3 GB
 wget -c ftp.ncbi.nih.gov/snp/database/shared_data/Allele.bcp.gz{,.md5}                                                                            #  ~70 MB
@@ -91,8 +95,10 @@ for src in *.gz; do
 done
 
 # Unifying bcp name
-cp ${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz ContigInfo.bcp.gz
+cp ${dbsnp}_ContigInfo_${ref_code[${ref}]}.bcp.gz     ContigInfo.bcp.gz
+cp ${dbsnp}_MapLinkInfo_${ref_code[${ref}]}.bcp.gz    MapLinkInfo.bcp.gz
+cp ${dbsnp}_MapLink_${ref_code[${ref}]}.bcp.gz        MapLink.bcp.gz
 cp ${dbsnp}_SNPChrPosOnRef_${ref_code[${ref}]}.bcp.gz SNPChrPosOnRef.bcp.gz
-cp ${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz SNPContigLoc.bcp.gz
+cp ${dbsnp}_SNPContigLoc_${ref_code[${ref}]}.bcp.gz   SNPContigLoc.bcp.gz
 
 echo "[INFO] Done"
