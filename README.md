@@ -2,7 +2,17 @@
 
 A PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
-[NCBI dbSNP is distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/). We simply ported original schema to PostgreSQL, and implemented query functions to get SNP information like in dbSNP website.
+Database schema of dbSNP is [distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/), however, [as mentioned in official handbook site](http://www.ncbi.nlm.nih.gov/books/NBK21088/#ch5.ch5_s6), it is not straightforward task to create a local copy of dbSNP:
+
+> How to Create a Local Copy of dbSNP
+> 
+> ...
+>
+> Due to security concerns and vendor endorsement issues, we cannot provide users with direct dumps of dbSNP. The task of creating a local copy of dbSNP can be complicated, and should be left to an experienced programmer. The following sections will guide you in the process of creating a local copy of dbSNP, but these instructions assume knowledge of relational databases, and were not written with the novice in mind.
+
+So we simply ported schema to PostgreSQL and created dumps of database, thus users can easily build local copy of dbSNP on non-windows platforms.
+
+Moreover, official FTP does not provide SQL queries to get SNP information from database. So we also implemented query functions to get SNP information like in dbSNP website.
 
 
 ## How to use
@@ -91,16 +101,17 @@ Then fetch data, create table, and import data:
 
 Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg/releases):
 
-    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.5/dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g}
-    $ cat dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g} > dbsnp.pg_dump
+    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.6/dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g,h,i}
+    $ cat dbsnp-b146-GRCh37-0.5.6.pg_dump.a{a,b,c,d,e,f,g,h,i} > dbsnp.pg_dump
     $ pg_restore -n public -d dbsnp_b146_GRCh37 dbsnp.pg_dump
 
 
 ## Software Requirements
 
-- PostgreSQL (>9.3 is preferred)
+- PostgreSQL (>9.1 is preferred)
 - Bash >4.x
-- wget, nkf
+- wget
+- nkf
 
 
 ## Unit Tests
