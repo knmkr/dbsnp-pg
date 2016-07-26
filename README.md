@@ -5,35 +5,6 @@ A PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 [NCBI dbSNP is distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/). We simply ported original schema to PostgreSQL, and implemented query functions to get SNP information like in dbSNP website.
 
 
-## How to install
-
-E.g.
-
-- dbSNP build: 146
-- reference genome build: GRCh37
-
-Create a new PostgreSQL user `dbsnp` and database `dbsnp_b146_GRCh37`
-
-    $ createuser dbsnp
-    $ createdb --owner=dbsnp dbsnp_b146_GRCh37
-
-### A. Build from resources
-
-Then fetch data, create table, and import data:
-
-    $ ./01_fetch_dbsnp.sh       -d b146 -r GRCh37 $PWD/data
-    $ ./02_drop_create_table.sh dbsnp_b146_GRCh37 dbsnp $PWD
-    $ ./03_import_data.sh       dbsnp_b146_GRCh37 dbsnp $PWD $PWD/data
-
-### B. Restore from pg_dump
-
-Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg/releases):
-
-    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.5/dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g}
-    $ cat dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g} > dbsnp.pg_dump
-    $ pg_restore -n public -d dbsnp_b146_GRCh37 dbsnp.pg_dump
-
-
 ## How to use
 
 ### Get chrom and position
@@ -94,6 +65,35 @@ AND risk_allele IS NOT NULL;
 ```
 
 See details in `contrib/gwascatalog`
+
+
+## How to install
+
+E.g.
+
+- dbSNP build: 146
+- reference genome build: GRCh37
+
+Create a new PostgreSQL user `dbsnp` and database `dbsnp_b146_GRCh37`
+
+    $ createuser dbsnp
+    $ createdb --owner=dbsnp dbsnp_b146_GRCh37
+
+### A. Build from resources
+
+Then fetch data, create table, and import data:
+
+    $ ./01_fetch_dbsnp.sh       -d b146 -r GRCh37 $PWD/data
+    $ ./02_drop_create_table.sh dbsnp_b146_GRCh37 dbsnp $PWD
+    $ ./03_import_data.sh       dbsnp_b146_GRCh37 dbsnp $PWD $PWD/data
+
+### B. Restore from pg_dump
+
+Or pg_restore from [pg_dump files (listed in the release page)](https://github.com/knmkr/dbsnp-pg/releases):
+
+    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.5/dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g}
+    $ cat dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g} > dbsnp.pg_dump
+    $ pg_restore -n public -d dbsnp_b146_GRCh37 dbsnp.pg_dump
 
 
 ## Software Requirements
