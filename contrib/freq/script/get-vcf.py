@@ -49,11 +49,6 @@ def main():
         rows = cur.fetchall()
         positions = rows
 
-    # TODO: Get rs id histories
-    histories = {}
-    for rsid in rsids:
-        histories[rsid] = [rsid]
-
     # TODO: DRY
     sample = {
         3: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt'),
@@ -101,29 +96,22 @@ def main():
             log(rsids[i], 'vcf record not found (error code NA3). chrom:{}, position:{}'.format(chrom, pos))
             sys.exit(0)
 
-        res_line = ''
+        founds = []
         for result in results:
             records = result.split('\t')
 
             # FIXME: need to handle multiple hits
             if records[0] == chrom and int(records[1]) == int(pos):
-                res_line = result
-                break
-        else:
+                founds.append(result)
+
+        if not founds:
             log(rsids[i], 'vcf record not found (error code NA1). chrom:{}, position:{}'.format(chrom, pos))
             sys.exit(0)
 
-        if records == ['']:
-            log(rsids[i], 'vcf record not found (error code NA2). chrom:{}, position:{}, id:rs{}'.format(chrom, pos))
-            sys.exit(0)
-
-        snp_id = get_rsid(records[2])
-        if not snp_id in histories[rsids[i]]:
-            continue
-
-        # Replace to rs ids in query
-        rec = res_line.split('\t')
-        print '\t'.join(rec[0:2] + ['rs' + str(rsids[i])] + rec[3:])
+        for found in founds:
+            # Replace to rs ids in query
+            rec = found.split('\t')
+            print '\t'.join(rec[0:2] + ['rs' + str(rsids[i])] + rec[3:])
 
 
 def log(rsid, msg):
