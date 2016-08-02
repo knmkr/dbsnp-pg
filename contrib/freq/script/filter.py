@@ -5,7 +5,7 @@ import sys
 import re
 import argparse
 
-def _rsid(text):
+def get_rsid(text):
     pattern = re.compile('rs(\d+)')
     rs_match = pattern.match(text)
 
@@ -21,7 +21,7 @@ def _main():
 
     for line in sys.stdin:
         record = line.strip().split('\t')
-        rsid = _rsid(record[0])
+        rsid = get_rsid(record[0])
         if not rsid:
             continue
         print '\t'.join([str(rsid)] + record[1:] + [args.source_id])
