@@ -10,6 +10,29 @@
             <h1>rs{{ rsid }}</h1>
           </div>
 
+          <table class="table">
+            <tr>
+              <th>Organism</th>
+              <td>
+                <a href="//www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id={{ dbsnp_taxonomy_id }}" target="_blank">
+                  <span class="label label-success">{{ dbsnp_organism }}</span>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <th>Validation Status</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Variation Class</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Clinical Significance</th>
+              <td></td>
+            </tr>
+          </table>
+
           <h3>Location</h3>
 
           <table class="table">

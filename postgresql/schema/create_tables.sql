@@ -44,9 +44,41 @@ CREATE TABLE SnpChrCode (
        NC_acc           varchar(16)
 );
 
+-- CREATE TABLE [SnpClassCode]
+-- (
+-- [code] [tinyint] NOT NULL ,
+-- [abbrev] [varchar](20) NOT NULL ,
+-- [descrip] [varchar](255) NOT NULL ,
+-- [display_str] [varchar](255) NULL
+-- )
+--
+-- TODO
+--
+
+-- CREATE TABLE [SnpValidationCode]
+-- (
+-- [code] [tinyint] NOT NULL ,
+-- [abbrev] [varchar](64) NOT NULL ,
+-- [descrip] [varchar](255) NOT NULL ,
+-- [create_time] [smalldatetime] NULL ,
+-- [last_updated_time] [smalldatetime] NULL
+-- )
+--
+-- TODO
+--
+
 
 -- Schema: ftp.ncbi.nih.gov:/snp/organisms/human_9606/database/organism_schema/human_9606_table.sql.gz
 -- Column Description: http://www.ncbi.nlm.nih.gov/projects/SNP/snp_db_table_description.cgi?t=<table_name>
+
+-- CREATE TABLE [BatchValCode]
+-- (
+-- [batch_id] [int] NOT NULL ,
+-- [validation_status] [tinyint] NOT NULL
+-- )
+--
+-- TODO
+--
 
 -- CREATE TABLE [OmimVarLocusIdSNP]
 -- (
@@ -160,6 +192,50 @@ CREATE TABLE SNP3D (
        var_color     integer    not null,
        var_label     integer    not null
 );
+
+-- CREATE TABLE [SNPClinSig]
+-- (
+-- [hgvs_g] [varchar](255) NULL ,
+-- [snp_id] [int] NULL ,
+-- [tested] [char](1) NULL ,
+-- [clin_sig_id] [int] NOT NULL ,
+-- [upd_time] [datetime] NOT NULL ,
+-- [clin_sig_id_by_rs] [int] NOT NULL
+-- )
+--
+-- TODO
+--
+
+-- CREATE TABLE [SNPVal]
+-- (
+-- [batch_id] [int] NOT NULL ,
+-- [snp_id] [int] NOT NULL
+-- )
+--
+-- TODO
+--
+
+-- CREATE TABLE [SNP_bitfield]
+-- (
+-- [snp_id] [int] NOT NULL ,
+-- [ver_code] [tinyint] NULL ,
+-- [link_prop_b1] [tinyint] NULL ,
+-- [link_prop_b2] [tinyint] NULL ,
+-- [gene_prop_b1] [tinyint] NULL ,
+-- [gene_prop_b2] [tinyint] NULL ,
+-- [map_prop] [tinyint] NULL ,
+-- [freq_prop] [tinyint] NULL ,
+-- [gty_prop] [tinyint] NULL ,
+-- [hapmap_prop] [tinyint] NULL ,
+-- [pheno_prop] [tinyint] NULL ,
+-- [variation_class] [tinyint] NOT NULL ,
+-- [quality_check] [tinyint] NULL ,
+-- [upd_time] [datetime] NOT NULL ,
+-- [encoding] [binary] NULL
+-- )
+--
+-- TODO
+--
 
 -- CREATE TABLE [b144_ContigInfo_105]              -- ContigInfo has the information for each contig the snp has mapped to. All position is 0 based.
 -- (

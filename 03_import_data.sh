@@ -21,7 +21,7 @@ else
   exit 1
 fi
 
-target=(Allele SnpChrCode RsMergeArch SNP ContigInfo MapLinkInfo MapLink SNPChrPosOnRef SNPContigLoc OmimVarLocusIdSNP SNP3D)
+target=(Allele SnpChrCode RsMergeArch SNP ContigInfo MapLinkInfo MapLink SNPChrPosOnRef SNPContigLoc OmimVarLocusIdSNP SNP3D SnpValidationCode SNPVal BatchValCode SnpClassCode SNP_bitfield ClinSigCode SNPClinSig)
 
 echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing data..."
 echo "[INFO] database_name: ${PG_DB}, database_user: ${PG_USER}, base_dir: ${BASE_DIR}, data_dir: ${DATA_DIR}"

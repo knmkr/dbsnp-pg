@@ -26,6 +26,8 @@ def snps(request):
 def snp(request, rsid):
     context = {
         'rsid': int(rsid),
+        'dbsnp_organism': settings.DBSNP_ORGANISM,
+        'dbsnp_taxonomy_id': settings.DBSNP_TAXONOMY_ID,
         'dbsnp_build': settings.DBSNP_BUILD,
         'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
     }

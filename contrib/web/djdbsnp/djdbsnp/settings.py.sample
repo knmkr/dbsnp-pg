@@ -73,6 +73,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'djdbsnp.wsgi.application'
 
 # dbsnp
+DBSNP_ORGANISM = 'human'
+DBSNP_TAXONOMY_ID = '9606'
 DBSNP_BUILD = 'b146'
 DBSNP_REF_GENOME_BUILD = 'GRCh37.p13'
 DBSNP_DB_NAME = 'dbsnp_b146_GRCh37'
