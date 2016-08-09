@@ -11,9 +11,6 @@
 *.py[cod]
 __pycache__/
 
-# web
-settings.py
-
 # deploy
 .vagrant
 hosts
