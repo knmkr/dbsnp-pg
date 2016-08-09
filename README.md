@@ -7,7 +7,7 @@ A PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 Database schema of dbSNP is [distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/), however, [as mentioned in official handbook site](http://www.ncbi.nlm.nih.gov/books/NBK21088/#ch5.ch5_s6), it is not straightforward task to create a local copy of dbSNP:
 
 > How to Create a Local Copy of dbSNP
-> 
+>
 > ...
 >
 > Due to security concerns and vendor endorsement issues, we cannot provide users with direct dumps of dbSNP. The task of creating a local copy of dbSNP can be complicated, and should be left to an experienced programmer. The following sections will guide you in the process of creating a local copy of dbSNP, but these instructions assume knowledge of relational databases, and were not written with the novice in mind.
@@ -95,7 +95,7 @@ Create a new PostgreSQL user `dbsnp` and database `dbsnp_b146_GRCh37`
 
 Download [pg_dump files from Relases pages](https://github.com/knmkr/dbsnp-pg/releases)
 
-    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.6/dbsnp-b146-GRCh37-0.5.5.pg_dump.a{a,b,c,d,e,f,g,h,i}
+    $ wget -c https://github.com/knmkr/dbsnp-pg/releases/download/0.5.6/dbsnp-b146-GRCh37-0.5.6.pg_dump.a{a,b,c,d,e,f,g,h,i}
     $ cat dbsnp-b146-GRCh37-0.5.6.pg_dump.a{a,b,c,d,e,f,g,h,i} > dbsnp.pg_dump
 
 Then restore database
