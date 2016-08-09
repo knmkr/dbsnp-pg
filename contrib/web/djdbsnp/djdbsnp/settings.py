@@ -15,18 +15,12 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'SECRET_KEY'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'SECRET_SECRET_SECRET_SECRET_SECRET'
+DEBUG = os.environ.get('DJANGO_DEBUG') or False
+ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS') or '127.0.0.1']
 
 # Application definition
 
@@ -73,12 +67,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'djdbsnp.wsgi.application'
 
 # dbsnp
-DBSNP_BUILD = 'b146'
-DBSNP_REF_GENOME_BUILD = 'GRCh37.p13'
-DBSNP_DB_NAME = 'dbsnp_b146_GRCh37'
-DBSNP_DB_USER= 'dbsnp'
-DBSNP_DB_HOST = '127.0.0.1'
-DBSNP_DB_PORT = '5432'
+DBSNP_DB_NAME = os.environ.get('DBSNP_DB_NAME') or 'dbsnp_b146_GRCh37'
+DBSNP_DB_USER = os.environ.get('DBSNP_DB_USER') or 'dbsnp'
+DBSNP_DB_PASS = os.environ.get('DBSNP_DB_PASS') or 'dbsnp'
+DBSNP_DB_HOST = os.environ.get('DBSNP_DB_HOST') or '127.0.0.1'
+DBSNP_DB_PORT = os.environ.get('DBSNP_DB_PORT') or '5432'
+DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or 'b146'
+DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or 'GRCh37.p13'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -86,15 +81,17 @@ DBSNP_DB_PORT = '5432'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djdbsnp',
-        'USER': 'dbsnp',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': DBSNP_DB_NAME,
+        'USER': DBSNP_DB_USER,
+        'PASSWORD': DBSNP_DB_PASS,
+        'HOST': DBSNP_DB_HOST,
+        'PORT': DBSNP_DB_PORT,
     },
     'dbsnp': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': DBSNP_DB_NAME,
         'USER': DBSNP_DB_USER,
+        'PASSWORD': DBSNP_DB_PASS,
         'HOST': DBSNP_DB_HOST,
         'PORT': DBSNP_DB_PORT,
     }
