@@ -108,13 +108,56 @@ Then restore database
     $ ./02_drop_create_table.sh dbsnp_b146_GRCh37 dbsnp $PWD
     $ ./03_import_data.sh       dbsnp_b146_GRCh37 dbsnp $PWD $PWD/data
 
+This option requires Bash >4.x, and `wget`, `nkf`.
 
-## Software Requirements
 
-- PostgreSQL (>9.1 is preferred)
-- Bash >4.x
-- wget
-- nkf
+## Requirements
+
+### PostgreSQL version
+
+No limitation. Currently, tested on 9.4.
+
+### Disk usage
+
+Disk usage of whole database is about 58GB (v0.5.6 on Amazon RDS)
+
+```
+=> \dti+
+                                       List of relations
+ Schema |          Name          | Type  | Owner |       Table       |    Size    | Description
+--------+------------------------+-------+-------+-------------------+------------+-------------
+ public | allele                 | table | dbsnp |                   | 509 MB     |
+ public | allele_pkey            | index | dbsnp | allele            | 107 MB     |
+ public | contiginfo             | table | dbsnp |                   | 912 kB     |
+ public | contiginfo_ukey_ctg    | index | dbsnp | contiginfo        | 136 kB     |
+ public | i_rev_allele_id        | index | dbsnp | allele            | 107 MB     |
+ public | i_rs                   | index | dbsnp | snp               | 3224 MB    |
+ public | i_rsh                  | index | dbsnp | rsmergearch       | 250 MB     |
+ public | i_rsl                  | index | dbsnp | rsmergearch       | 250 MB     |
+ public | maplink                | table | dbsnp |                   | 7243 MB    |
+ public | maplink_snp_id         | index | dbsnp | maplink           | 1291 MB    |
+ public | maplinkinfo            | table | dbsnp |                   | 10216 kB   |
+ public | maplinkinfo_gi         | index | dbsnp | maplinkinfo       | 2392 kB    |
+ public | omimvar_snp_id         | index | dbsnp | omimvarlocusidsnp | 432 kB     |
+ public | omimvarlocusidsnp      | table | dbsnp |                   | 1776 kB    |
+ public | rsmergearch            | table | dbsnp |                   | 915 MB     |
+ public | snp                    | table | dbsnp |                   | 12 GB      |
+ public | snp3d                  | table | dbsnp |                   | 184 MB     |
+ public | snp3d_snp_id           | index | dbsnp | snp3d             | 19 MB      |
+ public | snpchrcode             | table | dbsnp |                   | 8192 bytes |
+ public | snpchrcode_ukey_code   | index | dbsnp | snpchrcode        | 16 kB      |
+ public | snpchrposonref         | table | dbsnp |                   | 7483 MB    |
+ public | snpchrposonref_chr_pos | index | dbsnp | snpchrposonref    | 3233 MB    |
+ public | snpchrposonref_ukey_rs | index | dbsnp | snpchrposonref    | 3224 MB    |
+ public | snpcontigloc           | table | dbsnp |                   | 15 GB      |
+ public | snpcontigloc_rs_ctg    | index | dbsnp | snpcontigloc      | 3317 MB    |
+ 
+=> \l+
+                                                                     List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   |   Size    | Tablespace |                Description
+-----------+----------+----------+-------------+-------------+-----------------------+-----------+------------+--------------------------------------------
+ ebdb      | dbsnp    | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 58 GB     | pg_default |
+```
 
 
 ## Data Resources
