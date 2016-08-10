@@ -192,11 +192,16 @@ Requirements:
   - [pg_prove (a command-line tool for running and harnessing pgTAP tests)](http://search.cpan.org/dist/TAP-Parser-SourceHandler-pgTAP/)
 
 
-## Software Licenses
+## Software License
 
-See `LICENSE.txt`
+&copy; 2014 Kensuke Numakura
 
-- **dbsnp-pg**: Copyright (c) 2014,2015,2016 Kensuke Numakura
+dbsnp-pg is licensed under the GNU AGPLv3.0. See details in `LICENSE.txt`
+
+![agplv3](https://www.gnu.org/graphics/agplv3-88x31.png)
+
+### OSS Notice
+
 - **termcolor**: Copyright (c) 2008-2011 Volvox Development Team
 
 
