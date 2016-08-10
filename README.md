@@ -117,20 +117,6 @@ Then restore database
 - nkf
 
 
-## Unit Tests
-
-To run tests:
-
-```
-$ cd test
-$ ./run-test.sh $test_db $test_user
-```
-
-Requirements:
-  - PostgreSQL extension: [pgTAP (a unit testing framework for PostgreSQL)](http://pgtap.org/)
-  - [pg_prove (a command-line tool for running and harnessing pgTAP tests)](http://search.cpan.org/dist/TAP-Parser-SourceHandler-pgTAP/)
-
-
 ## Data Resources
 
 - **Database of Single Nucleotide Polymorphisms (dbSNP).** Bethesda (MD): National Center for Biotechnology Information, National Library of Medicine. (dbSNP Build ID: b144,146,147).
@@ -147,6 +133,20 @@ Available from: http://www.ncbi.nlm.nih.gov/SNP/
 
 - Only human [taxonomy id: 9606] data is supported.
 - Builds of dbSNP and human references genome are depend on the releases on the NCBI FTP.
+
+
+## Unit Tests
+
+To run tests:
+
+```
+$ cd test
+$ ./run-test.sh $test_db $test_user
+```
+
+Requirements:
+  - PostgreSQL extension: [pgTAP (a unit testing framework for PostgreSQL)](http://pgtap.org/)
+  - [pg_prove (a command-line tool for running and harnessing pgTAP tests)](http://search.cpan.org/dist/TAP-Parser-SourceHandler-pgTAP/)
 
 
 ## Software Licenses
