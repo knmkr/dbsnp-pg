@@ -10,7 +10,7 @@ echo "[contrib/freq] [INFO] Fetching data..."
 # 1000 genomes phase1
 mkdir -p 1000genomes.phase1
 cd 1000genomes.phase1
-wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.chr{{1..22},X}.phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz{,.tbi}
+# wget -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20110521/ALL.chr{{1..22},X}.phase1_release_v3.20101123.snps_indels_svs.genotypes.vcf.gz{,.tbi}
 
 cd ..
 
