@@ -6,11 +6,13 @@
 ## How to use
 
 ```
-=> SELECT * FROM AlleleFreqSource;
- source_id |      project         |  populations  | genome_build
------------+----------------------+---------------+--------------
-         4 | 1000 Genomes Phase 3 | {CHB,JPT,CHS} | b37
-...
+=> SELECT * FROM AlleleFreqSource WHERE status = 'ok';
+ source_id |       project        |  populations  | genome_build | status |          display_name
+-----------+----------------------+---------------+--------------+--------+---------------------------------
+         4 | 1000 Genomes Phase 3 | {CHB,JPT,CHS} | b37          | ok     | 1000 Genomes Phase3 CHB+JPT+CHS
+       100 | 1000 Genomes Phase 3 | {CEU}         | b37          | ok     | 1000 Genomes Phase3 CEU
+       200 | 1000 Genomes Phase 3 | {YRI}         | b37          | ok     | 1000 Genomes Phase3 YRI
+       300 | 1000 Genomes Phase 3 | {Global}      | b37          | ok     | 1000 Genomes Phase3 Global
 
 => SELECT * FROM get_tbl_allele_freq_by_rs_history(4, ARRAY[671, 2230021]);
   snp_id  | snp_current | snp_in_source | allele |      freq
