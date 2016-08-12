@@ -44,6 +44,8 @@ Moreover, official FTP does not provide SQL queries to get SNP information from 
 
 ### Get allele frequency
 
+See details in [contrib/freq](https://github.com/knmkr/dbsnp-pg/tree/master/contrib/freq)
+
 ```
 => SELECT * FROM get_allele_freq(3, ARRAY[671, 2230021]);
 
@@ -53,9 +55,9 @@ Moreover, official FTP does not provide SQL queries to get SNP information from 
  2230021 |         671 | {A,G}  | {0.2168,0.7832}
 ```
 
-See details in `contrib/freq`
-
 ### Get GWAS Catalog data
+
+See details in [contrib/gwascatalog](https://github.com/knmkr/dbsnp-pg/tree/master/contrib/gwascatalog)
 
 ```
 => SELECT pubmed_id, disease_or_trait, snp_id, risk_allele, odds_ratio_or_beta_coeff
@@ -73,8 +75,6 @@ AND risk_allele IS NOT NULL;
   22797727 | Renal function-related traits (sCR)       |    671 | A           |                        0
   24861553 | Body mass index                           |    671 | G           |                     0.04
 ```
-
-See details in `contrib/gwascatalog`
 
 
 ## How to install
@@ -108,7 +108,7 @@ Then restore database
     $ ./02_drop_create_table.sh dbsnp_b146_GRCh37 dbsnp $PWD
     $ ./03_import_data.sh       dbsnp_b146_GRCh37 dbsnp $PWD $PWD/data
 
-This option requires Bash >4.x, and `wget`, `nkf`.
+This option requires Bash >4.x, `wget`, and `nkf`.
 
 
 ## Requirements
