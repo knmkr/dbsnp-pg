@@ -8,7 +8,7 @@ PG_USER=$2
 BASE_DIR=$3
 DATA_DIR=$4
 
-source_ids=(3 4 100 200 300)
+source_ids=(4 100 200 300)
 
 # TODO: Avoid hardcoding source_ids
 declare -A source_id2filename=( \
