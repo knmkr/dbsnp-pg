@@ -7,9 +7,9 @@
 
 ```
 => SELECT * FROM AlleleFreqSource;
- source_id |      project       |  populations  | genome_build
------------+--------------------+---------------+--------------
-         4 | 1000genomes_phase3 | {CHB,JPT}     | b37
+ source_id |      project         |  populations  | genome_build
+-----------+----------------------+---------------+--------------
+         4 | 1000 Genomes Phase 3 | {CHB,JPT,CHS} | b37
 ...
 
 => SELECT * FROM get_tbl_allele_freq_by_rs_history(2, ARRAY[671, 2230021, 4134524, 4986830, 60823674]);
