@@ -33,7 +33,7 @@ Moreover, official FTP does not provide SQL queries to get SNP information from 
 ### Get current rs ID
 
 ```
-=> SELECT * FROM get_current_rs(ARRAY[1,2,3,671,2230021]);
+=> SELECT * FROM get_current_rs(ARRAY[3,671,2230021]);
 
  snp_id  | snp_valid | snp_merged_into | snp_current
 ---------+-----------+-----------------+-------------
