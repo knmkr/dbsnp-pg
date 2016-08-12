@@ -47,7 +47,13 @@ Moreover, official FTP does not provide SQL queries to get SNP information from 
 See details in [contrib/freq](https://github.com/knmkr/dbsnp-pg/tree/master/contrib/freq)
 
 ```
-=> SELECT * FROM get_allele_freq(3, ARRAY[671, 2230021]);
+=> SELECT * FROM AlleleFreqSource WHERE project = '1000 Genomes Phase 3' AND populations = '{CHB,JPT,CHS}';
+
+ source_id |       project        |  populations  | genome_build | status |          display_name
+-----------+----------------------+---------------+--------------+--------+---------------------------------
+         4 | 1000 Genomes Phase 3 | {CHB,JPT,CHS} | b37          | ok     | 1000 Genomes Phase3 CHB+JPT+CHS
+
+=> SELECT * FROM get_allele_freq(4, ARRAY[671, 2230021]);
 
  snp_id  | snp_current | allele |      freq
 ---------+-------------+--------+-----------------
