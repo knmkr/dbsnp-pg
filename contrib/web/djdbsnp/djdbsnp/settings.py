@@ -74,6 +74,7 @@ DBSNP_DB_HOST = os.environ.get('DBSNP_DB_HOST') or '127.0.0.1'
 DBSNP_DB_PORT = os.environ.get('DBSNP_DB_PORT') or '5432'
 DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or 'b146'
 DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or 'GRCh37.p13'
+DBSNP_QUERY_COUNTS_LIMIT = 30
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

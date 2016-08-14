@@ -22,7 +22,21 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
 
+
           <h2 class="sub-header">Results</h2>
+
+          <!-- Form validation messages -->
+          {% if form.errors %}
+            {% for key,msgs in form.errors.items %}
+              {% for msg in msgs %}
+              <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Form input erorr in {{ key }}: {{ msg }}
+              </div>
+              {% endfor %}
+            {% endfor %}
+          {% else %}
 
           <!-- Nav tabs -->
           <ul class="nav nav-tabs" role="tablist">
@@ -85,6 +99,7 @@
             </div>
 
           </div>
+          {% endif %}
 
         </div>
       </div>

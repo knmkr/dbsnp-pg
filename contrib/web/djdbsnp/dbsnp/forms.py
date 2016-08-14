@@ -1,3 +1,4 @@
+from django.conf import settings
 from django import forms
 from .models import SNP
 
@@ -22,5 +23,8 @@ class SnpsForm(forms.Form):
             data_cleaned = [int(line.replace('rs', '')) for line in lines]
         except ValueError:
             raise forms.ValidationError("Invalid rs IDs")
+
+        if len(data_cleaned) > settings.DBSNP_QUERY_COUNTS_LIMIT:
+            raise forms.ValidationError("Number of query exceeds soft limit {}".format(settings.DBSNP_QUERY_COUNTS_LIMIT))
 
         return data_cleaned
