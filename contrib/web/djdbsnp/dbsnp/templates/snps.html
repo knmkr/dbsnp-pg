@@ -22,7 +22,7 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
 
-
+          {% if form.data %}
           <h2 class="sub-header">Results</h2>
 
           <!-- Form validation messages -->
@@ -37,7 +37,6 @@
               {% endfor %}
             {% endfor %}
           {% else %}
-
           <!-- Nav tabs -->
           <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#chr_pos" aria-controls="chr_pos" role="tab" data-toggle="tab">Position (GRCh37.p13)</a></li>
@@ -99,6 +98,7 @@
             </div>
 
           </div>
+          {% endif %}
           {% endif %}
 
         </div>

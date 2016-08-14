@@ -10,15 +10,17 @@ def index(request):
     return redirect(snps)
 
 def snps(request):
-    form = SnpsForm(request.POST)
+    form = SnpsForm()
     context = {'form': form}
 
     if request.method == "POST":
+        form = SnpsForm(request.POST)
         if form.is_valid():
             af_population = form.cleaned_data.get('af_population')
             rsids = form.cleaned_data.get('rsids')
             context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids)
             context['chr_pos'] = SNP.get_pos_by_rs(rsids)
+        context['form'] = form
 
     return render(request, 'snps.html', context)
 
