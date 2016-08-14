@@ -22,9 +22,9 @@ class SnpsForm(forms.Form):
         data_cleaned = []
         try:
             for line in lines:
-                li = line.strip()
-                if li:
-                    data_cleaned.append(int(li.replace('rs', '')))
+                text = line.strip()
+                if text:
+                    data_cleaned.append(rsid(text))
         except ValueError:
             raise forms.ValidationError("Invalid rs IDs")
 
@@ -32,3 +32,10 @@ class SnpsForm(forms.Form):
             raise forms.ValidationError("Number of query exceeds soft limit {}".format(settings.DBSNP_QUERY_COUNTS_LIMIT))
 
         return data_cleaned
+
+def rsid(text):
+    num = text.replace('rs', '')
+    if len(num) > 9:
+        raise ValueError()
+
+    return int(num)
