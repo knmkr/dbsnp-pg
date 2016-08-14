@@ -19,8 +19,12 @@ class SnpsForm(forms.Form):
         data = self.cleaned_data['rsids']
         lines = data.splitlines()
 
+        data_cleaned = []
         try:
-            data_cleaned = [int(line.replace('rs', '')) for line in lines]
+            for line in lines:
+                li = line.strip()
+                if li:
+                    data_cleaned.append(int(li.replace('rs', '')))
         except ValueError:
             raise forms.ValidationError("Invalid rs IDs")
 
