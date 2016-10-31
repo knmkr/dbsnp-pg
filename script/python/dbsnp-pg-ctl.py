@@ -76,6 +76,9 @@ def init_demo(args):
                     run('./03_import_data.sh       {db_name} {db_user} {src} {src}/test/data'.format(**context))
 
         log.info('Done')
+        log.info(colored('New demo database created: {}'.format(args.demo_db_name),      'blue', attrs=['bold']))
+        log.info('To connect via psql, run:')
+        log.info(colored('$ psql {} -U {}'.format(args.demo_db_name, args.demo_db_user), 'blue', attrs=['bold']))
 
 if __name__ == '__main__':
     main()
