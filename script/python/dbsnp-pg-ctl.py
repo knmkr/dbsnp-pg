@@ -23,13 +23,17 @@ def main():
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(VERSION))
     parser.add_argument('--dbsnp-build', default=DBSNP_DEFAULT, choices=DBSNP_BUILDS, help='dbSNP build ID')
     parser.add_argument('--genome-build', default=GENOME_DEFAULT, choices=GENOME_BUILDS, help='reference genome build ID')
+    parser.add_argument('--prefix', default='dbsnp', help='prefix for database name')
 
     subparsers = parser.add_subparsers()
+
     parser_restore = subparsers.add_parser('restore', help='restore database from pg_dump')
     parser_restore.add_argument('--tag', default=VERSION, help='dbsnp-pg release tag')
     parser_restore.set_defaults(func=restore)
+
     parser_build = subparsers.add_parser('build', help='build database from resources')
     parser_build.set_defaults(func=build)
+
     parser_init_demo = subparsers.add_parser('init-demo', help='init demo database')
     parser_init_demo.add_argument('--demo-db-name', default='dbsnp_demo', help='demo database name')
     parser_init_demo.add_argument('--demo-db-user', default='dbsnp_demo', help='demo database user')
@@ -42,15 +46,17 @@ def restore(args):
     context = {
         'dbsnp_build': args.dbsnp_build,
         'genome_build': args.genome_build,
+        'prefix': args.prefix,
         'tag': args.tag,
     }
-    context['db_name'] = 'dbsnp_{dbsnp_build}_{genome_build}'.format(**context)
+    context['db_src_name'] = 'dbsnp_{dbsnp_build}_{genome_build}'.format(**context)
+    context['db_name'] = '{prefix}_{dbsnp_build}_{genome_build}'.format(**context)
     context['db_user'] = 'dbsnp'
     log.info(colored(pformat(context), 'blue'))
 
     with cd(DBSNP_HOME):
         force('createuser {db_user}'.format(**context))
-        run('./script/pg_restore.sh {db_name} {db_user} {tag}'.format(**context))
+        run('./script/pg_restore.sh {db_src_name} {db_name} {db_user} {tag}'.format(**context))
 
     log.info('Done')
     log.info('To connect via psql, run:')
@@ -62,8 +68,9 @@ def build(args):
     context = {
         'dbsnp_build': args.dbsnp_build,
         'genome_build': args.genome_build,
+        'prefix': args.prefix,
     }
-    context['db_name'] = 'dbsnp_{dbsnp_build}_{genome_build}'.format(**context)
+    context['db_name'] = '{prefix}_{dbsnp_build}_{genome_build}'.format(**context)
     context['db_user'] = 'dbsnp'
     log.info(colored(pformat(context), 'blue'))
 
