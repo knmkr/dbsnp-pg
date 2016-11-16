@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION get_allele_freq(
   OUT snp_current int,
   OUT allele varchar[],
   OUT freq real[],
-  OUT freqx real[]
+  OUT freqx integer[]
 ) RETURNS SETOF RECORD AS $$
 BEGIN
   RETURN QUERY (
