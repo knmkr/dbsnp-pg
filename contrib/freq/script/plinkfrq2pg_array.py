@@ -9,9 +9,41 @@ def mustache(x):
     return '{' + ','.join(x) + '}'
 
 for line in sys.stdin:
+    # .frq (basic allele frequency report)
+    # Produced by --freq. Valid input for --read-freq.
+    #
+    # A text file with a header line, and then one line per variant with the following six fields:
+    #
+    #   CHR      Chromosome code
+    #   SNP      Variant identifier
+    #   A1       Allele 1 (usually minor)
+    #   A2       Allele 2 (usually major)
+    #   MAF      Allele 1 frequency
+    #   NCHROBS  Number of allele observations
+
+    # E.g.
+    #
     # [.frq]
     # CHR     SNP   A1   A2          MAF  NCHROBS
     # 12   rs671    A    G      0.03591     4984
+
+    # .frqx (genotype count report)
+    # Produced by --freqx. Valid input for --read-freq.
+    #
+    # A text file with a header line, and then one line per variant with the following ten fields:
+    #
+    #   CHR         Chromosome code
+    #   SNP         Variant identifier
+    #   A1          Allele 1 (usually minor)
+    #   A2          Allele 2 (usually major)
+    #   C(HOM A1)   A1 homozygote count
+    #   C(HET)      Heterozygote count
+    #   C(HOM A2)   A2 homozygote count
+    #   C(HAP A1)   Haploid A1 count (includes male X chromosome)
+    #   C(HAP A2)   Haploid A2 count
+    #   C(MISSING)  Missing genotype count
+
+    # E.g.
     #
     # [.frqx]
     # CHR	SNP	A1	A2	C(HOM A1)	C(HET)	C(HOM A2)	C(HAP A1)	C(HAP A2)	C(MISSING)
