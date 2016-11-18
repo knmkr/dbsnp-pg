@@ -1,4 +1,5 @@
 import logging
+from decimal import *
 
 from django.db import models
 from django.db import connections
@@ -48,9 +49,19 @@ class SNP(models.Model):
         with connections['dbsnp'].cursor() as c:
             try:
                 c.execute('SELECT * FROM get_allele_freq(%s, %s)', (source_id, rsids,))
-                row = dictfetchall(c)
-                assert_query_ids_eq_result_ids(rsids, row)
-                return row
+                rows = dictfetchall(c)
+                assert_query_ids_eq_result_ids(rsids, rows)
+
+                records = []
+                for row in rows:
+                    record = {}
+                    gt_count = Decimal(row['freqx'][0] + row['freqx'][1] + row['freqx'][2])
+                    record['a1_hom_freq']    = '{0: .4f}'.format(Decimal(row['freqx'][0]) / gt_count)
+                    record['a1_a2_het_freq'] = '{0: .4f}'.format(Decimal(row['freqx'][1]) / gt_count)
+                    record['a2_hom_freq']    = '{0: .4f}'.format(Decimal(row['freqx'][2]) / gt_count)
+                    record.update(row)
+                    records.append(record)
+                return records
             except Exception as e:
                 log.warn(e)
                 return []

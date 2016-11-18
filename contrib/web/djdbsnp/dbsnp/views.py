@@ -6,6 +6,7 @@ from django.conf import settings
 from .models import SNP
 from .forms import SnpsForm
 
+
 def index(request):
     return redirect(snps)
 
