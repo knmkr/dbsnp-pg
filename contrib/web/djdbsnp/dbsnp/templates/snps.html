@@ -15,13 +15,28 @@
             <div class="form-group">
               <label for="id_af_population">Allele frequency source population</label>
               {{ form.af_population| css_class:"form-control" }}
-
+            </div>
+            <div class="form-group">
+              <label for="id_af_order">Allele order</label>
+              <div class="radio">
+                {% for radio in form.af_order %}
+                <label for="{{ radio.id_for_label }}">
+                  {{ radio.tag }} {{ radio.choice_label }}
+                </label>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="form-group">
               <label for="id_rsids">rs IDs</label>
               {{ form.rsids| css_class:"form-control" }}
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
           </form>
+        </div>
+      </div>
 
+      <div class="row">
+        <div class="col-md-8">
           {% if form.data %}
           <h2 class="sub-header">Results</h2>
 
@@ -48,20 +63,24 @@
             <div role="tabpanel" class="tab-pane active" id="chr_pos">
               {% if chr_pos %}
               <table class="table table-striped">
-                <tr>
-                  <th>rs ID</th>
-                  <th>Current rs ID</th>
-                  <th>Chrom</th>
-                  <th>Position</th>
-                </tr>
-                {% for pos in chr_pos %}
-                <tr>
-                  <th><a href="{% url 'snp' pos.snp_id %}">{{ pos.snp_id| na }}</a></th>
-                  <th>{{ pos.snp_current| na }}</th>
-                  <th>{{ pos.chr| na }}</th>
-                  <th>{{ pos.pos| na }}</th>
-                </tr>
-                {% endfor %}
+                <thead>
+                  <tr>
+                    <th>rs ID (Query)</th>
+                    <th>rs ID (Current)</th>
+                    <th>Chrom</th>
+                    <th>Position</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for pos in chr_pos %}
+                  <tr>
+                    <td><a href="{% url 'snp' pos.snp_id %}">{{ pos.snp_id| na }}</a></td>
+                    <td>{{ pos.snp_current| na }}</td>
+                    <td>{{ pos.chr| na }}</td>
+                    <td>{{ pos.pos| na }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
               </table>
               {% else %}
               <div class="alert alert-warning" role="alert">
@@ -72,23 +91,54 @@
 
             <div role="tabpanel" class="tab-pane" id="af">
               {% if allele_freqs %}
-              <table class="table table-striped">
-                <tr>
-                  <th>rs ID</th>
-                  <th>Current rs ID</th>
-                  <th>Allele 1</th>
-                  <th>Allele 2</th>
-                  <th>Allele 1 Freq</th>
-                </tr>
-                {% for af in allele_freqs %}
-                <tr>
-                  <th>{{ af.snp_id }}</th>
-                  <th>{{ af.snp_current| na }}</th>
-                  <th>{{ af.allele.0| na }}</th>
-                  <th>{{ af.allele.1| na }}</th>
-                  <td>{{ af.freq.0| na }}</td>
-                </tr>
-                {% endfor %}
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="2">SNP</th>
+                    <th colspan="2">Allele</th>
+                    <th colspan="2">Allele Freq</th>
+                    <th colspan="3">Genotype Freq</th>
+                    <th colspan="6">Genotype Count</th>
+                  </tr>
+                  <tr>
+                    <th>rs ID (Query)</th>
+                    <th>rs ID (Current)</th>
+                    <th>A1</th>
+                    <th>A2</th>
+                    <th>A1 Freq</th>
+                    <th>A2 Freq</th>
+                    <th>A1 Hom Freq</th>
+                    <th>A1/2 Het Freq</th>
+                    <th>A2 Hom Freq</th>
+                    <th>A1 Hom Count</th>
+                    <th>A1/2 Het Count</th>
+                    <th>A2 Hom Count</th>
+                    <th>A1 Hap Count</th>
+                    <th>A2 Hap Count</th>
+                    <th>Missing GT Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for af in allele_freqs %}
+                  <tr>
+                    <td>{{ af.snp_id }}</td>
+                    <td>{{ af.snp_current| na }}</td>
+                    <td>{{ af.allele.0| na }}</td>
+                    <td>{{ af.allele.1| na }}</td>
+                    <td>{{ af.freq.0| na }}</td>
+                    <td>{{ af.freq.1| na }}</td>
+                    <td>{{ af.a1_hom_freq| na }}</td>
+                    <td>{{ af.a1_a2_het_freq| na }}</td>
+                    <td>{{ af.a2_hom_freq| na }}</td>
+                    <td>{{ af.freqx.0| na }}</td>
+                    <td>{{ af.freqx.1| na }}</td>
+                    <td>{{ af.freqx.2| na }}</td>
+                    <td>{{ af.freqx.3| na }}</td>
+                    <td>{{ af.freqx.4| na }}</td>
+                    <td>{{ af.freqx.5| na }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
               </table>
               {% else %}
               <div class="alert alert-warning" role="alert">

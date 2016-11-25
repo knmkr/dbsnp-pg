@@ -6,6 +6,7 @@ from django.conf import settings
 from .models import SNP
 from .forms import SnpsForm
 
+
 def index(request):
     return redirect(snps)
 
@@ -18,7 +19,8 @@ def snps(request):
         if form.is_valid():
             af_population = form.cleaned_data.get('af_population')
             rsids = form.cleaned_data.get('rsids')
-            context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids)
+            af_order = form.cleaned_data.get('af_order')
+            context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids, af_order)
             context['chr_pos'] = SNP.get_pos_by_rs(rsids)
         context['form'] = form
 

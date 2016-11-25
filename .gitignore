@@ -25,3 +25,6 @@ hosts
 data/
 !test/data/
 release/
+
+# bin dir
+bin/plink

@@ -11,21 +11,23 @@ from cmd import run, force, cd
 from log import Logger
 log = Logger(__name__)
 
-VERSION = '0.5.4'
 DBSNP_HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DBSNP_BUILDS = ['b147', 'b146', 'b144']
 DBSNP_DEFAULT = 'b146'
 GENOME_BUILDS = ['GRCh38', 'GRCh37']
 GENOME_DEFAULT = 'GRCh37'
+VERSION = open(os.path.join(DBSNP_HOME, 'VERSION')).readline().strip()
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--version', action='version', version='%(prog)s {}'.format(VERSION))
+    parser.add_argument('--dbsnp-build', default=DBSNP_DEFAULT, choices=DBSNP_BUILDS, help='dbSNP build ID')
+    parser.add_argument('--genome-build', default=GENOME_DEFAULT, choices=GENOME_BUILDS, help='reference genome build ID')
+    parser.add_argument('--prefix', default='dbsnp', help='prefix for database name')
+
     subparsers = parser.add_subparsers()
 
     parser_restore = subparsers.add_parser('restore', help='restore database from pg_dump')
-    parser_restore.add_argument('--dbsnp-build', default=DBSNP_DEFAULT, choices=DBSNP_BUILDS, help='dbSNP build ID')
-    parser_restore.add_argument('--genome-build', default=GENOME_DEFAULT, choices=GENOME_BUILDS, help='reference genome build ID')
     parser_restore.add_argument('--tag', default=VERSION, help='dbsnp-pg release tag')
     parser_restore.set_defaults(func=restore)
 
@@ -44,24 +46,59 @@ def restore(args):
     context = {
         'dbsnp_build': args.dbsnp_build,
         'genome_build': args.genome_build,
+        'prefix': args.prefix,
         'tag': args.tag,
     }
-    context['db_name'] = 'dbsnp_{dbsnp_build}_{genome_build}'.format(**context)
+    context['db_src_name'] = 'dbsnp_{dbsnp_build}_{genome_build}'.format(**context)
+    context['db_name'] = '{prefix}_{dbsnp_build}_{genome_build}'.format(**context)
     context['db_user'] = 'dbsnp'
     log.info(colored(pformat(context), 'blue'))
 
     with cd(DBSNP_HOME):
         force('createuser {db_user}'.format(**context))
-        run('./script/pg_restore.sh {db_name} {db_user} {tag}'.format(**context))
+        run('./script/pg_restore.sh {db_src_name} {db_name} {db_user} {tag}'.format(**context))
+
+    log.info('Done')
+    log.info('To connect via psql, run:')
+    log.info('')
+    log.info(colored('$ psql {db_name} -U {db_user}'.format(**context), 'blue', attrs=['bold']))
+    log.info('')
 
 def build(args):
-    log.error('Not implemented yet.')
+    context = {
+        'dbsnp_build': args.dbsnp_build,
+        'genome_build': args.genome_build,
+        'prefix': args.prefix,
+    }
+    context['db_name'] = '{prefix}_{dbsnp_build}_{genome_build}'.format(**context)
+    context['db_user'] = 'dbsnp'
+    log.info(colored(pformat(context), 'blue'))
+
+    with cd(DBSNP_HOME):
+        force('createuser {db_user}'.format(**context))
+        force('createdb --owner={db_user} {db_name}'.format(**context))
+
+        for src in [DBSNP_HOME] + glob.glob(DBSNP_HOME + '/contrib/*'):
+            with cd(src):
+                run('pwd')
+                if glob.glob('02_drop_create_table.*'):
+                    context.update(src=src)
+                    run('./01_fetch_data.sh        -d {dbsnp_build} -r {genome_build} {src}/data'.format(**context))
+                    run('./02_drop_create_table.sh {db_name} {db_user} {src}'.format(**context))
+                    run('./03_import_data.sh       {db_name} {db_user} {src} {src}/data'.format(**context))
+
+    log.info('Done')
+    log.info('To connect via psql, run:')
+    log.info('')
+    log.info(colored('$ psql {db_name} -U {db_user}'.format(**context), 'blue', attrs=['bold']))
+    log.info('')
 
 def init_demo(args):
     context = {
         'db_user': args.demo_db_user,
         'db_name': args.demo_db_name,
     }
+    log.info(colored(pformat(context), 'blue'))
 
     with cd(DBSNP_HOME):
         force('createuser {db_user}'.format(**context))
@@ -75,10 +112,11 @@ def init_demo(args):
                     run('./02_drop_create_table.sh {db_name} {db_user} {src}'.format(**context))
                     run('./03_import_data.sh       {db_name} {db_user} {src} {src}/test/data'.format(**context))
 
-        log.info('Done')
-        log.info(colored('New demo database created: {}'.format(args.demo_db_name),      'blue', attrs=['bold']))
-        log.info('To connect via psql, run:')
-        log.info(colored('$ psql {} -U {}'.format(args.demo_db_name, args.demo_db_user), 'blue', attrs=['bold']))
+    log.info('Done')
+    log.info('To connect via psql, run:')
+    log.info('')
+    log.info(colored('$ psql {} -U {}'.format(args.demo_db_name, args.demo_db_user), 'blue', attrs=['bold']))
+    log.info('')
 
 if __name__ == '__main__':
     main()

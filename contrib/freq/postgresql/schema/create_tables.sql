@@ -19,10 +19,11 @@ INSERT INTO AlleleFreqSource VALUES (1,   '1000 Genomes Phase 1',  '{JPT}',     
 -- Partitioning "master" table
 DROP TABLE IF EXISTS AlleleFreq CASCADE;
 CREATE TABLE AlleleFreq (
-       snp_id    integer          not null,
-       allele    varchar(1024)[]  not null,
-       freq      real[]           not null,
-       source_id smallint         references AlleleFreqSource(source_id)
+       snp_id        integer          not null,
+       allele        varchar(1024)[]  not null,
+       freq          real[]           not null,
+       freqx         integer[]        not null,
+       source_id     smallint         references AlleleFreqSource(source_id)
 );
 
 -- Partitioning "child" table

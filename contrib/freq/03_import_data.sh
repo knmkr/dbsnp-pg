@@ -45,10 +45,16 @@ fi
 
 # plink is required
 if type plink >/dev/null; then
-    :
+    plink=plink
 else
-    echo "[contrib/freq] [FATAL] `date +"%Y-%m-%d %H:%M:%S"` plink not found."
-    exit 1
+    echo "[contrib/freq] [WARN] `date +"%Y-%m-%d %H:%M:%S"` plink command not found."
+    echo "[contrib/freq] [WARN] `date +"%Y-%m-%d %H:%M:%S"` try to use local plink..."
+    plink=$BASE_DIR/../../bin/plink
+    if type $plink >/dev/null; then
+        :
+    else
+        $BASE_DIR/../../script/install_plink.sh $BASE_DIR/../../
+    fi
 fi
 
 psql="psql $PG_DB $PG_USER --no-psqlrc --single-transaction "
@@ -67,14 +73,15 @@ for source_id in ${source_ids[@]}; do
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Create .bed if not exists ..."
         if [ ! -f ${filename}.bim ] || [ ! -f ${filename}.bed ] || [ ! -f ${filename}.fam ]; then
-            plink --vcf ${filename} --make-bed --out ${filename}
+            $plink --vcf ${filename} --make-bed --out ${filename}
         fi
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Calculating freq ..."
-        plink --bfile ${filename} --freq --keep ${keep_ids}.fam --out ${filename}.${source_id}
+        $plink --bfile ${filename} --freq --keep ${keep_ids}.fam --out ${filename}.${source_id}
+        $plink --bfile ${filename} --freqx --keep ${keep_ids}.fam --out ${filename}.${source_id}
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting and filtering..."
-        cat ${filename}.${source_id}.frq| \
+        paste ${filename}.${source_id}.frq ${filename}.${source_id}.frqx| \
             ${py} ${BASE_DIR}/script/plinkfrq2pg_array.py| \
             ${py} ${BASE_DIR}/script/filter.py --source-id ${source_id} \
             > ${filename}.${source_id}.frq.csv
@@ -93,6 +100,5 @@ for source_id in ${source_ids[@]}; do
     $psql -c "UPDATE allelefreqsource s SET status = 'ok' WHERE s.source_id = ${source_id}"
 
 done;
-
 
 echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Done"
