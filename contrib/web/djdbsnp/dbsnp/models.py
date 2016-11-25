@@ -107,7 +107,7 @@ class SNP(models.Model):
     def af_source_choices(self):
         with connections['dbsnp'].cursor() as c:
             try:
-                c.execute("SELECT source_id, display_name FROM allelefreqsource WHERE status = 'ok'")
+                c.execute("SELECT source_id, display_name FROM allelefreqsource WHERE status = 'ok' ORDER BY source_id")
                 row = c.fetchall()
                 return row
             except Exception as e:
