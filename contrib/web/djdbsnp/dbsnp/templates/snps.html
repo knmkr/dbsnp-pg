@@ -121,21 +121,21 @@
                 <tbody>
                   {% for af in allele_freqs %}
                   <tr>
-                    <td>{{ af.snp_id }}</td>
+                    <td>{{ af.snp_id| na }}</td>
                     <td>{{ af.snp_current| na }}</td>
                     <td>{{ af.allele.0| na }}</td>
                     <td>{{ af.allele.1| na }}</td>
-                    <td>{{ af.freq.0| na }}</td>
-                    <td>{{ af.freq.1| na }}</td>
-                    <td>{{ af.a1_hom_freq| na }}</td>
-                    <td>{{ af.a1_a2_het_freq| na }}</td>
-                    <td>{{ af.a2_hom_freq| na }}</td>
-                    <td>{{ af.freqx.0| na }}</td>
-                    <td>{{ af.freqx.1| na }}</td>
-                    <td>{{ af.freqx.2| na }}</td>
-                    <td>{{ af.freqx.3| na }}</td>
-                    <td>{{ af.freqx.4| na }}</td>
-                    <td>{{ af.freqx.5| na }}</td>
+                    <td>{{ af.freq.0 }}</td>
+                    <td>{{ af.freq.1 }}</td>
+                    <td>{{ af.a1_hom_freq }}</td>
+                    <td>{{ af.a1_a2_het_freq }}</td>
+                    <td>{{ af.a2_hom_freq }}</td>
+                    <td>{{ af.freqx.0 }}</td>
+                    <td>{{ af.freqx.1 }}</td>
+                    <td>{{ af.freqx.2 }}</td>
+                    <td>{{ af.freqx.3 }}</td>
+                    <td>{{ af.freqx.4 }}</td>
+                    <td>{{ af.freqx.5 }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
