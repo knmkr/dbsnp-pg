@@ -21,4 +21,4 @@ dependencies:
 
 test:
   override:
-    - cd test && ./run-test.sh $DB_NAME $DB_USER
+    - cd test && ./run-test.sh $DB_NAME $DB_USER $PWD/../
