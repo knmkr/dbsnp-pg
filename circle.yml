@@ -1,0 +1,16 @@
+general:
+  branches:
+    only:
+      - develop
+      - master
+
+machine:
+    python:
+        version: 2.7.12
+    environment:
+        DB_NAME: circle_test
+        DB_USER: ubuntu
+
+test:
+    override:
+        - echo 0
