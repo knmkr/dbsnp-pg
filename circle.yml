@@ -5,12 +5,20 @@ general:
       - master
 
 machine:
-    python:
-        version: 2.7.12
+  python:
+    version: 2.7.12
     environment:
-        DB_NAME: circle_test
-        DB_USER: ubuntu
+      DB_NAME: circle_test
+      DB_USER: ubuntu
+
+dependencies:
+  pre:
+    - sudo apt-get update
+    - sudo apt-get install nkf
+    - sudo apt-get install pgtap
+    - nkf --version
+    - pg_prove --version
 
 test:
-    override:
-        - echo 0
+  override:
+    - echo 0
