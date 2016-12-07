@@ -8,7 +8,7 @@ def css_class(value, arg):
 
 @register.filter
 def na(value):
-    return value if value else 'N/A'
+    return 'N/A' if value is None or value == '' else value
 
 @register.filter
 def fwd_or_rev(value):
