@@ -20,8 +20,8 @@ dependencies:
 
 test:
   pre:
-    - ./test/ci/before_script.sh $DB_NAME $DB_USER $PWD/../
+    - ./test/ci/before_script.sh $DB_NAME $DB_USER $PWD
   override:
-    - ./test/ci/script.sh        $DB_NAME $DB_USER $PWD/../
+    - ./test/ci/script.sh        $DB_NAME $DB_USER $PWD
   post:
-    - ./test/ci/after_script.sh  $DB_NAME $DB_USER $PWD/../
+    - ./test/ci/after_script.sh  $DB_NAME $DB_USER $PWD
