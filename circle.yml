@@ -16,9 +16,12 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install nkf
     - sudo apt-get install pgtap
-    - nkf --version
-    - pg_prove --version
+    - sudo cp /usr/share/postgresql/9.6/extension/pgtap* /usr/share/postgresql/9.5/extension
 
 test:
+  pre:
+    - ./test/ci/before_script.sh $DB_NAME $DB_USER $PWD/../
   override:
-    - cd test && ./run-test.sh $DB_NAME $DB_USER $PWD/../
+    - ./test/ci/script.sh        $DB_NAME $DB_USER $PWD/../
+  post:
+    - ./test/ci/after_script.sh  $DB_NAME $DB_USER $PWD/../
