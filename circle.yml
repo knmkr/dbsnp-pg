@@ -7,9 +7,9 @@ general:
 machine:
   python:
     version: 2.7.12
-    environment:
-      DB_NAME: circle_test
-      DB_USER: ubuntu
+  environment:
+    DB_NAME: circle_test
+    DB_USER: ubuntu
 
 dependencies:
   pre:
