@@ -2,6 +2,8 @@
 
 A PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
+[![CircleCI](https://circleci.com/gh/knmkr/dbsnp-pg.svg?style=svg)](https://circleci.com/gh/knmkr/dbsnp-pg)
+
 ## Motivation
 
 Database schema of dbSNP is [distributed in MS SQL Server schema](http://ftp.ncbi.nih.gov/snp/database/shared_schema/), however, [as mentioned in official handbook site](http://www.ncbi.nlm.nih.gov/books/NBK21088/#ch5.ch5_s6), it is not straightforward task to create a local copy of dbSNP:
