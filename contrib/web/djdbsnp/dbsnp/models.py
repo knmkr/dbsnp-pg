@@ -58,6 +58,7 @@ class SNP(models.Model):
                     record = {
                         'snp_id':      row['snp_id'],
                         'snp_current': row['snp_current'],
+                        'ref':         row['ref'],
                         'allele':      ['' for i in xrange(len(allele))],
                         'freq':        ['' for i in xrange(len(allele))],
                         'freqx':       ['' for i in xrange(6)],

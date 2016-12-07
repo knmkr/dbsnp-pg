@@ -95,7 +95,7 @@
                 <thead>
                   <tr>
                     <th colspan="2">SNP</th>
-                    <th colspan="2">Allele</th>
+                    <th colspan="3">Allele</th>
                     <th colspan="2">Allele Freq</th>
                     <th colspan="3">Genotype Freq</th>
                     <th colspan="6">Genotype Count</th>
@@ -103,6 +103,7 @@
                   <tr>
                     <th>rs ID (Query)</th>
                     <th>rs ID (Current)</th>
+                    <th>Ref</th>
                     <th>A1</th>
                     <th>A2</th>
                     <th>A1 Freq</th>
@@ -123,6 +124,7 @@
                   <tr>
                     <td>{{ af.snp_id| na }}</td>
                     <td>{{ af.snp_current| na }}</td>
+                    <td>{{ af.ref| na }}</td>
                     <td>{{ af.allele.0| na }}</td>
                     <td>{{ af.allele.1| na }}</td>
                     <td>{{ af.freq.0| na }}</td>
