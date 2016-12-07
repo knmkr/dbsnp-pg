@@ -20,6 +20,7 @@ INSERT INTO AlleleFreqSource VALUES (1,   '1000 Genomes Phase 1',  '{JPT}',     
 DROP TABLE IF EXISTS AlleleFreq CASCADE;
 CREATE TABLE AlleleFreq (
        snp_id        integer          not null,
+       "ref"         varchar(1024)    not null,
        allele        varchar(1024)[]  not null,
        freq          real[]           not null,
        freqx         integer[]        not null,

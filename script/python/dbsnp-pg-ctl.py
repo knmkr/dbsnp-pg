@@ -16,6 +16,8 @@ DBSNP_BUILDS = ['b147', 'b146', 'b144']
 DBSNP_DEFAULT = 'b146'
 GENOME_BUILDS = ['GRCh38', 'GRCh37']
 GENOME_DEFAULT = 'GRCh37'
+PLUGINS = ['freq']
+BUILD_TARGETS = ['core'] + PLUGINS
 VERSION = open(os.path.join(DBSNP_HOME, 'VERSION')).readline().strip()
 
 def main():
@@ -32,6 +34,7 @@ def main():
     parser_restore.set_defaults(func=restore)
 
     parser_build = subparsers.add_parser('build', help='build database from resources')
+    parser_build.add_argument('--target', nargs='+', default=BUILD_TARGETS, choices=BUILD_TARGETS, help='build targets')
     parser_build.set_defaults(func=build)
 
     parser_init_demo = subparsers.add_parser('init-demo', help='init demo database')
@@ -69,6 +72,7 @@ def build(args):
         'dbsnp_build': args.dbsnp_build,
         'genome_build': args.genome_build,
         'prefix': args.prefix,
+        'target': args.target,
     }
     context['db_name'] = '{prefix}_{dbsnp_build}_{genome_build}'.format(**context)
     context['db_user'] = 'dbsnp'
@@ -78,7 +82,10 @@ def build(args):
         force('createuser {db_user}'.format(**context))
         force('createdb --owner={db_user} {db_name}'.format(**context))
 
-        for src in [DBSNP_HOME] + glob.glob(DBSNP_HOME + '/contrib/*'):
+        target = [DBSNP_HOME] if 'core' in args.target else []
+        target += [os.path.join(DBSNP_HOME, 'contrib', x) for x in set(args.target) if x != 'core']
+
+        for src in target:
             with cd(src):
                 run('pwd')
                 if glob.glob('02_drop_create_table.*'):

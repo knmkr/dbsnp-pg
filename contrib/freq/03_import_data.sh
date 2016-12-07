@@ -81,7 +81,9 @@ for source_id in ${source_ids[@]}; do
         $plink --bfile ${filename} --freqx --keep ${keep_ids}.fam --out ${filename}.${source_id}
 
         echo "[contrib/freq] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Formatting and filtering..."
-        paste ${filename}.${source_id}.frq ${filename}.${source_id}.frqx| \
+        paste ${filename}.${source_id}.frq \
+              ${filename}.${source_id}.frqx \
+              <(gzip -dc ${filename}| grep -v '##'| cut -f1-4)| \
             ${py} ${BASE_DIR}/script/plinkfrq2pg_array.py| \
             ${py} ${BASE_DIR}/script/filter.py --source-id ${source_id} \
             > ${filename}.${source_id}.frq.csv
