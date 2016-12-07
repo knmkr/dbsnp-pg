@@ -1,0 +1,27 @@
+general:
+  branches:
+    only:
+      - develop
+      - master
+
+machine:
+  python:
+    version: 2.7.12
+  environment:
+    DB_NAME: circle_test
+    DB_USER: ubuntu
+
+dependencies:
+  pre:
+    - sudo apt-get update
+    - sudo apt-get install nkf
+    - sudo apt-get install pgtap
+    - sudo cp /usr/share/postgresql/9.6/extension/pgtap* /usr/share/postgresql/9.5/extension
+
+test:
+  pre:
+    - ./test/ci/before_script.sh $DB_NAME $DB_USER $PWD
+  override:
+    - ./test/ci/script.sh        $DB_NAME $DB_USER $PWD
+  post:
+    - ./test/ci/after_script.sh  $DB_NAME $DB_USER $PWD
