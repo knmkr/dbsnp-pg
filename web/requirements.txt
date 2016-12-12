@@ -1,2 +1,7 @@
 Django>=1.10,<1.10.99
 psycopg2
+
+# Django REST framework
+djangorestframework
+markdown
+django-filter
