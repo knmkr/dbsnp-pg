@@ -5,10 +5,19 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework import generics
 from .models import Snp
 from .forms import SnpsForm
 from .serializers import SnpSerializer
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'snps': reverse('snp-list', request=request, format=format)
+    })
 
 class SnpList(generics.ListAPIView):
     queryset = Snp.objects.all()
