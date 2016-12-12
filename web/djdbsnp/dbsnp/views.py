@@ -5,12 +5,37 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from .models import SNP
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Snp
 from .forms import SnpsForm
+from .serializers import SnpSerializer
 
 
-def index(request):
-    return redirect(snps)
+@api_view(['GET'])
+def snp_list(request):
+    """
+    List all snps.
+    """
+    if request.method == 'GET':
+        snps = Snp.objects.all()
+        serializer = SnpSerializer(snps, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def snp_detail(request, pk):
+    """
+    Retrieve a snp instance.
+    """
+    try:
+        snp = Snp.objects.get(pk=pk)
+    except Snp.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = SnpSerializer(snp)
+        return Response(serializer.data)
 
 @csrf_exempt  # FIXME: change to GET?
 def snps(request):
@@ -25,8 +50,8 @@ def snps(request):
             rsids = data.get('rsids')
             af_order = data.get('af_order')
 
-            context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids, af_order)
-            context['chr_pos'] = SNP.get_pos_by_rs(rsids)
+            context['allele_freqs'] = Snp.get_allele_freqs(af_population, rsids, af_order)
+            context['chr_pos'] = Snp.get_pos_by_rs(rsids)
         response = JsonResponse(context)
 
         return response
@@ -40,8 +65,8 @@ def snps(request):
                 af_population = form.cleaned_data.get('af_population')
                 rsids = form.cleaned_data.get('rsids')
                 af_order = form.cleaned_data.get('af_order')
-                context['allele_freqs'] = SNP.get_allele_freqs(af_population, rsids, af_order)
-                context['chr_pos'] = SNP.get_pos_by_rs(rsids)
+                context['allele_freqs'] = Snp.get_allele_freqs(af_population, rsids, af_order)
+                context['chr_pos'] = Snp.get_pos_by_rs(rsids)
             context['form'] = form
 
         return render(request, 'snps.html', context)
@@ -53,16 +78,16 @@ def snp(request, rsid):
         'dbsnp_ref_genome_build': settings.DBSNP_REF_GENOME_BUILD,
     }
 
-    context['chr_pos'] = SNP.get_all_pos_by_rs([context['rsid']])
+    context['chr_pos'] = Snp.get_all_pos_by_rs([context['rsid']])
 
     # TODO: gene
 
-    context['refseq'] = SNP.get_refseq_by_rs([context['rsid']])
+    context['refseq'] = Snp.get_refseq_by_rs([context['rsid']])
 
     # TODO: snp fasta sequence
 
-    context['snp3d'] = SNP.get_snp3d_by_rs([context['rsid']])
-    context['omim'] = SNP.get_omim_by_rs([context['rsid']])
+    context['snp3d'] = Snp.get_snp3d_by_rs([context['rsid']])
+    context['omim'] = Snp.get_omim_by_rs([context['rsid']])
 
     # TODO: LD
 

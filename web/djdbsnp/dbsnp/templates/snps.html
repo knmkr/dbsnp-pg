@@ -10,7 +10,7 @@
 
           <h2 class="sub-header">Query</h2>
 
-          <form action="/dbsnp/snps/" method="post" enctype="multipart/form-data">
+          <form action="{% url 'snps' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
               <label for="id_af_population">Allele frequency source population</label>

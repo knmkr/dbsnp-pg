@@ -7,7 +7,7 @@ from django.db import connections
 log = logging.getLogger('django')
 
 
-class SNP(models.Model):
+class Snp(models.Model):
     @classmethod
     def get_pos_by_rs(self, rsids):
         with connections['dbsnp'].cursor() as c:
