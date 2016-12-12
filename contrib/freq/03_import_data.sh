@@ -37,7 +37,7 @@ echo "[contrib/freq] [INFO] database_name: ${PG_DB}, database_user: ${PG_USER}, 
 cd ${DATA_DIR}
 
 # Use pypy if available
-if type pypy >/dev/null 2>&1; then
+if type pypy >/dev/null 2>&1 && pypy --version >/dev/null 2>&1; then
     py=$(which pypy)
 else
     py=$(which python)
