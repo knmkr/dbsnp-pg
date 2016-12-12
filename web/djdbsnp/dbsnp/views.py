@@ -5,37 +5,18 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework import generics
 from .models import Snp
 from .forms import SnpsForm
 from .serializers import SnpSerializer
 
+class SnpList(generics.ListAPIView):
+    queryset = Snp.objects.all()
+    serializer_class = SnpSerializer
 
-@api_view(['GET'])
-def snp_list(request, format=None):
-    """
-    List all snps.
-    """
-    if request.method == 'GET':
-        snps = Snp.objects.all()
-        serializer = SnpSerializer(snps, many=True)
-        return Response(serializer.data)
-
-@api_view(['GET'])
-def snp_detail(request, pk, format=None):
-    """
-    Retrieve a snp instance.
-    """
-    try:
-        snp = Snp.objects.get(pk=pk)
-    except Snp.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = SnpSerializer(snp)
-        return Response(serializer.data)
+class SnpDetail(generics.RetrieveAPIView):
+    queryset = Snp.objects.all()
+    serializer_class = SnpSerializer
 
 @csrf_exempt  # FIXME: change to GET?
 def snps(request):
