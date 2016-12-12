@@ -14,7 +14,7 @@ from .serializers import SnpSerializer
 
 
 @api_view(['GET'])
-def snp_list(request):
+def snp_list(request, format=None):
     """
     List all snps.
     """
@@ -24,7 +24,7 @@ def snp_list(request):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def snp_detail(request, pk):
+def snp_detail(request, pk, format=None):
     """
     Retrieve a snp instance.
     """
