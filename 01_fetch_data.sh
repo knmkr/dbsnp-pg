@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-dbsnp_builds=("b147" "b146" "b144")
+dbsnp_builds=("b149" "b147" "b146" "b144")
 reference_genome_builds=("GRCh38" "GRCh37")
 
 usage_exit() {
@@ -57,9 +57,11 @@ declare -A ftp_name=( \
   ["b144_GRCh37"]="archive/human_9606_b144_GRCh37p13" \
   ["b144_GRCh38"]="archive/human_9606_b144_GRCh38p2"  \
   ["b146_GRCh37"]="human_9606_b146_GRCh37p13" \
-  ["b146_GRCh38"]="human_9606_b146_GRCh38p2"
+  ["b146_GRCh38"]="human_9606_b146_GRCh38p2"  \
   ["b147_GRCh37"]="human_9606_b147_GRCh37p13" \
-  ["b147_GRCh38"]="human_9606_b147_GRCh38p2"
+  ["b147_GRCh38"]="human_9606_b147_GRCh38p2"  \
+  ["b149_GRCh37"]="human_9606_b149_GRCh37p13" \
+  ["b149_GRCh38"]="human_9606_b149_GRCh38p7"  \
 )
 declare -A ref_code=( \
   ["GRCh37"]="105" \

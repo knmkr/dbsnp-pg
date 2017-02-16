@@ -159,7 +159,7 @@ Disk usage of whole database is about 58GB (v0.5.6 on Amazon RDS)
  public | snpchrposonref_ukey_rs | index | dbsnp | snpchrposonref    | 3224 MB    |
  public | snpcontigloc           | table | dbsnp |                   | 15 GB      |
  public | snpcontigloc_rs_ctg    | index | dbsnp | snpcontigloc      | 3317 MB    |
- 
+
 => \l+
                                                                      List of databases
    Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   |   Size    | Tablespace |                Description
@@ -170,20 +170,24 @@ Disk usage of whole database is about 58GB (v0.5.6 on Amazon RDS)
 
 ## Data Resources
 
-- **Database of Single Nucleotide Polymorphisms (dbSNP).** Bethesda (MD): National Center for Biotechnology Information, National Library of Medicine. (dbSNP Build ID: b144,146,147).
+- **Database of Single Nucleotide Polymorphisms (dbSNP).** Bethesda (MD): National Center for Biotechnology Information, National Library of Medicine. (dbSNP Build ID: b144,146,147,149).
 Available from: http://www.ncbi.nlm.nih.gov/SNP/
 
-| dbSNP    | Reference Genome |
-|----------|------------------|
-| b147     | GRCh38p2         |
-| b147     | GRCh37p13        |
-| b146     | GRCh38p2         |
-| b146     | GRCh37p13        |
-| b144     | GRCh38p2         |
-| b144     | GRCh37p13        |
+| dbSNP    | Reference |
+|----------|-----------|
+| b149     | GRCh38p7  |
+| b149     | GRCh37p13 |
+| b147     | GRCh38p2  |
+| b147     | GRCh37p13 |
+| b146     | GRCh38p2  |
+| b146     | GRCh37p13 |
+| b144     | GRCh38p2  |
+| b144     | GRCh37p13 |
 
-- Only human [taxonomy id: 9606] data is supported.
-- Builds of dbSNP and human references genome are depend on the releases on the NCBI FTP.
+- Build versions of dbSNP and Reference depend on ones released on the FTP:
+  - `ftp://ftp.ncbi.nih.gov/snp/organisms/`
+  - `ftp://ftp.ncbi.nih.gov/snp/organisms/archive/`
+- Only Human [Taxonomy ID 9606] is supported.
 
 
 ## Unit Tests
