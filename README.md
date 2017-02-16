@@ -2,7 +2,7 @@
 
 A PostgreSQL porting of [NCBI dbSNP](http://www.ncbi.nlm.nih.gov/SNP/).
 
-[![CircleCI](https://circleci.com/gh/knmkr/dbsnp-pg.svg?style=svg)](https://circleci.com/gh/knmkr/dbsnp-pg)
+[![CircleCI](https://circleci.com/gh/knmkr/dbsnp-pg/tree/master.svg?style=svg)](https://circleci.com/gh/knmkr/dbsnp-pg/tree/master)
 
 ## Motivation
 
