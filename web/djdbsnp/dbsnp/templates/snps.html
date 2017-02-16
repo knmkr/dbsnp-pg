@@ -10,7 +10,7 @@
 
           <h2 class="sub-header">Query</h2>
 
-          <form action="{% url 'snps' %}" method="post" enctype="multipart/form-data">
+          <form action="{% url 'dbsnp:index' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
               <label for="id_af_population">Allele frequency source population</label>
@@ -74,7 +74,7 @@
                 <tbody>
                   {% for pos in chr_pos %}
                   <tr>
-                    <td><a href="{% url 'snp' pos.snp_id %}">{{ pos.snp_id| na }}</a></td>
+                    <td><a href="{% url 'dbsnp:show' pos.snp_id %}">{{ pos.snp_id| na }}</a></td>
                     <td>{{ pos.snp_current| na }}</td>
                     <td>{{ pos.chr| na }}</td>
                     <td>{{ pos.pos| na }}</td>

@@ -1,13 +1,23 @@
 import logging
 from decimal import *
 
-from django.db import models
 from django.db import connections
+from django.conf import settings
 
 log = logging.getLogger('django')
 
 
-class Snp(models.Model):
+class Snp(object):
+    def __init__(self, pk):
+        self.rsid = int(pk)
+        self.dbsnp_build = settings.DBSNP_BUILD
+        self.dbsnp_ref_genome_build = settings.DBSNP_REF_GENOME_BUILD
+
+        self.chr_pos = self.get_all_pos_by_rs([self.rsid])
+        self.refseq = self.get_refseq_by_rs([self.rsid])
+        self.snp3d = self.get_snp3d_by_rs([self.rsid])
+        self.omim = self.get_omim_by_rs([self.rsid])
+
     @classmethod
     def get_pos_by_rs(self, rsids):
         with connections['dbsnp'].cursor() as c:
