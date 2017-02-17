@@ -45,9 +45,4 @@ ${psql} $PG_DB $PG_USER -c "UPDATE ${table}
                             FROM (SELECT rshigh, rscurrent FROM rsmergearch) a
                             WHERE ${table}.snp_id_reported = a.rshigh"
 
-echo "[contrib/gwascatalog] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Creating GwasCatalogSNPAlleleFreq ..."
-freq_tsv=gwascatalog-snps-allele-freq-${LATEST}.tsv
-${BASE_DIR}/script/create_gwascatalog_snp_allele_freq_data.sh $PG_DB $PG_USER ${freq_tsv}
-cat ${freq_tsv}.*| ${psql} $PG_DB $PG_USER -c "COPY GwasCatalogSNPAlleleFreq FROM stdin DELIMITERS '	' WITH NULL AS ''" -q
-
 echo "[contrib/gwascatalog] [INFO] `date +"%Y-%m-%d %H:%M:%S"` Done"
