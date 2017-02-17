@@ -170,7 +170,7 @@ Disk usage of whole database is about 58GB (v0.5.6 on Amazon RDS)
 
 ## Data Resources
 
-- **Database of Single Nucleotide Polymorphisms (dbSNP).** Bethesda (MD): National Center for Biotechnology Information, National Library of Medicine. (dbSNP Build ID: b144,146,147,149).
+- **Database of Single Nucleotide Polymorphisms (dbSNP).** Bethesda (MD): National Center for Biotechnology Information, National Library of Medicine. (dbSNP Build ID: 146,147,149).
 Available from: http://www.ncbi.nlm.nih.gov/SNP/
 
 | dbSNP    | Reference |
@@ -181,8 +181,6 @@ Available from: http://www.ncbi.nlm.nih.gov/SNP/
 | b147     | GRCh37p13 |
 | b146     | GRCh38p2  |
 | b146     | GRCh37p13 |
-| b144     | GRCh38p2  |
-| b144     | GRCh37p13 |
 
 - Build versions of dbSNP and Reference depend on ones released on the FTP:
   - `ftp://ftp.ncbi.nih.gov/snp/organisms/`
