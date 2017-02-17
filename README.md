@@ -121,9 +121,9 @@ This option requires Bash >4.x, `wget`, and `nkf`.
 
 ## Requirements
 
-### PostgreSQL version
+### PostgreSQL
 
-No limitation. Currently, tested on 9.4.
+No limitation. Currently, tested on 9.6.
 
 ### Disk usage
 
