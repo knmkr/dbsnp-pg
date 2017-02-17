@@ -16,7 +16,7 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install nkf
     - sudo apt-get install pgtap
-    - sudo apt-get install plink
+    - ./script/install_plink.sh
     - sudo cp /usr/share/postgresql/9.6/extension/pgtap* /usr/share/postgresql/9.5/extension
 
 test:
