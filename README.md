@@ -63,27 +63,6 @@ See details in [contrib/freq](https://github.com/knmkr/dbsnp-pg/tree/master/cont
  2230021 |         671 | {A,G}  | {0.2168,0.7832}
 ```
 
-### Get GWAS Catalog data
-
-See details in [contrib/gwascatalog](https://github.com/knmkr/dbsnp-pg/tree/master/contrib/gwascatalog)
-
-```
-=> SELECT pubmed_id, disease_or_trait, snp_id, risk_allele, odds_ratio_or_beta_coeff
-FROM gwascatalog
-WHERE snp_id = 671
-AND risk_allele IS NOT NULL;
-
- pubmed_id |             disease_or_trait              | snp_id | risk_allele | odds_ratio_or_beta_coeff
------------+-------------------------------------------+--------+-------------+--------------------------
-  19698717 | Esophageal cancer                         |    671 | A           |                     1.67
-  20139978 | Hematological and biochemical traits      |    671 | A           |                     0.12
-  20139978 | Mean corpuscular hemoglobin concentration |    671 | A           |                     0.08
-  21971053 | Coronary heart disease                    |    671 | A           |                     1.43
-  22286173 | Intracranial aneurysm                     |    671 | C           |                     1.24
-  22797727 | Renal function-related traits (sCR)       |    671 | A           |                        0
-  24861553 | Body mass index                           |    671 | G           |                     0.04
-```
-
 
 ## How to install
 
