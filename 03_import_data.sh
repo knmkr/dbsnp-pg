@@ -35,7 +35,7 @@ for table in ${target[@]}; do
             continue
         fi
 
-        echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename} into ${table}..."
+        echo "[INFO] `date +"%Y-%m-%d %H:%M:%S"` Importing ${filename}..."
         gzip -d -c ${filename} \
             | tr -d '\15' \
             | nkf -Lu \
