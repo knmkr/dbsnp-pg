@@ -2,6 +2,11 @@
 
 set -eu
 
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <PG_DB> <PG_USER> <TAG>" >&2
+    exit 1
+fi
+
 PG_DB=$1
 PG_USER=$2
 TAG=$3
