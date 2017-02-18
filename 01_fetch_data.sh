@@ -55,8 +55,10 @@ echo "[INFO] Fetching data for ${database} to ${data_dir}..."
 
 declare -A ftp_main=( \
   ["b146_GRCh37"]="human_9606_b146_GRCh37p13" \
-  ["b147_GRCh37"]="human_9606_b147_GRCh38p2"  \  # in b147, GRCh37 dir does not contain main tables
-  ["b149_GRCh37"]="human_9606_b149_GRCh38p7"  \  # in b149, GRCh37 dir does not contain main tables
+  # b147_GRCh37 does not contain main tables, so use ones in GRCh38
+  ["b147_GRCh37"]="human_9606_b147_GRCh38p2"  \
+  # b149_GRCh37 does not contain main tables, so use ones in GRCh38
+  ["b149_GRCh37"]="human_9606_b149_GRCh38p7"  \
 
   ["b146_GRCh38"]="human_9606_b146_GRCh38p2"  \
   ["b147_GRCh38"]="human_9606_b147_GRCh38p2"  \
