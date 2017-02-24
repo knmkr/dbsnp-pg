@@ -11,6 +11,15 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
+
+def get_env(key):
+    try:
+        return os.environ[key]
+    except KeyError:
+        err = "Environment variable not set: {}".format(key)
+        raise ImproperlyConfigured(err)
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,13 +84,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # dbsnp
-DBSNP_DB_NAME = os.environ.get('DBSNP_DB_NAME') or 'dbsnp_b149_GRCh37'
-DBSNP_DB_USER = os.environ.get('DBSNP_DB_USER') or 'dbsnp'
-DBSNP_DB_PASS = os.environ.get('DBSNP_DB_PASS') or 'dbsnp'
+DBSNP_DB_NAME = get_env('DBSNP_DB_NAME')
+DBSNP_DB_USER = get_env('DBSNP_DB_USER')
+DBSNP_DB_PASS = os.environ.get('DBSNP_DB_PASS') or ''
 DBSNP_DB_HOST = os.environ.get('DBSNP_DB_HOST') or '127.0.0.1'
 DBSNP_DB_PORT = os.environ.get('DBSNP_DB_PORT') or '5432'
-DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or 'b149'
-DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or 'GRCh37.p13'
+DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or ''
+DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or ''
 DBSNP_QUERY_COUNTS_LIMIT = 30
 
 

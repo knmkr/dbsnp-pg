@@ -11,13 +11,16 @@ rs672
 
 
 class SnpsForm(forms.Form):
-    af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=Snp.af_source_choices())
-    af_order = forms.ChoiceField(widget=forms.RadioSelect, choices=Snp.af_order_choices(), initial=0)
     rsids = forms.CharField(widget=forms.Textarea(attrs={'placeholder': RSID_PLACEHOLDER}))
 
     def clean_rsids(self):
         data = self.cleaned_data['rsids']
         return cleaned_rsids(data.splitlines())
+
+class SnpsFreqForm(SnpsForm):
+    af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=Snp.af_source_choices())
+    af_order = forms.ChoiceField(widget=forms.RadioSelect, choices=Snp.af_order_choices(), initial=0)
+
 
 def cleaned_rsid(text):
     """
