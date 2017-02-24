@@ -24,9 +24,11 @@ BEGIN
           CASE WHEN snp.snp_id IS NOT NULL THEN snp.snp_id
                WHEN m.rscurrent IS NOT NULL THEN m.rscurrent END AS snp_current
       FROM
-          (SELECT unnest(_rs) as snp_id) a
+          (SELECT * FROM unnest(_rs) WITH ORDINALITY snp_id) a
           LEFT JOIN snp ON a.snp_id = snp.snp_id
           LEFT JOIN rsmergearch m ON a.snp_id = m.rshigh
+      ORDER BY
+          a.ordinality
   );
 END
 $$ LANGUAGE plpgsql;
