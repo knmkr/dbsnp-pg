@@ -73,10 +73,10 @@ E.g.
 
 ### 1. Init database
 
-Create a new PostgreSQL user `dbsnp` and database `dbsnp_b146_GRCh37`
+Create a new PostgreSQL role `dbsnp` and a database `dbsnp_b146_GRCh37`
 
-    $ createuser dbsnp
-    $ createdb --owner=dbsnp dbsnp_b146_GRCh37
+    $ sudo -u postgres psql -c "CREATE ROLE dbsnp LOGIN CREATEDB"
+    $ sudo -u postgres createdb --owner=dbsnp dbsnp_b146_GRCh37
 
 ### 2. Option A: Download dumps and pg_restore
 
@@ -102,7 +102,7 @@ This option requires Bash >4.x, `wget`, and `nkf`.
 
 ### PostgreSQL
 
-No limitation. Currently, tested on 9.6.
+PostgreSQL 9.4 or later. Currently, tested on 9.6.
 
 ### Disk usage
 

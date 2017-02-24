@@ -1,0 +1,167 @@
+{% extends "layout.html" %}
+{% load extra %}
+{% block title %}{% endblock %}
+
+{% block main %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h1></h1>
+
+      <h2 class="sub-header">Query</h2>
+
+      <form action="{% url 'dbsnp:index' %}" method="get" enctype="multipart/form-data">
+
+        <div class="form-group">
+          <label for="id_rsids">rsID</label>
+          {{ form.rsids| css_class:"form-control" }}
+        </div>
+
+        {% if has_freq %}
+        <div class="form-group">
+          <label for="id_af_population">Allele frequency source population</label>
+          {{ form.af_population| css_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_af_order">Allele order</label>
+          <div class="radio">
+            {% for radio in form.af_order %}
+            <label for="{{ radio.id_for_label }}">
+              {{ radio.tag }} {{ radio.choice_label }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      {% if form.data %}
+      <h2 class="sub-header">Results</h2>
+
+      <!-- Form validation messages -->
+      {% if form.errors %}
+      {% for key,msgs in form.errors.items %}
+        {% for msg in msgs %}
+        <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span>
+          Form input erorr in {{ key }}: {{ msg }}
+        </div>
+        {% endfor %}
+      {% endfor %}
+
+      {% else %}
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#chr_pos" aria-controls="chr_pos" role="tab" data-toggle="tab">Position (GRCh37.p13)</a></li>
+        {% if has_freq %}
+        <li role="presentation"><a href="#af" aria-controls="af" role="tab" data-toggle="tab">Allele Freq</a></li>
+        {% endif %}
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="chr_pos">
+          {% if chr_pos %}
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>rs ID (Query)</th>
+                <th>rs ID (Current)</th>
+                <th>Chrom</th>
+                <th>Position</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pos in chr_pos %}
+              <tr>
+                <td><a href="{% url 'dbsnp:show' pos.snp_id %}">{{ pos.snp_id| na }}</a></td>
+                <td>{{ pos.snp_current| na }}</td>
+                <td>{{ pos.chr| na }}</td>
+                <td>{{ pos.pos| na }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="alert alert-warning" role="alert">
+            Not found.
+          </div>
+          {% endif %}
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="af">
+          {% if allele_freqs %}
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th colspan="2">SNP</th>
+                <th colspan="3">Allele</th>
+                <th colspan="2">Allele Freq</th>
+                <th colspan="3">Genotype Freq</th>
+                <th colspan="6">Genotype Count</th>
+              </tr>
+              <tr>
+                <th>rs ID (Query)</th>
+                <th>rs ID (Current)</th>
+                <th>Ref</th>
+                <th>A1</th>
+                <th>A2</th>
+                <th>A1 Freq</th>
+                <th>A2 Freq</th>
+                <th>A1 Hom Freq</th>
+                <th>A1/2 Het Freq</th>
+                <th>A2 Hom Freq</th>
+                <th>A1 Hom Count</th>
+                <th>A1/2 Het Count</th>
+                <th>A2 Hom Count</th>
+                <th>A1 Hap Count</th>
+                <th>A2 Hap Count</th>
+                <th>Missing GT Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for af in allele_freqs %}
+              <tr>
+                <td>{{ af.snp_id| na }}</td>
+                <td>{{ af.snp_current| na }}</td>
+                <td>{{ af.ref| na }}</td>
+                <td>{{ af.allele.0| na }}</td>
+                <td>{{ af.allele.1| na }}</td>
+                <td>{{ af.freq.0| na }}</td>
+                <td>{{ af.freq.1| na }}</td>
+                <td>{{ af.a1_hom_freq| na }}</td>
+                <td>{{ af.a1_a2_het_freq| na }}</td>
+                <td>{{ af.a2_hom_freq| na }}</td>
+                <td>{{ af.freqx.0| na }}</td>
+                <td>{{ af.freqx.1| na }}</td>
+                <td>{{ af.freqx.2| na }}</td>
+                <td>{{ af.freqx.3| na }}</td>
+                <td>{{ af.freqx.4| na }}</td>
+                <td>{{ af.freqx.5| na }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="alert alert-warning" role="alert">
+            Not found.
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+      {% endif %}
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -11,6 +11,15 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
+
+def get_env(key):
+    try:
+        return os.environ[key]
+    except KeyError:
+        err = "Environment variable not set: {}".format(key)
+        raise ImproperlyConfigured(err)
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +34,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'SECRET_SECRET_SECRET_SECRET
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG') or False
 
-ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS') or '127.0.0.1']
+ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS') or '127.0.0.1',
+                 'localhost']
 
 # Application definition
 
@@ -53,7 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'djdbsnp.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -71,16 +81,16 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'djdbsnp.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # dbsnp
-DBSNP_DB_NAME = os.environ.get('DBSNP_DB_NAME') or 'dbsnp_b146_GRCh37'
-DBSNP_DB_USER = os.environ.get('DBSNP_DB_USER') or 'dbsnp'
-DBSNP_DB_PASS = os.environ.get('DBSNP_DB_PASS') or 'dbsnp'
+DBSNP_DB_NAME = get_env('DBSNP_DB_NAME')
+DBSNP_DB_USER = get_env('DBSNP_DB_USER')
+DBSNP_DB_PASS = os.environ.get('DBSNP_DB_PASS') or ''
 DBSNP_DB_HOST = os.environ.get('DBSNP_DB_HOST') or '127.0.0.1'
 DBSNP_DB_PORT = os.environ.get('DBSNP_DB_PORT') or '5432'
-DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or 'b146'
-DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or 'GRCh37.p13'
+DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or ''
+DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or ''
 DBSNP_QUERY_COUNTS_LIMIT = 30
 
 
@@ -153,7 +163,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon':  '1/second',
+        'anon': '10/second',
         'user': '10/second',
     },
 }

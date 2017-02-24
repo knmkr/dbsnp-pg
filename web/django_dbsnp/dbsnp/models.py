@@ -10,6 +10,10 @@ log = logging.getLogger('django')
 class Snp(object):
     def __init__(self, pk):
         self.rsid = int(pk)
+
+        # TODO:
+        # raise ObjectDoesNotExist for invalid rsid
+
         self.dbsnp_build = settings.DBSNP_BUILD
         self.dbsnp_ref_genome_build = settings.DBSNP_REF_GENOME_BUILD
 
@@ -151,3 +155,7 @@ def strip(x):
 def assert_query_ids_eq_result_ids(query_ids, result_row):
     result_ids = [x['snp_id'] for x in result_row]
     assert query_ids == result_ids, '[ERROR] Query ids != Result ids: {} != {}'.format(query_ids, result_ids)
+
+def is_frequences_installed():
+    tables = connections['dbsnp'].introspection.table_names()
+    return 'allelefreqsource' in tables
