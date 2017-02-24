@@ -49,7 +49,7 @@ def positions(request, format=None):
     except forms.ValidationError as e:
         raise serializers.ValidationError({'detail': e.message})
 
-    positions = Snp.get_all_pos_by_rs(rsids)
+    positions = Snp.get_pos_by_rs(rsids)
     serializer = ChrPosSerializer(positions, many=True)
     return Response(serializer.data)
 
