@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'djdbsnp.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -71,15 +71,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'djdbsnp.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # dbsnp
-DBSNP_DB_NAME = os.environ.get('DBSNP_DB_NAME') or 'dbsnp_b146_GRCh37'
+DBSNP_DB_NAME = os.environ.get('DBSNP_DB_NAME') or 'dbsnp_b149_GRCh37'
 DBSNP_DB_USER = os.environ.get('DBSNP_DB_USER') or 'dbsnp'
 DBSNP_DB_PASS = os.environ.get('DBSNP_DB_PASS') or 'dbsnp'
 DBSNP_DB_HOST = os.environ.get('DBSNP_DB_HOST') or '127.0.0.1'
 DBSNP_DB_PORT = os.environ.get('DBSNP_DB_PORT') or '5432'
-DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or 'b146'
+DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or 'b149'
 DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or 'GRCh37.p13'
 DBSNP_QUERY_COUNTS_LIMIT = 30
 
