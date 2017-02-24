@@ -25,7 +25,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'SECRET_SECRET_SECRET_SECRET
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG') or False
 
-ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS') or '127.0.0.1']
+ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS') or '127.0.0.1',
+                 'localhost']
 
 # Application definition
 
@@ -153,7 +154,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon':  '1/second',
+        'anon': '10/second',
         'user': '10/second',
     },
 }
