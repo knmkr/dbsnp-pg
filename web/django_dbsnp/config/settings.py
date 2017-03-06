@@ -84,11 +84,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # dbsnp
-DBSNP_DB_NAME = get_env('DBSNP_DB_NAME')
-DBSNP_DB_USER = get_env('DBSNP_DB_USER')
-DBSNP_DB_PASS = os.environ.get('DBSNP_DB_PASS') or ''
-DBSNP_DB_HOST = os.environ.get('DBSNP_DB_HOST') or '127.0.0.1'
-DBSNP_DB_PORT = os.environ.get('DBSNP_DB_PORT') or '5432'
 DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or ''
 DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or ''
 DBSNP_QUERY_COUNTS_LIMIT = 30
@@ -100,19 +95,19 @@ DBSNP_QUERY_COUNTS_LIMIT = 30
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DBSNP_DB_NAME,
-        'USER': DBSNP_DB_USER,
-        'PASSWORD': DBSNP_DB_PASS,
-        'HOST': DBSNP_DB_HOST,
-        'PORT': DBSNP_DB_PORT,
+        'NAME': get_env('DJANGO_DB_NAME'),
+        'USER': get_env('DJANGO_DB_USER'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASS') or '',
+        'HOST': os.environ.get('DJANGO_DB_HOST') or '127.0.0.1',
+        'PORT': os.environ.get('DJANGO_DB_PORT') or '5432',
     },
     'dbsnp': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': DBSNP_DB_NAME,
-        'USER': DBSNP_DB_USER,
-        'PASSWORD': DBSNP_DB_PASS,
-        'HOST': DBSNP_DB_HOST,
-        'PORT': DBSNP_DB_PORT,
+        'NAME': get_env('DBSNP_DB_NAME'),
+        'USER': get_env('DBSNP_DB_USER'),
+        'PASSWORD': os.environ.get('DBSNP_DB_PASS') or '',
+        'HOST': os.environ.get('DBSNP_DB_HOST') or '127.0.0.1',
+        'PORT': os.environ.get('DBSNP_DB_PORT') or '5432',
     }
 }
 
