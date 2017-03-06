@@ -102,7 +102,7 @@ This option requires Bash >4.x, `wget`, and `nkf`.
 
 ### PostgreSQL
 
-PostgreSQL 9.4 or later. Currently, tested on 9.6.
+PostgreSQL 9.4 or later. Currently, tested on 9.5.
 
 ### Disk usage
 

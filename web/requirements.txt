@@ -5,3 +5,6 @@ psycopg2
 djangorestframework
 markdown
 django-filter
+
+#
+django_extensions
