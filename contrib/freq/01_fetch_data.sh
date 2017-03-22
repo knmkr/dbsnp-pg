@@ -2,6 +2,11 @@
 
 DATA_DIR=$1
 
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <data_dir>" >&2
+    exit 1
+fi
+
 mkdir -p ${DATA_DIR}
 cd ${DATA_DIR}
 
