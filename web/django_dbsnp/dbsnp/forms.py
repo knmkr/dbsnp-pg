@@ -1,5 +1,6 @@
 from django.conf import settings
 from django import forms
+from rest_framework import serializers
 from .models import Snp
 
 RSID_PLACEHOLDER = '''671
@@ -56,3 +57,10 @@ def cleaned_rsids(array):
         raise forms.ValidationError(msg)
 
     return rsids
+
+def parse_rsids(request):
+    q = request.GET.get('rsid', '').split(',')
+    try:
+        rsids = cleaned_rsids(q)
+    except forms.ValidationError as e:
+        raise serializers.ValidationError({'detail': e.message})
