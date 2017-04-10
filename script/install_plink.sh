@@ -13,10 +13,10 @@ cd $TMPDIR
 
 case $OSTYPE in
   darwin*)
-    URL="https://www.cog-genomics.org/static/bin/plink170223/plink_mac.zip"
+    URL="https://www.cog-genomics.org/static/bin/plink170320/plink_mac.zip"
     ;;
   linux*)
-    URL="https://www.cog-genomics.org/static/bin/plink170223/plink_linux_x86_64.zip"
+    URL="https://www.cog-genomics.org/static/bin/plink170320/plink_linux_x86_64.zip"
     ;;
 esac
 

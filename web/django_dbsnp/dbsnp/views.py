@@ -8,7 +8,7 @@ from rest_framework.reverse import reverse
 from rest_framework import serializers
 from .utils import table_exists
 from .models import Snp
-from .forms import SnpsForm, cleaned_rsids
+from .forms import SnpsForm, SnpsFreqForm, cleaned_rsids
 from .serializers import SnpSerializer, ChrPosSerializer
 
 
