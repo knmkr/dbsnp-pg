@@ -22,7 +22,6 @@ class SnpsFreqForm(SnpsForm):
     af_population = forms.ChoiceField(widget=forms.widgets.Select, choices=Snp.af_source_choices())
     af_order = forms.ChoiceField(widget=forms.RadioSelect, choices=Snp.af_order_choices(), initial=0)
 
-
 def cleaned_rsid(text):
     """
     >>> rsid('rs671')
@@ -64,3 +63,5 @@ def parse_rsids(request):
         rsids = cleaned_rsids(q)
     except forms.ValidationError as e:
         raise serializers.ValidationError({'detail': e.message})
+
+    return rsids

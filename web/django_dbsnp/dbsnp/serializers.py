@@ -48,6 +48,17 @@ class SnpSerializer(Serializer):
     )
 
 class FrequencySerializer(Serializer):
+    # {
+    #     'snp_id': 671,
+    #     'snp_current': 671,
+    #     'ref': u'G',
+    #     'allele': [u'A', u'G'],
+    #     'freq': [0.2168, 0.7832],
+    #     'freqx': [13, 98, 175, 0, 0, 0],
+    #     'a1_hom_freq': ' 0.0455',
+    #     'a1_a2_het_freq': ' 0.3427',
+    #     'a2_hom_freq': ' 0.6119'
+    # }
     snp_id = IntegerField()
     snp_current = IntegerField()
     ref = CharField()
@@ -58,5 +69,8 @@ class FrequencySerializer(Serializer):
         child=DecimalField(max_digits=5, decimal_places=4)
     )
     freqx = ListField(
-        child=DecimalField(max_digits=5, decimal_places=4)
+        child=IntegerField()
     )
+    a1_hom_freq=DecimalField(max_digits=5, decimal_places=4)
+    a1_a2_het_freq=DecimalField(max_digits=5, decimal_places=4)
+    a2_hom_freq=DecimalField(max_digits=5, decimal_places=4)
