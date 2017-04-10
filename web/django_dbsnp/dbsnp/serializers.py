@@ -1,4 +1,4 @@
-from rest_framework.serializers import Serializer, IntegerField, CharField, ListField
+from rest_framework.serializers import Serializer, IntegerField, CharField, ListField, DecimalField
 
 
 class ChrPosSerializer(Serializer):
@@ -45,4 +45,18 @@ class SnpSerializer(Serializer):
     )
     omim = ListField(
         child=OmimSerializer()
+    )
+
+class FrequencySerializer(Serializer):
+    snp_id = IntegerField()
+    snp_current = IntegerField()
+    ref = CharField()
+    allele = ListField(
+        child=CharField()
+    )
+    freq = ListField(
+        child=DecimalField(max_digits=5, decimal_places=4)
+    )
+    freqx = ListField(
+        child=DecimalField(max_digits=5, decimal_places=4)
     )
