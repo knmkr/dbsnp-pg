@@ -70,12 +70,15 @@ class Snp(object):
                 for row in rows:
                     allele = row['allele'] or []
                     record = {
-                        'snp_id':      row['snp_id'],
-                        'snp_current': row['snp_current'],
-                        'ref':         row['ref'],
-                        'allele':      ['' for i in xrange(len(allele))],
-                        'freq':        ['' for i in xrange(len(allele))],
-                        'freqx':       ['' for i in xrange(6)],
+                        'snp_id':         row['snp_id'],
+                        'snp_current':    row['snp_current'],
+                        'ref':            row['ref'],
+                        'allele':         ['' for i in xrange(len(allele))],
+                        'freq':           ['' for i in xrange(len(allele))],
+                        'freqx':          [],
+                        'a1_hom_freq':    None,
+                        'a1_a2_het_freq': None,
+                        'a2_hom_freq':    None,
                     }
 
                     if allele:
@@ -92,6 +95,7 @@ class Snp(object):
                                 record[col][i] = row[col][order_map[i]]
 
                         if row['freqx']:
+                            record['freqx'] = [None for i in xrange(6)]
                             if order_map == {0:0, 1:1}:
                                 record['freqx'] = row['freqx']
                             elif order_map == {0:1, 1:0}:
@@ -106,10 +110,6 @@ class Snp(object):
                             record['a1_hom_freq']    = '{0: .4f}'.format(Decimal(record['freqx'][0]) / gt_count)
                             record['a1_a2_het_freq'] = '{0: .4f}'.format(Decimal(record['freqx'][1]) / gt_count)
                             record['a2_hom_freq']    = '{0: .4f}'.format(Decimal(record['freqx'][2]) / gt_count)
-                        else:
-                            record['a1_hom_freq']    = ''
-                            record['a1_a2_het_freq'] = ''
-                            record['a2_hom_freq']    = ''
 
                     records.append(record)
 
