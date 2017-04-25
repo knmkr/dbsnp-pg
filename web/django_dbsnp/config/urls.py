@@ -13,7 +13,7 @@ urlpatterns = [
 ]
 
 api_urlpatterns = format_suffix_patterns([
-    url(r'^api/v1/dbsnp/(?P<pk>\d{1,9})/$', dbsnp_views.snp, name='snp'),
+    url(r'^api/v1/dbsnp/snps/(?P<pk>\d{1,9})/$', dbsnp_views.snp),
     url(r'^api/v1/dbsnp/positions/$', dbsnp_views.positions),
     url(r'^api/v1/dbsnp/frequences/$', dbsnp_views.frequences),
 ])
