@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION get_allele_freq(
 BEGIN
   RETURN QUERY (
       SELECT
+          DISTINCT
           a.snp_id,
           a.snp_current,
           f.ref,
