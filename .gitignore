@@ -28,3 +28,6 @@ release/
 
 # bin dir
 bin/plink
+
+#
+db.sqlite3

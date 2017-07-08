@@ -13,12 +13,13 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 from django.core.exceptions import ImproperlyConfigured
 
-def get_env(key):
+def get_env(key, required=True):
     try:
         return os.environ[key]
     except KeyError:
-        err = "Environment variable not set: {}".format(key)
-        raise ImproperlyConfigured(err)
+        if required:
+            err = "Environment variable not set: {}".format(key)
+            raise ImproperlyConfigured(err)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -94,12 +95,8 @@ DBSNP_QUERY_COUNTS_LIMIT = 30
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': get_env('DJANGO_DB_NAME'),
-        'USER': get_env('DJANGO_DB_USER'),
-        'PASSWORD': os.environ.get('DJANGO_DB_PASS') or '',
-        'HOST': os.environ.get('DJANGO_DB_HOST') or '127.0.0.1',
-        'PORT': os.environ.get('DJANGO_DB_PORT') or '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
     'dbsnp': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -110,6 +107,16 @@ DATABASES = {
         'PORT': os.environ.get('DBSNP_DB_PORT') or '5432',
     }
 }
+
+if get_env('DJANGO_DB_NAME', required=False):
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': get_env('DJANGO_DB_NAME'),
+        'USER': get_env('DJANGO_DB_USER'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASS') or '',
+        'HOST': os.environ.get('DJANGO_DB_HOST') or '127.0.0.1',
+        'PORT': os.environ.get('DJANGO_DB_PORT') or '5432',
+    }
 
 
 # Password validation
