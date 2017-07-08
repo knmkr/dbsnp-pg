@@ -22,13 +22,13 @@ def _main():
 
     conn = psycopg2.connect("dbname={} user={}".format(args.dbname, args.dbuser))
     cur = conn.cursor()
-    cur.execute("SELECT * FROM get_tbl_allele_freq_by_rs_history(%s, %s);", (args.source_id, args.rsids,))
+    cur.execute("SELECT * FROM get_allele_freq(%s, %s);", (args.source_id, args.rsids,))
     rows = cur.fetchall()
 
     records = {}
 
     for row in rows:
-        snp_id, snp_current, allele, freq = row
+        snp_id, snp_current, ref, allele, freq, freqx = row
 
         if not (allele and freq):
             raw_chr     = '{0: >4}'.format('.')
