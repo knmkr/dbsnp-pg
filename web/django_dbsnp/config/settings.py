@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # dbsnp
 DBSNP_BUILD   = os.environ.get('DBSNP_BUILD') or ''
 DBSNP_REF_GENOME_BUILD = os.environ.get('DBSNP_REF_GENOME_BUILD') or ''
-DBSNP_QUERY_COUNTS_LIMIT = 30
+DBSNP_QUERY_COUNTS_LIMIT = os.environ.get('DBSNP_QUERY_COUNTS_LIMIT') or 30
 
 
 # Database
