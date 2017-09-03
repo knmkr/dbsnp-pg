@@ -26,7 +26,7 @@ RSID_PATTERN = re.compile('rs(\d+)')
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--source-id', required=True, choices=[3,4], type=int)
+    parser.add_argument('--source-id', required=True, choices=[3,4, 100, 200, 300], type=int)
     parser.add_argument('--rsids', nargs='+', type=int)
     parser.add_argument('--dbname', default=DBNAME)
     parser.add_argument('--dbuser', default=DBUSER)
@@ -49,15 +49,20 @@ def main():
         rows = cur.fetchall()
         positions = rows
 
-    # TODO: DRY
     sample = {
-        3: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt'),
-        4: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt'),
+        3:   os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt'),
+        4:   os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt'),
+        100: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.CEU.no-pat-mat.txt'),
+        200: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.YRI.no-pat-mat.txt'),
+        300: os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.no-pat-mat.txt'),
     }[args.source_id]
 
     vcf = {
-        3: os.path.join(BASE_DIR, '..', 'data/1000genomes.phase1/ALL.chr{chrom}.*.vcf.gz'),
-        4: os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.*.vcf.gz'),
+        3:   os.path.join(BASE_DIR, '..', 'data/1000genomes.phase1/ALL.chr{chrom}.*.vcf.gz'),
+        4:   os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.*.vcf.gz'),
+        100: os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.*.vcf.gz'),
+        200: os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.*.vcf.gz'),
+        300: os.path.join(BASE_DIR, '..', 'data/1000genomes.phase3/ALL.chr{chrom}.*.vcf.gz'),
     }[args.source_id]
 
     for i, (chrom, pos) in enumerate(positions):
