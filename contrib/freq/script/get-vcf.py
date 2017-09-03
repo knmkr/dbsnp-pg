@@ -33,6 +33,8 @@ def main():
     parser.add_argument('--regions', nargs='+', type=str)
     args = parser.parse_args()
 
+    # TODO: check bcftools installed
+
     rsids = args.rsids
 
     if args.regions:
