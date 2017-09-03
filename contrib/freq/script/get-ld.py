@@ -13,15 +13,25 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-id', required=True, choices=[3,4, 100, 200, 300], type=int)
-    parser.add_argument('--rsids', nargs='+', type=int)
-    parser.add_argument('--rsids-file', type=file)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--rsids', nargs='+', type=int)
+    group.add_argument('--rsids-file')
     parser.add_argument('--dbname')
     parser.add_argument('--dbuser')
     parser.add_argument('--dbhost')
     parser.add_argument('--min-r2', default=0.8, type=float)
     args = parser.parse_args()
 
-    rsids = args.rsids
+    if args.rsids:
+        rsids = args.rsids
+    elif args.rsids_file:
+        rsids = []
+        with open(args.rsids_file) as fin:
+            for line in fin:
+                record = line.strip()
+                if record:
+                    rsids.append(int(record.replace('rs', '')))
+
     query = '.q.txt'
 
     context = {
@@ -40,7 +50,7 @@ def main():
 
     print '\t'.join(['snp_a', 'chrom_a', 'pos_a', 'snp_b', 'chrom_b', 'pos_b', 'r2', 'bp_dist'])
 
-    for snp in args.rsids:
+    for snp in rsids:
         subprocess.call(shlex.split('plink --bfile {query} --r2 --ld-snp rs{snp} --ld-window-r2 {min_r2}'.format(query=query, snp=snp, min_r2=args.min_r2)), stdout=sys.stderr, stderr=sys.stderr)
 
         with open('plink.ld', 'r') as fin:
