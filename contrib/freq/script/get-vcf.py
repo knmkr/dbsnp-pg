@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 # TODO: Load from settings.py if exists.
 DBNAME = 'dbsnp_b146_GRCh37'
 DBUSER = 'dbsnp'
+DBHOST = 'localhost'
 
 RSID_PATTERN = re.compile('rs(\d+)')
 
@@ -30,6 +31,7 @@ def main():
     parser.add_argument('--rsids', nargs='+', type=int)
     parser.add_argument('--dbname', default=DBNAME)
     parser.add_argument('--dbuser', default=DBUSER)
+    parser.add_argument('--dbhost', default=DBHOST)
     parser.add_argument('--regions', nargs='+', type=str)
     args = parser.parse_args()
 
@@ -45,7 +47,7 @@ def main():
             sys.exit(1)
 
         # Get current chrom/pos
-        conn = psycopg2.connect("dbname={} user={}".format(args.dbname, args.dbuser))
+        conn = psycopg2.connect("dbname={} user={} host={}".format(args.dbname, args.dbuser, args.dbhost))
         cur = conn.cursor()
         cur.execute("SELECT chr, pos FROM get_pos_by_rs(ARRAY[%s]);", (rsids,))
         rows = cur.fetchall()
