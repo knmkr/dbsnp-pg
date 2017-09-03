@@ -77,11 +77,7 @@ def main():
             cmd = shlex.split('bcftools view --header-only --samples-file {sample} {vcf}'.format(chrpos='{}:{}'.format(chrom, pos),
                                                                                                  sample=sample,
                                                                                                  vcf=vcf_in[0]))
-            try:
-                results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
-            except Exception as e:
-                log(rsids[i], 'vcf record not found (error code NA3). chrom:{}, position:{}'.format(chrom, pos))
-                sys.exit(0)
+            results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
 
             for line in results:
                 if line.startswith('#'):
