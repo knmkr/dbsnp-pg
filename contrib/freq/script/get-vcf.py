@@ -28,23 +28,34 @@ RSID_PATTERN = re.compile('rs(\d+)')
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source-id', required=True, choices=[3,4, 100, 200, 300], type=int)
-    parser.add_argument('--rsids', nargs='+', type=int)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--rsids', nargs='+', type=int)
+    group.add_argument('--rsids-file')
+    group.add_argument('--regions', nargs='+', type=str)
     parser.add_argument('--dbname', default=DBNAME)
     parser.add_argument('--dbuser', default=DBUSER)
     parser.add_argument('--dbhost', default=DBHOST)
-    parser.add_argument('--regions', nargs='+', type=str)
     args = parser.parse_args()
 
     # TODO: check bcftools installed
 
-    rsids = args.rsids
-
+    # get query positions by region args or rsid args
     if args.regions:
         positions = [tuple(x.split(':')) for x in args.regions]
     else:
         if not args.dbname or not args.dbuser:
             print >>sys.stderr, '[ERROR] If --regions is not set, you need to set --dbname and --dbuser (error code AR1).'
             sys.exit(1)
+
+        if args.rsids:
+            rsids = args.rsids
+        elif args.rsids_file:
+            rsids = []
+            with open(args.rsids_file) as fin:
+                for line in fin:
+                    record = line.strip()
+                    if record:
+                        rsids.append(int(record.replace('rs', '')))
 
         # Get current chrom/pos
         conn = psycopg2.connect("dbname={} user={} host={}".format(args.dbname, args.dbuser, args.dbhost))
@@ -53,6 +64,7 @@ def main():
         rows = cur.fetchall()
         positions = rows
 
+    #
     sample = {
         3:   os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase1.CHB+JPT+CHS.txt'),
         4:   os.path.join(BASE_DIR, 'sample_ids.1000genomes.phase3.CHB+JPT+CHS.txt'),
