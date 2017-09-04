@@ -111,7 +111,6 @@ def main():
             results = subprocess.check_output(cmd, stderr=subprocess.STDOUT).splitlines()
         except Exception as e:
             log(rsids[i], 'vcf record not found (error code NA3). chrom:{}, position:{}'.format(chrom, pos))
-            sys.exit(0)
 
         founds = []
         for result in results:
@@ -123,7 +122,6 @@ def main():
 
         if not founds:
             log(rsids[i], 'vcf record not found (error code NA1). chrom:{}, position:{}'.format(chrom, pos))
-            sys.exit(0)
 
         for found in founds:
             # Replace to rs ids in query
