@@ -6,7 +6,8 @@ CREATE TABLE [Allele]
 [rev_allele_id] [int] NULL ,
 [src] [varchar](10) NULL ,
 [last_updated_time] [smalldatetime] NULL ,
-[allele_left] [varchar](900) NULL
+[allele_left] [varchar](900) NULL ,
+[allele_md5] [binary] NULL
 )
 go
 
@@ -32,7 +33,7 @@ go
 CREATE TABLE [AllocIds]
 (
 [name] [varchar](30) NOT NULL ,
-[id] [int] NOT NULL ,
+[id] [bigint] NOT NULL ,
 [cycle] [int] NULL ,
 [create_time] [smalldatetime] NULL ,
 [last_updated_time] [smalldatetime] NULL ,
@@ -47,6 +48,16 @@ CREATE TABLE [Author]
 [author] [varchar](255) NOT NULL ,
 [create_time] [smalldatetime] NULL ,
 [last_updated_time] [smalldatetime] NULL
+)
+go
+
+CREATE TABLE [BatchAssertedPositionSourceId]
+(
+[pos_src_id] [int] NOT NULL ,
+[pos_src_type_code] [int] NOT NULL ,
+[pos_src_path] [varchar](255) NULL ,
+[pos_src_note] [varchar](255) NULL ,
+[insert_time] [smalldatetime] NULL
 )
 go
 
@@ -387,6 +398,15 @@ CREATE TABLE [StrandCode]
 [rs_to_ss_orien] [bit] NOT NULL ,
 [descrip] [varchar](255) NOT NULL ,
 [create_time] [smalldatetime] NOT NULL
+)
+go
+
+CREATE TABLE [SubSNPAssertedPositionSourceCode]
+(
+[code] [int] NOT NULL ,
+[abbrev] [varchar](32) NULL ,
+[descrip] [varchar](2000) NULL ,
+[create_time] [smalldatetime] NULL
 )
 go
 

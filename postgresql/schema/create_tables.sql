@@ -10,7 +10,8 @@
 -- [rev_allele_id] [int] NULL ,
 -- [src] [varchar](10) NULL ,
 -- [last_updated_time] [smalldatetime] NULL ,
--- [allele_left] [varchar](900) NULL
+-- [allele_left] [varchar](900) NULL,
+-- [allele_md5] [binary] NULL
 -- )
 DROP TABLE IF EXISTS Allele;
 CREATE TABLE Allele (
@@ -20,7 +21,8 @@ CREATE TABLE Allele (
        rev_allele_id      integer,
        src                varchar(10),
        last_updated_time  timestamp,  -- default CURRENT_TIMESTAMP,
-       allele_left        varchar(900)
+       allele_left        varchar(900),
+       allele_md5         bytea
 );
 
 -- CREATE TABLE [SnpChrCode]
@@ -45,7 +47,7 @@ CREATE TABLE SnpChrCode (
 );
 
 
--- Schema: ftp.ncbi.nih.gov:/snp/organisms/human_9606/database/organism_schema/human_9606_table.sql.gz
+-- Schema: ftp.ncbi.nih.gov:/snp/organisms/human_9606/database/data/organism_schema/human_9606_table.sql.gz
 -- Column Description: http://www.ncbi.nlm.nih.gov/projects/SNP/snp_db_table_description.cgi?t=<table_name>
 
 -- CREATE TABLE [OmimVarLocusIdSNP]
@@ -77,8 +79,8 @@ CREATE TABLE OmimVarLocusIdSNP (
 -- CREATE TABLE [RsMergeArch]                 -- refSNP(rs) cluster is based on unique genome position. On new genome assembly, previously different contig may
 --                                               align. So different rs clusters map to the same location. In this case, we merge the rs. This table tracks this merging.
 -- (
--- [rsHigh] [int] NOT NULL ,                  -- Since rs# is assigned sequentially. Low number means the rs occurs early. So we always merge high rs number into low rs number.
--- [rsLow] [int] NOT NULL ,
+-- [rsHigh] [bigint] NOT NULL ,                  -- Since rs# is assigned sequentially. Low number means the rs occurs early. So we always merge high rs number into low rs number.
+-- [rsLow] [bigint] NOT NULL ,
 -- [build_id] [int] NULL ,                    -- dbSNP build id when this rsHigh was merged into rsLow.
 -- [orien] [tinyint] NULL ,                   -- The orientation between rsHigh and rsLow.
 -- [create_time] [datetime] NOT NULL ,
@@ -89,8 +91,8 @@ CREATE TABLE OmimVarLocusIdSNP (
 -- )
 DROP TABLE IF EXISTS RsMergeArch;
 CREATE TABLE RsMergeArch (
-       rsHigh            integer        not null,
-       rsLow             integer        not null,
+       rsHigh            bigint        not null,
+       rsLow             bigint        not null,
        build_id          smallint,
        orien             bit,
        create_time       timestamp,
@@ -102,7 +104,7 @@ CREATE TABLE RsMergeArch (
 
 -- CREATE TABLE [SNP]                     -- refSNP property table.
 -- (
--- [snp_id] [int] NULL ,                  -- RefSNP Cluster Id. This is the ubiquitous rs# for dbSNP RefSNP.
+-- [snp_id] [bigint] NULL ,               -- RefSNP Cluster Id. This is the ubiquitous rs# for dbSNP RefSNP.
 -- [avg_heterozygosity] [real] NULL ,     -- The average heterozygosity of a snp. This field has value when there is frequency data for the snp.
 -- [het_se] [real] NULL ,                 -- Standard error of the the above average heterozygosity.
 -- [create_time] [datetime] NULL ,        -- The first time this refSNP cluster is created.
@@ -110,7 +112,7 @@ CREATE TABLE RsMergeArch (
 -- [CpG_code] [tinyint] NULL ,            -- CpG_code describes the DNA CpG motif. This is a foreign key to lookup table CpGCode.
 -- [tax_id] [int] NULL ,                  -- NCBI taxonomy id for an organism.
 -- [validation_status] [tinyint] NULL ,   -- This is a foreign key to lookup table SnpValidatonCode, which describes the definition of each validation status.
--- [exemplar_subsnp_id] [int] NOT NULL ,  -- snp_id is the id for a refSNP Cluster of one or more submitted snp that all have the same mapping positions. The subsnp_id ( id for the submitted snp) with the longest flanking sequence is the exemplar_subsnp_id. An rs fasta sequence is the sequence of the exemplar ss ( may be in the reverse orientation. See SNPSubSNPLink.substrand_reversed_flag for more details. )
+-- [exemplar_subsnp_id] [bigint] NOT NULL ,  -- snp_id is the id for a refSNP Cluster of one or more submitted snp that all have the same mapping positions. The subsnp_id ( id for the submitted snp) with the longest flanking sequence is the exemplar_subsnp_id. An rs fasta sequence is the sequence of the exemplar ss ( may be in the reverse orientation. See SNPSubSNPLink.substrand_reversed_flag for more details. )
 -- [univar_id] [int] NULL ,               -- Uni-variation id. This is the foreign key to lookup table UniVariation. Each submitted snp has a variation( See ObsVariation Table). UniVariation standardize on the order of each allele and corrects typo/format problems of the submitted variations. Many observed variation in submitted snp may be curated to be the same univariation. For ex. -/ATATAT is the same as -/(AT)3.
 -- [cnt_subsnp] [int] NULL ,              -- Number of submitted snp (subsnp, or ss) in the refSNP cluster.
 -- [map_property] [tinyint] NULL          -- Stores interim data for internal use only
@@ -118,7 +120,7 @@ CREATE TABLE RsMergeArch (
 
 DROP TABLE IF EXISTS SNP;
 CREATE TABLE SNP (
-       snp_id              integer,
+       snp_id              bigint,
        avg_heterozygosity  real,
        het_se              real,
        create_time         timestamp,
@@ -126,7 +128,7 @@ CREATE TABLE SNP (
        CpG_code            smallint,
        tax_id              integer,
        validation_status   smallint,
-       exemplar_subsnp_id  integer     not null,
+       exemplar_subsnp_id  bigint     not null,
        univar_id           integer,
        cnt_subsnp          integer,
        map_property        smallint
@@ -238,14 +240,14 @@ CREATE TABLE ContigInfo (
     contig_length      integer
 );
 
--- CREATE TABLE [b141_SNPChrPosOnRef]  -- This table stores the chromosome position(0 based) of uniquely mapped snp on NCBI reference assembly. It has one
+-- CREATE TABLE [b150_SNPChrPosOnRef_108]  -- This table stores the chromosome position(0 based) of uniquely mapped snp on NCBI reference assembly. It has one
 --                                        row for each snp in SNP table. For snp with ambiguous mappings(weight>1, please see SNPMapInfo for weight
 --                                        description), the chromosome position is NULL. To get the positions of ambiguous mapped snp, please see
 --                                        SNPContigLoc.
 --                                        Please note that the actually table name in database has dbSNP build prefix and NCBI genome build suffix. For ex.
 --                                        human dbSNP build 130 maps to NCBI 36.3. The table name for this build is: b130_SNPChrPosOnRef_36_3.
 -- (
--- [snp_id] [int] NOT NULL ,           -- snp_id refers to SNP.snp_id. Also called 'rs#'.
+-- [snp_id] [bigint] NOT NULL ,        -- snp_id refers to SNP.snp_id. Also called 'rs#'.
 -- [chr] [varchar](32) NOT NULL ,      -- chr refers to SnpChrCode. Please see value at: ftp://ftp.ncbi.nih.gov/snp/database/shared_data/SnpChrCode.bcp.gz
 -- [pos] [int] NULL ,                  -- pos is the 0 based chromosome position of uniquely mapped snp. This value is from SNPContigLoc.phys_pos_from field. Not uniquely mapped snp(weight>1) has NULL in this field.
 -- [orien] [int] NULL ,                -- snp to chromosome orientation. 0 - same orientation(orsame strand), 1 - opposite strand
@@ -254,7 +256,7 @@ CREATE TABLE ContigInfo (
 -- )
 DROP TABLE IF EXISTS SNPChrPosOnRef;
 CREATE TABLE SNPChrPosOnRef (
-       snp_id                    integer,
+       snp_id                    bigint,
        chr                       varchar(32)    not null,
        pos                       integer,
        orien                     bit,
@@ -262,7 +264,7 @@ CREATE TABLE SNPChrPosOnRef (
        isPAR                     varchar(1)     not null
 );
 
--- CREATE TABLE [b144_SNPContigLoc_105]        -- SNPContigLoc table stores snp mapping positions to contigs in all assemblies. A snp may have different map positions
+-- CREATE TABLE [b150_SNPContigLoc_108]        -- SNPContigLoc table stores snp mapping positions to contigs in all assemblies. A snp may have different map positions
 --                                                on different genome builds. To make the genome build number/version explicit, the table name is suffixed with
 --                                                "_build_ver" and prefixed with snp build number. For ex. in dbSNP build 125, human snp is both mapped to NCBI build
 --                                                35.1 and build 34.3. So we have two tables: b125_SNPContigLoc_35_1 and b125_SNPContigLoc_34_3. Please note
@@ -281,7 +283,7 @@ CREATE TABLE SNPChrPosOnRef (
 -- (
 -- [snp_type] [varchar](2) NOT NULL ,          -- "rs" or "ss". For snp external users, this value should always be "rs". Internally,
 --                                                during build prepartion, when the snp is not clustered, the snp_id will be "ss".
--- [snp_id] [int] NULL ,                       -- rs#. Foreign key to SNP table.
+-- [snp_id] [bigint] NULL ,                    -- rs#. Foreign key to SNP table.
 -- [ctg_id] [int] NULL ,                       -- ctg_id is the foreign key to ContigInfo.
 -- [asn_from] [int] NULL ,                     -- Start position of snp on contig, counting from 0. This position is always from the
 --                                                beginning of the contig regardless of the snp orienation to contig and
@@ -311,7 +313,7 @@ CREATE TABLE SNPChrPosOnRef (
 DROP TABLE IF EXISTS SNPContigLoc;
 CREATE TABLE SNPContigLoc (
     snp_type           varchar(2)     not null,
-    snp_id             integer,
+    snp_id             bigint,
     ctg_id             integer,
     asn_from           integer,
     asn_to             integer,
@@ -334,7 +336,7 @@ CREATE TABLE SNPContigLoc (
     tier               integer
 );
 
--- CREATE TABLE [b146_MapLinkInfo_105]    -- MapLinkInfo table stores accession.version for the gi in MapLink table.
+-- CREATE TABLE [b150_MapLinkInfo_108]    -- MapLinkInfo table stores accession.version for the gi in MapLink table.
 -- (
 -- [gi] [bigint] NOT NULL ,               -- MapLink.gi refers to this gi. This is the gi for RefSeq NM/NG/NR/XR/XM sequence.
 -- [accession] [varchar](32) NOT NULL ,   -- This is the accession corresponds to the gi.
@@ -363,7 +365,7 @@ CREATE TABLE MapLinkInfo (
        cds_to         integer
 );
 
--- CREATE TABLE [b146_MapLink_105]      -- MapLink table stores snp mapping to RefSeq sequences with accession starts with letter: NM, NG, XM, NR, XR.
+-- CREATE TABLE [b150_MapLink_108]      -- MapLink table stores snp mapping to RefSeq sequences with accession starts with letter: NM, NG, XM, NR, XR.
 -- (
 -- [snp_type] [char](2) NULL ,          -- "rs" or "ss". For snp external users, this value should always be "rs".
 --                                         Internally, during build prepartion, when the snp is not clustered, the snp_id
@@ -429,11 +431,11 @@ CREATE TABLE MapLink (
        "source"          varchar(64)
 );
 
--- CREATE TABLE [b144_SNPMapInfo_105]  -- SNPMapInfo has the mapping summary information for snp for each assembly the snp is mapped to for the current
+-- CREATE TABLE [b150_SNPMapInfo_108]  -- SNPMapInfo has the mapping summary information for snp for each assembly the snp is mapped to for the current
 --                                        build. Two columns snp_id and assembly together unqiuely identify each row in this table.
 -- (
 -- [snp_type] [varchar](2) NOT NULL ,  -- same description as SNPContigLoc.snp_type.
--- [snp_id] [int] NULL ,               -- same description as SNPContigLoc.snp_id.
+-- [snp_id] [bigint] NULL ,            -- same description as SNPContigLoc.snp_id.
 -- [chr_cnt] [int] NOT NULL ,          -- Number of chromosomes the snp has hits on.
 -- [contig_cnt] [int] NOT NULL ,       -- Number of contig the snp has hits on.
 -- [loc_cnt] [int] NOT NULL ,          -- Number of locations the snp has been mapped to. This could be bigger than

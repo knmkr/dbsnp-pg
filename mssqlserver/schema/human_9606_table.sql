@@ -143,10 +143,7 @@ CREATE TABLE [GeneIdToName]
 [gene_name] [varchar](255) NULL ,
 [gene_type] [varchar](255) NULL ,
 [tax_id] [int] NOT NULL ,
-[last_update_time] [smalldatetime] NOT NULL ,
-[ref_tax_id] [int] NOT NULL ,
-[dbSNP_tax_id] [int] NOT NULL ,
-[ins_time] [smalldatetime] NULL
+[last_update_time] [smalldatetime] NOT NULL
 )
 go
 
@@ -269,8 +266,8 @@ go
 
 CREATE TABLE [RsMergeArch]
 (
-[rsHigh] [int] NOT NULL ,
-[rsLow] [int] NOT NULL ,
+[rsHigh] [bigint] NOT NULL ,
+[rsLow] [bigint] NOT NULL ,
 [build_id] [int] NULL ,
 [orien] [tinyint] NOT NULL ,
 [create_time] [datetime] NOT NULL ,
@@ -283,7 +280,7 @@ go
 
 CREATE TABLE [SNP]
 (
-[snp_id] [int] NULL ,
+[snp_id] [bigint] NULL ,
 [avg_heterozygosity] [real] NULL ,
 [het_se] [real] NULL ,
 [create_time] [datetime] NULL ,
@@ -291,7 +288,7 @@ CREATE TABLE [SNP]
 [CpG_code] [tinyint] NULL ,
 [tax_id] [int] NULL ,
 [validation_status] [tinyint] NULL ,
-[exemplar_subsnp_id] [int] NOT NULL ,
+[exemplar_subsnp_id] [bigint] NOT NULL ,
 [univar_id] [int] NULL ,
 [cnt_subsnp] [int] NULL ,
 [map_property] [tinyint] NULL
@@ -418,8 +415,8 @@ go
 
 CREATE TABLE [SNPSubSNPLink]
 (
-[subsnp_id] [int] NULL ,
-[snp_id] [int] NULL ,
+[subsnp_id] [bigint] NOT NULL ,
+[snp_id] [bigint] NULL ,
 [substrand_reversed_flag] [tinyint] NULL ,
 [create_time] [datetime] NULL ,
 [last_updated_time] [datetime] NULL ,
@@ -430,7 +427,7 @@ go
 
 CREATE TABLE [SNPSubSNPLinkHistory]
 (
-[subsnp_id] [int] NULL ,
+[subsnp_id] [bigint] NULL ,
 [snp_id] [int] NULL ,
 [build_id] [int] NULL ,
 [history_create_time] [datetime] NOT NULL ,
@@ -487,7 +484,7 @@ go
 CREATE TABLE [SubPop]
 (
 [batch_id] [int] NOT NULL ,
-[subsnp_id] [int] NOT NULL ,
+[subsnp_id] [bigint] NOT NULL ,
 [pop_id] [int] NOT NULL ,
 [type] [char](3) NOT NULL ,
 [samplesize] [int] NOT NULL ,
@@ -508,7 +505,7 @@ go
 CREATE TABLE [SubPopAllele]
 (
 [batch_id] [int] NOT NULL ,
-[subsnp_id] [int] NOT NULL ,
+[subsnp_id] [bigint] NOT NULL ,
 [pop_id] [int] NOT NULL ,
 [allele] [char](1) NOT NULL ,
 [other] [varchar](255) NULL ,
@@ -539,7 +536,7 @@ go
 
 CREATE TABLE [SubSNP]
 (
-[subsnp_id] [int] NOT NULL ,
+[subsnp_id] [bigint] NOT NULL ,
 [known_snp_handle] [varchar](20) NULL ,
 [known_snp_loc_id] [varchar](64) NULL ,
 [known_snp_loc_id_upp] [varchar](64) NULL ,
@@ -573,7 +570,7 @@ go
 
 CREATE TABLE [SubSNPAcc_ins]
 (
-[subsnp_id] [int] NOT NULL ,
+[subsnp_id] [bigint] NOT NULL ,
 [acc_type_ind] [char](1) NOT NULL ,
 [acc_part] [varchar](16) NOT NULL ,
 [acc_ver] [int] NULL
@@ -582,7 +579,7 @@ go
 
 CREATE TABLE [SubSNPCommLine_ins]
 (
-[subsnp_id] [int] NOT NULL ,
+[subsnp_id] [bigint] NOT NULL ,
 [line_num] [tinyint] NOT NULL ,
 [line] [varchar](255) NOT NULL
 )
@@ -604,7 +601,7 @@ go
 
 CREATE TABLE [SubSNPLinkout]
 (
-[subsnp_id] [int] NOT NULL ,
+[subsnp_id] [bigint] NOT NULL ,
 [url_val] [varchar](255) NOT NULL ,
 [updated_time] [smalldatetime] NULL ,
 [link_type] [varchar](3) NOT NULL
@@ -720,7 +717,7 @@ CREATE TABLE [Synonym]
 )
 go
 
-CREATE TABLE [b149_ContigInfo_108]
+CREATE TABLE [b150_ContigInfo_108]
 (
 [ctg_id] [bigint] NOT NULL ,
 [tax_id] [int] NOT NULL ,
@@ -753,7 +750,7 @@ CREATE TABLE [b149_ContigInfo_108]
 )
 go
 
-CREATE TABLE [b149_MapLinkInfo_108]
+CREATE TABLE [b150_MapLinkInfo_108]
 (
 [gi] [int] NOT NULL ,
 [accession] [varchar](32) NOT NULL ,
@@ -768,7 +765,7 @@ CREATE TABLE [b149_MapLinkInfo_108]
 )
 go
 
-CREATE TABLE [b149_MapLink_108]
+CREATE TABLE [b150_MapLink_108]
 (
 [snp_type] [char](2) NULL ,
 [snp_id] [int] NULL ,
@@ -799,7 +796,7 @@ CREATE TABLE [b149_MapLink_108]
 )
 go
 
-CREATE TABLE [b149_ProteinInfo_108]
+CREATE TABLE [b150_ProteinInfo_108]
 (
 [gi] [int] NOT NULL ,
 [acc] [varchar](32) NOT NULL ,
@@ -813,9 +810,9 @@ CREATE TABLE [b149_ProteinInfo_108]
 )
 go
 
-CREATE TABLE [b149_SNPChrPosOnRef_108]
+CREATE TABLE [b150_SNPChrPosOnRef_108]
 (
-[snp_id] [int] NULL ,
+[snp_id] [bigint] NULL ,
 [chr] [varchar](32) NULL ,
 [pos] [int] NULL ,
 [orien] [tinyint] NULL ,
@@ -824,10 +821,10 @@ CREATE TABLE [b149_SNPChrPosOnRef_108]
 )
 go
 
-CREATE TABLE [b149_SNPContigLoc_108]
+CREATE TABLE [b150_SNPContigLoc_108]
 (
 [snp_type] [varchar](2) NULL ,
-[snp_id] [int] NULL ,
+[snp_id] [bigint] NULL ,
 [ctg_id] [bigint] NULL ,
 [asn_from] [int] NULL ,
 [asn_to] [int] NULL ,
@@ -851,7 +848,7 @@ CREATE TABLE [b149_SNPContigLoc_108]
 )
 go
 
-CREATE TABLE [b149_SNPContigLocusId_108]
+CREATE TABLE [b150_SNPContigLocusId_108]
 (
 [snp_id] [int] NULL ,
 [contig_acc] [varchar](32) NOT NULL ,
@@ -884,10 +881,10 @@ CREATE TABLE [b149_SNPContigLocusId_108]
 )
 go
 
-CREATE TABLE [b149_SNPMapInfo_108]
+CREATE TABLE [b150_SNPMapInfo_108]
 (
 [snp_type] [varchar](2) NOT NULL ,
-[snp_id] [int] NULL ,
+[snp_id] [bigint] NULL ,
 [chr_cnt] [int] NOT NULL ,
 [contig_cnt] [int] NOT NULL ,
 [loc_cnt] [int] NOT NULL ,
@@ -904,7 +901,7 @@ CREATE TABLE [b149_SNPMapInfo_108]
 )
 go
 
-CREATE TABLE [b149_SNP_bitfield_108]
+CREATE TABLE [b150_SNP_bitfield_108]
 (
 [snp_id] [int] NOT NULL ,
 [ver_code] [tinyint] NULL ,
@@ -917,7 +914,7 @@ CREATE TABLE [b149_SNP_bitfield_108]
 [gty_prop] [tinyint] NULL ,
 [hapmap_prop] [tinyint] NULL ,
 [pheno_prop] [tinyint] NULL ,
-[variation_class] [tinyint] NOT NULL ,
+[variation_class] [int] NOT NULL ,
 [quality_check] [tinyint] NULL ,
 [upd_time] [datetime] NOT NULL ,
 [encoding] [binary] NULL
