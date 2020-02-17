@@ -1,8 +1,8 @@
 import logging
 from decimal import *
 
-from django.db import connections
 from django.conf import settings
+from django.db import connections
 
 log = logging.getLogger('django')
 
@@ -73,8 +73,8 @@ class Snp(object):
                         'snp_id':         row['snp_id'],
                         'snp_current':    row['snp_current'],
                         'ref':            row['ref'],
-                        'allele':         ['' for i in xrange(len(allele))],
-                        'freq':           ['' for i in xrange(len(allele))],
+                        'allele':         ['' for i in range(len(allele))],
+                        'freq':           ['' for i in range(len(allele))],
                         'freqx':          [],
                         'a1_hom_freq':    None,
                         'a1_a2_het_freq': None,
@@ -86,16 +86,16 @@ class Snp(object):
                         assert len(allele) == 2
 
                         if self.af_order_dict().get(int(af_order)) == 'alphabet':
-                            order_map = dict(zip(xrange(len(allele)), [allele.index(x) for x in sorted(allele)]))
+                            order_map = dict(zip(range(len(allele)), [allele.index(x) for x in sorted(allele)]))
                         else:
                             order_map = {0:0, 1:1}
 
                         for col in ['allele', 'freq']:
-                            for i in xrange(len(allele)):
+                            for i in range(len(allele)):
                                 record[col][i] = row[col][order_map[i]]
 
                         if row['freqx']:
-                            record['freqx'] = [None for i in xrange(6)]
+                            record['freqx'] = [None for i in range(6)]
                             if order_map == {0:0, 1:1}:
                                 record['freqx'] = row['freqx']
                             elif order_map == {0:1, 1:0}:
@@ -147,7 +147,7 @@ def dictfetchall(cursor):
     return row
 
 def strip(x):
-    if type(x) in (str, unicode):
+    if type(x) == str:
         return x.strip()
     else:
         return x

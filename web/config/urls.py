@@ -1,12 +1,12 @@
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from rest_framework.urlpatterns import format_suffix_patterns
+
 from dbsnp import views as dbsnp_views
 
-
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
+    url(r'^ok/$', TemplateView.as_view(template_name='ok.html')),
 
     url(r'^$', RedirectView.as_view(pattern_name='dbsnp:index')),
     url(r'^dbsnp/', include('dbsnp.urls', namespace='dbsnp')),
