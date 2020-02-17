@@ -1,11 +1,7 @@
-Django>=1.10,<1.10.99
-psycopg2
+Django>=1.11,<1.11.99
+psycopg2-binary
 pytz
 
-# Django REST framework
 djangorestframework
-markdown
 django-filter
-
-#
 django_extensions
